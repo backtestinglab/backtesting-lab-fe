@@ -1,7 +1,6 @@
 import React from 'react'
 import './HomeScreen.css'
-// Assuming your logo is at src/renderer/src/assets/images/logo.svg (adjust if different)
-import logo from '../../assets/images/logo.svg'
+import logo from '../../assets/logo.svg'
 
 const HomeScreen = () => {
   const [showWelcome, setShowWelcome] = React.useState(false)
