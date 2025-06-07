@@ -1,9 +1,9 @@
 {
   "name": "backtesting-lab",
   "version": "1.0.0",
-  "description": "An Electron application with React",
+  "description": "Automated & manual backtesting software for daytraders",
   "main": "./out/main/index.js",
-  "author": "example.com",
+  "author": "https://davidpnowak.com",
   "homepage": "https://electron-vite.org",
   "packageManager": "yarn@4.9.2",
   "scripts": {
