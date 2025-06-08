@@ -46,17 +46,100 @@
   width: 75%;
   max-width: 350px;
   height: auto;
-  /* margin-bottom: 20px; */
   object-fit: contain;
-  /* We can add animations for fade-in/out later */
+  opacity: 0;
+  animation-name: logoPowerUpSequence;
+  animation-duration: 3s;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
+}
+
+@keyframes logoPowerUpSequence {
+  0% {
+    /* Initial fade-in and scale */
+    opacity: 0;
+    transform: scale(0.82);
+    filter: drop-shadow(0 0 0px rgba(105, 136, 230, 0));
+  }
+  20% {
+    /* Fully visible, scaled up, start of glow */
+    opacity: 1;
+    transform: scale(1);
+    filter: drop-shadow(0 0 0.3em rgba(105, 136, 230, 0.25));
+  }
+
+  /* First Flicker Event during glow build-up */
+  35% {
+    /* Approaching first flicker - glow building */
+    opacity: 1;
+    filter: drop-shadow(0 0 0.6em rgba(105, 136, 230, 0.45));
+  }
+  38% {
+    /* Flicker OFF */
+    opacity: 0.9;
+    filter: drop-shadow(0 0 0.5em rgba(105, 136, 230, 0.35)); /* Dimmer glow during off */
+  }
+  41% {
+    /* Flicker ON - slightly brighter before settling */
+    opacity: 1;
+    filter: drop-shadow(0 0 0.72em rgba(105, 136, 230, 0.5));
+  }
+  44% {
+    /* Settle after first flicker, glow continues to build */
+    opacity: 1;
+    filter: drop-shadow(0 0 0.65em rgba(105, 136, 230, 0.48));
+  }
+
+  /* Second, more intense Flicker Event */
+  60% {
+    /* Approaching second flicker - glow stronger */
+    opacity: 1;
+    filter: drop-shadow(0 0 0.95em rgba(105, 136, 230, 0.6));
+  }
+  63% {
+    /* Flicker OFF */
+    opacity: 0.4; /* More pronounced opacity drop */
+    filter: drop-shadow(0 0 0.8em rgba(105, 136, 230, 0.5));
+  }
+  66% {
+    /* Flicker ON - more intense */
+    opacity: 1;
+    filter: drop-shadow(0 0 1.1em rgba(105, 136, 230, 0.63));
+  }
+  69% {
+    /* Settle after second flicker, approaching full glow */
+    opacity: 1;
+    filter: drop-shadow(0 0 1em rgba(105, 136, 230, 0.6));
+  }
+
+  85% {
+    /* Full target glow */
+    opacity: 1;
+    filter: drop-shadow(0 0 1.2em rgba(105, 136, 230, 0.66)); /* Target glow */
+  }
+  100% {
+    /* Hold final glow and scale */
+    opacity: 1;
+    filter: drop-shadow(0 0 1.2em rgba(105, 136, 230, 0.66));
+  }
 }
 
 .navigator-core .welcome-text {
+  display: none;
   width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+  pointer-events: none; /* Initially not interactive */
+}
+
+.navigator-core .welcome-text.visible {
+  opacity: 1;
+  pointer-events: auto; /* Make interactive when visible */
 }
 
 .navigator-core .welcome-text h1 {

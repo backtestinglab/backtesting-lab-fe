@@ -1,26 +1,29 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import './HomeScreen.css'
 import logo from '../../assets/logo.svg'
 
 const HomeScreen = () => {
-  const [showWelcomeText, setShowWelcomeText] = React.useState(false)
+  const [welcomeTextVisibleClass, setWelcomeTextVisibleClass] = React.useState(false)
+  const [renderWelcomeText, setRenderWelcomeText] = React.useState(false)
 
-  // Simulate logo display then fade to welcome text
-  React.useEffect(() => {
-    const timer = setTimeout(() => {
-      setShowWelcomeText(true)
-    }, 2000)
-    return () => clearTimeout(timer)
+  useEffect(() => {
+    const logoAnimationTime = 3400
+
+    const logoTimer = setTimeout(() => {
+      setRenderWelcomeText(true)
+      requestAnimationFrame(() => setWelcomeTextVisibleClass(true))
+    }, logoAnimationTime)
+
+    return () => clearTimeout(logoTimer)
   }, [])
 
   return (
     <div className="home-screen">
       <div className="central-navigator">
         <div className="navigator-core">
-          {!showWelcomeText ? (
-            <img src={logo} alt="BacktestingLab Logo" className="logo" />
-          ) : (
-            <div className="welcome-text">
+          {!renderWelcomeText && <img src={logo} alt="BacktestingLab Logo" className="logo" />}
+          {renderWelcomeText && (
+            <div className={`welcome-text ${welcomeTextVisibleClass ? 'visible' : ''}`}>
               <h1>WELCOME USER!</h1>
               <p>What are we doing today?</p>
               <div className="navigation-arrows">
