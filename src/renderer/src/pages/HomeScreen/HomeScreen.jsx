@@ -3,12 +3,12 @@ import './HomeScreen.css'
 import logo from '../../assets/logo.svg'
 
 const HomeScreen = () => {
-  const [showWelcome, setShowWelcome] = React.useState(false)
+  const [showWelcomeText, setShowWelcomeText] = React.useState(false)
 
   // Simulate logo display then fade to welcome text
   React.useEffect(() => {
     const timer = setTimeout(() => {
-      setShowWelcome(true)
+      setShowWelcomeText(true)
     }, 2000)
     return () => clearTimeout(timer)
   }, [])
@@ -17,16 +17,15 @@ const HomeScreen = () => {
     <div className="home-screen">
       <div className="central-navigator">
         <div className="navigator-core">
-          {!showWelcome ? (
+          {!showWelcomeText ? (
             <img src={logo} alt="BacktestingLab Logo" className="logo" />
           ) : (
             <div className="welcome-text">
               <h1>WELCOME USER!</h1>
               <p>What are we doing today?</p>
-              {/* Placeholder for arrow navigation, can be styled later */}
               <div className="navigation-arrows">
-                <span>◀</span> {/* Left Arrow */}
-                <span>▶</span> {/* Right Arrow */}
+                <span>◀</span>
+                <span>▶</span>
               </div>
             </div>
           )}
