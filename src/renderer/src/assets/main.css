@@ -43,9 +43,9 @@ code {
   transition: filter 300ms;
 }
 
-.logo:hover {
+/* .logo:hover {
   filter: drop-shadow(0 0 1.2em #6988e6aa);
-}
+} */
 
 .creator {
   font-size: 14px;
