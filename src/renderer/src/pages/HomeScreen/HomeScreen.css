@@ -14,28 +14,285 @@
   background-position: center center;
 }
 
+.outer-frame-piece {
+  position: absolute;
+  /* background-color: rgba(35, 40, 55, 0.75); */
+  /* border: 1px solid rgba(70, 75, 95, 0.6); */
+  /* box-shadow:
+    inset 0px 2px 2px rgba(200, 200, 220, 0.1),
+    inset 0px -2px 2px rgba(10, 10, 20, 0.3),
+    0px 0px 25px rgba(30, 30, 40, 0.3); */
+  z-index: 1;
+  width: 300px;
+  height: 42vh;
+}
+
+.lower-frame {
+  height: 26vh;
+  width: 225px;
+}
+
+/* 
+  For clip-path: polygon(...), the coordinates are (X Y, X Y, X Y, ...).
+  0% 0% is top-left corner of the element itself.
+  100% 100% is bottom-right.
+  These are very rough starting points for angular shapes.
+*/
+
+.square {
+  position: absolute;
+  background-color: rgba(35, 40, 55, 0.75);
+}
+
+.top-left-frame .square {
+  right: 0px;
+  width: calc(50% + 10px);
+  height: calc(50% - 10px);
+  border-right: 2px solid #707484;
+  border-top: 1px solid #707484;
+  background-image: linear-gradient(45deg, rgba(60, 65, 85, 0.85) 40%, rgba(35, 40, 55, 0.65) 100%);
+}
+
+.top-right-frame .square {
+  left: 0px;
+  width: calc(50% + 10px);
+  height: calc(50% - 10px);
+  border-left: 2px solid #707484;
+  border-top: 1px solid #707484;
+  background-image: linear-gradient(
+    -45deg,
+    rgba(60, 65, 85, 0.85) 40%,
+    rgba(35, 40, 55, 0.65) 100%
+  );
+}
+
+.bottom-left-frame .square {
+  right: 0px;
+  bottom: 0px;
+  width: 74%;
+  height: calc(50% - 10px);
+  border-bottom: 3px solid #707484;
+  background-image: linear-gradient(
+    135deg,
+    rgba(60, 65, 85, 0.85) 50%,
+    rgba(35, 40, 55, 0.65) 100%
+  );
+}
+
+.bottom-right-frame .square {
+  left: 0px;
+  bottom: 0px;
+  width: 74%;
+  height: calc(50% - 10px);
+  border-bottom: 3px solid #707484;
+  background-image: linear-gradient(
+    225deg,
+    rgba(60, 65, 85, 0.85) 50%,
+    rgba(35, 40, 55, 0.65) 100%
+  );
+}
+
+.trapezoid {
+  position: absolute;
+  height: 100%;
+  background-color: rgba(35, 40, 55, 0.75);
+}
+
+.top-left-frame .trapezoid {
+  left: 0px;
+  width: calc(50% - 10px);
+  border-bottom: 3px solid #707484;
+  border-top: 1px solid #707484;
+  clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 42% 100%, 0% 0%);
+  background-image: linear-gradient(
+    to left,
+    rgba(60, 65, 85, 0.85) 0%,
+    rgba(35, 40, 55, 0.65) 100%
+  );
+}
+
+.top-right-frame .trapezoid {
+  right: 0px;
+  width: calc(50% - 10px);
+  border-bottom: 3px solid #707484;
+  border-top: 1px solid #707484;
+  clip-path: polygon(0% 0%, 100% 0%, 100% 0%, 57% 100%, 0% 100%);
+  background-image: linear-gradient(
+    to right,
+    rgba(60, 65, 85, 0.85) 0%,
+    rgba(35, 40, 55, 0.65) 100%
+  );
+}
+
+.bottom-left-frame .trapezoid {
+  left: 0px;
+  bottom: 0px;
+  width: calc(30% - 9px);
+  border-top: 1px solid #707484;
+  border-bottom: 3px solid #707484;
+  height: 96%;
+  clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 42% 100%, 0% 0%);
+  background-image: linear-gradient(
+    to left,
+    rgba(60, 65, 85, 0.85) 10%,
+    rgba(35, 40, 55, 0.65) 100%
+  );
+}
+
+.bottom-right-frame .trapezoid {
+  right: 0px;
+  bottom: 0px;
+  width: calc(30% - 9px);
+  border-top: 1px solid #707484;
+  border-bottom: 3px solid #707484;
+  clip-path: polygon(0% 0%, 100% 0%, 100% 0%, 57% 100%, 0% 100%);
+  background-image: linear-gradient(
+    to right,
+    rgba(60, 65, 85, 0.85) 0%,
+    rgba(35, 40, 55, 0.65) 100%
+  );
+}
+
+.invert-circle-container {
+  position: absolute;
+  top: calc(50% - 10px);
+  height: calc(50% + 10px);
+  width: calc(50% + 10px);
+}
+
+.top-left-frame .invert-circle-container,
+.bottom-left-frame .invert-circle-container {
+  right: 0px;
+}
+
+.top-right-frame .invert-circle-container,
+.bottom-right-frame .invert-circle-container {
+  left: 0px;
+}
+
+.bottom-left-frame .invert-circle-container {
+  top: 0px;
+  width: 74%;
+}
+
+.bottom-right-frame .invert-circle-container {
+  top: 0px;
+  width: 74%;
+}
+
+.invert-circle {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+.invert-circle:before {
+  content: '';
+  display: block;
+  width: 215%;
+  height: 200%;
+  position: absolute;
+  border-radius: 50%;
+}
+
+.top-left-frame .invert-circle:before {
+  top: 0;
+  left: 0;
+  box-shadow: -50px -50px 0 0 rgba(60, 65, 85, 0.9);
+}
+
+.top-right-frame .invert-circle:before {
+  top: 0;
+  right: 0;
+  box-shadow: 50px -50px 0 0 rgba(60, 65, 85, 0.9);
+}
+
+.bottom-left-frame .invert-circle:before {
+  bottom: 0;
+  left: 0;
+  box-shadow: -90px 50px 0 0 rgba(60, 65, 85, 0.9);
+}
+
+.bottom-right-frame .invert-circle:before {
+  bottom: 0;
+  right: 0;
+  box-shadow: 90px 50px 0 0 rgba(60, 65, 85, 0.9);
+}
+
+.outer-frame-piece.top-right-frame {
+  bottom: calc(50% + 15px);
+  left: calc(50% + 25px);
+  /* clip-path: polygon(0% 0%, 100% 0%, 100% 0%, 80% 100%, 0% 100%); */
+  /* background-image: linear-gradient(135deg, rgba(60, 65, 85, 0.85) 0%, rgba(35, 40, 55, 0.65) 100%); */
+}
+
+.outer-frame-piece.top-left-frame {
+  bottom: calc(50% + 15px);
+  right: calc(50% + 25px);
+  /* clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 20% 100%, 0% 0%); */
+  /* background-image: linear-gradient(
+    -135deg,
+    rgba(60, 65, 85, 0.85) 0%,
+    rgba(35, 40, 55, 0.65) 100%
+  ); */
+}
+
+/* .outer-frame-piece.top-left-frame {
+  bottom: calc(50% + 15px);
+  right: calc(50% + 25px);
+} */
+
+/* Option 2: White outline */
+/* .outer-frame-piece.top-left-frame:before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: white;
+  mask:
+    radial-gradient(175px at 100% 100%, #0000 calc(98% - 3px), #000 calc(100% - 3px) 98%, #0000),
+    conic-gradient(from 90deg at 6px 3px, #0000 25%, #000 0) -3px 0/100% calc(100% - 175px + 3px)
+      repeat-x,
+    conic-gradient(at bottom 3px left 3px, #0000 25%, #000 0) 0 100% / calc(100% - 175px + 3px) 100%
+      repeat-y;
+} */
+
+.outer-frame-piece.bottom-right-frame {
+  top: calc(50% + 90px);
+  left: 50%;
+  /* clip-path: polygon(0% 0%, 100% 0%, 100% 0%, 80% 100%, 0% 100%);
+  background-image: linear-gradient(45deg, rgba(60, 65, 85, 0.85) 0%, rgba(35, 40, 55, 0.65) 100%); */
+}
+
+.outer-frame-piece.bottom-left-frame {
+  top: calc(50% + 90px);
+  right: 50%;
+  /* clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 20% 100%, 0% 0%);
+  background-image: linear-gradient(-45deg, rgba(60, 65, 85, 0.85) 0%, rgba(35, 40, 55, 0.65) 100%); */
+}
+
 .main-hud-area {
   width: 70vmin;
   height: 70vmin;
   max-width: 600px;
   max-height: 600px;
-  /* border: 2px dashed #4f4f70; Temporary border to see its bounds */
-  border: 1px dashed rgba(100, 100, 150, 0.2);
+  border: 1px dashed rgba(100, 100, 150, 0.2); /* Temporary border to see its bounds */
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   background-color: transparent;
+  z-index: 2;
   /* background-color: rgb(26, 26, 38); */
   /* box-shadow: 0 0 30px rgba(79, 79, 112, 0.3); */
 }
 
 .central-display-core {
-  width: 55%;
-  height: 55%;
-  max-width: 350px;
-  max-height: 350px;
+  width: 65%;
+  height: 65%;
+  max-width: 480px;
+  max-height: 480px;
   background-color: rgb(30, 32, 42);
   border-radius: 50%;
   border: 3px solid rgba(100, 105, 150, 0.5);
@@ -87,7 +344,7 @@
   38% {
     /* Flicker OFF */
     opacity: 0.9;
-    filter: drop-shadow(0 0 0.5em rgba(105, 136, 230, 0.35)); /* Dimmer glow during off */
+    filter: drop-shadow(0 0 0.5em rgba(105, 136, 230, 0.35));
   }
   41% {
     /* Flicker ON - slightly brighter before settling */
@@ -125,7 +382,7 @@
   85% {
     /* Full target glow */
     opacity: 1;
-    filter: drop-shadow(0 0 1.2em rgba(105, 136, 230, 0.66)); /* Target glow */
+    filter: drop-shadow(0 0 1.2em rgba(105, 136, 230, 0.66));
   }
   100% {
     /* Hold final glow and scale */
@@ -208,6 +465,9 @@
   font-size: 1.2rem;
   color: #777799;
   margin-top: 5px;
+  min-height: 1.5em;
+  line-height: 1.5em;
+  transition: opacity 0.15s ease-in-out;
 }
 
 .navigation-arrows span {
@@ -244,26 +504,26 @@
 
 /* Top-left quadrant */
 .nav-segment-button.develop {
-  top: 15%;
-  left: 15%;
+  top: 0%;
+  left: 4%;
 }
 
 /* Top-right quadrant */
 .nav-segment-button.refine {
-  top: 15%;
-  right: 15%;
+  top: 0%;
+  right: 4%;
 }
 
 /* Bottom-right quadrant */
 .nav-segment-button.fine-tune {
-  bottom: 25%;
-  right: 15%;
+  bottom: 2%;
+  right: 20%;
 }
 
 /* Bottom-left quadrant */
 .nav-segment-button.analyze {
-  bottom: 25%;
-  left: 15%;
+  bottom: 2%;
+  left: 20%;
 }
 
 .nav-segment-button:hover {

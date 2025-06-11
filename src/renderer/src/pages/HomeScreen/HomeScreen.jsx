@@ -64,13 +64,40 @@ const HomeScreen = () => {
 
   const handleSegmentLeave = () => {
     if (!isLogoVisible) {
-      setCoreDisplay(defaultCoreText)
+      setCoreDisplay({ ...defaultCoreText, userNameOrTitle: currentUsername })
     }
   }
 
   return (
     <div className="home-screen">
-      {/* Outer frame elements will be added here later */}
+      <div className="outer-frame-piece top-left-frame">
+        <div className="square"></div>
+        <div className="invert-circle-container">
+          <div className="invert-circle"></div>
+        </div>
+        <div className="trapezoid"></div>
+      </div>
+      <div className="outer-frame-piece top-right-frame">
+        <div className="square"></div>
+        <div className="invert-circle-container">
+          <div className="invert-circle"></div>
+        </div>
+        <div className="trapezoid"></div>
+      </div>
+      <div className="outer-frame-piece lower-frame bottom-left-frame">
+        <div className="square"></div>
+        <div className="invert-circle-container">
+          <div className="invert-circle"></div>
+        </div>
+        <div className="trapezoid"></div>
+      </div>
+      <div className="outer-frame-piece lower-frame bottom-right-frame">
+        <div className="square"></div>
+        <div className="invert-circle-container">
+          <div className="invert-circle"></div>
+        </div>
+        <div className="trapezoid"></div>
+      </div>
       <div className="main-hud-area">
         <div className="central-display-core">
           {isLogoVisible && <img src={logo} alt="BacktestingLab Logo" className="logo" />}
@@ -83,13 +110,24 @@ const HomeScreen = () => {
               <div className="description-marquee-container">
                 <p className="core-description marquee">{coreDisplay.description}</p>
               </div>
-              {coreDisplay.greeting === 'Hello' &&
-                coreDisplay.userNameOrTitle === currentUsername && (
-                  <div className="navigation-arrows">
-                    <span>◀</span>
-                    <span>▶</span>
-                  </div>
-                )}
+              <div
+                className="navigation-arrows"
+                style={{
+                  visibility:
+                    coreDisplay.greeting === 'Hello' &&
+                    coreDisplay.userNameOrTitle === currentUsername
+                      ? 'visible'
+                      : 'hidden',
+                  opacity:
+                    coreDisplay.greeting === 'Hello' &&
+                    coreDisplay.userNameOrTitle === currentUsername
+                      ? 1
+                      : 0
+                }}
+              >
+                <span>◀</span>
+                <span>▶</span>
+              </div>
             </div>
           )}
         </div>
