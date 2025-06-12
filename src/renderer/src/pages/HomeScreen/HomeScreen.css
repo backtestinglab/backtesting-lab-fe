@@ -16,49 +16,37 @@
 
 .outer-frame-piece {
   position: absolute;
-  /* background-color: rgba(35, 40, 55, 0.75); */
-  /* border: 1px solid rgba(70, 75, 95, 0.6); */
-  /* box-shadow:
-    inset 0px 2px 2px rgba(200, 200, 220, 0.1),
-    inset 0px -2px 2px rgba(10, 10, 20, 0.3),
-    0px 0px 25px rgba(30, 30, 40, 0.3); */
   z-index: 1;
   width: 300px;
   height: 42vh;
 }
 
 .lower-frame {
-  height: 26vh;
+  height: calc(26vh + 55px);
   width: 225px;
 }
-
-/* 
-  For clip-path: polygon(...), the coordinates are (X Y, X Y, X Y, ...).
-  0% 0% is top-left corner of the element itself.
-  100% 100% is bottom-right.
-  These are very rough starting points for angular shapes.
-*/
 
 .square {
   position: absolute;
   background-color: rgba(35, 40, 55, 0.75);
 }
 
-.top-left-frame .square {
-  right: 0px;
+.top-left-frame .square,
+.top-right-frame .square {
   width: calc(50% + 10px);
   height: calc(50% - 10px);
-  border-right: 2px solid #707484;
   border-top: 1px solid #707484;
+}
+
+.top-left-frame .square {
+  right: 0px;
+  border-right: 2px solid #707484;
   background-image: linear-gradient(45deg, rgba(60, 65, 85, 0.85) 40%, rgba(35, 40, 55, 0.65) 100%);
 }
 
 .top-right-frame .square {
   left: 0px;
-  width: calc(50% + 10px);
-  height: calc(50% - 10px);
   border-left: 2px solid #707484;
-  border-top: 1px solid #707484;
   background-image: linear-gradient(
     -45deg,
     rgba(60, 65, 85, 0.85) 40%,
@@ -66,12 +54,16 @@
   );
 }
 
+.bottom-left-frame .square,
+.bottom-right-frame .square {
+  bottom: 55px;
+  width: 74%;
+  height: calc(50% + 17px - 55px);
+  border-bottom: 1px solid #000;
+}
+
 .bottom-left-frame .square {
   right: 0px;
-  bottom: 0px;
-  width: 74%;
-  height: calc(50% - 10px);
-  border-bottom: 3px solid #707484;
   background-image: linear-gradient(
     135deg,
     rgba(60, 65, 85, 0.85) 50%,
@@ -81,10 +73,6 @@
 
 .bottom-right-frame .square {
   left: 0px;
-  bottom: 0px;
-  width: 74%;
-  height: calc(50% - 10px);
-  border-bottom: 3px solid #707484;
   background-image: linear-gradient(
     225deg,
     rgba(60, 65, 85, 0.85) 50%,
@@ -98,11 +86,15 @@
   background-color: rgba(35, 40, 55, 0.75);
 }
 
-.top-left-frame .trapezoid {
-  left: 0px;
+.top-left-frame .trapezoid,
+.top-right-frame .trapezoid {
   width: calc(50% - 10px);
   border-bottom: 3px solid #707484;
   border-top: 1px solid #707484;
+}
+
+.top-left-frame .trapezoid {
+  left: 0px;
   clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 42% 100%, 0% 0%);
   background-image: linear-gradient(
     to left,
@@ -113,9 +105,6 @@
 
 .top-right-frame .trapezoid {
   right: 0px;
-  width: calc(50% - 10px);
-  border-bottom: 3px solid #707484;
-  border-top: 1px solid #707484;
   clip-path: polygon(0% 0%, 100% 0%, 100% 0%, 57% 100%, 0% 100%);
   background-image: linear-gradient(
     to right,
@@ -124,13 +113,17 @@
   );
 }
 
-.bottom-left-frame .trapezoid {
-  left: 0px;
-  bottom: 0px;
+.bottom-left-frame .trapezoid,
+.bottom-right-frame .trapezoid {
+  top: 0px;
+  height: calc(100% - 55px);
   width: calc(30% - 9px);
   border-top: 1px solid #707484;
-  border-bottom: 3px solid #707484;
-  height: 96%;
+  border-bottom: 1px solid #000;
+}
+
+.bottom-left-frame .trapezoid {
+  left: 0px;
   clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 42% 100%, 0% 0%);
   background-image: linear-gradient(
     to left,
@@ -141,10 +134,6 @@
 
 .bottom-right-frame .trapezoid {
   right: 0px;
-  bottom: 0px;
-  width: calc(30% - 9px);
-  border-top: 1px solid #707484;
-  border-bottom: 3px solid #707484;
   clip-path: polygon(0% 0%, 100% 0%, 100% 0%, 57% 100%, 0% 100%);
   background-image: linear-gradient(
     to right,
@@ -160,6 +149,12 @@
   width: calc(50% + 10px);
 }
 
+.lower-frame .invert-circle-container {
+  top: 0px;
+  height: calc(50% - 17px);
+  width: 74%;
+}
+
 .top-left-frame .invert-circle-container,
 .bottom-left-frame .invert-circle-container {
   right: 0px;
@@ -168,16 +163,6 @@
 .top-right-frame .invert-circle-container,
 .bottom-right-frame .invert-circle-container {
   left: 0px;
-}
-
-.bottom-left-frame .invert-circle-container {
-  top: 0px;
-  width: 74%;
-}
-
-.bottom-right-frame .invert-circle-container {
-  top: 0px;
-  width: 74%;
 }
 
 .invert-circle {
@@ -223,52 +208,21 @@
 .outer-frame-piece.top-right-frame {
   bottom: calc(50% + 15px);
   left: calc(50% + 25px);
-  /* clip-path: polygon(0% 0%, 100% 0%, 100% 0%, 80% 100%, 0% 100%); */
-  /* background-image: linear-gradient(135deg, rgba(60, 65, 85, 0.85) 0%, rgba(35, 40, 55, 0.65) 100%); */
 }
 
 .outer-frame-piece.top-left-frame {
   bottom: calc(50% + 15px);
   right: calc(50% + 25px);
-  /* clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 20% 100%, 0% 0%); */
-  /* background-image: linear-gradient(
-    -135deg,
-    rgba(60, 65, 85, 0.85) 0%,
-    rgba(35, 40, 55, 0.65) 100%
-  ); */
 }
-
-/* .outer-frame-piece.top-left-frame {
-  bottom: calc(50% + 15px);
-  right: calc(50% + 25px);
-} */
-
-/* Option 2: White outline */
-/* .outer-frame-piece.top-left-frame:before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: white;
-  mask:
-    radial-gradient(175px at 100% 100%, #0000 calc(98% - 3px), #000 calc(100% - 3px) 98%, #0000),
-    conic-gradient(from 90deg at 6px 3px, #0000 25%, #000 0) -3px 0/100% calc(100% - 175px + 3px)
-      repeat-x,
-    conic-gradient(at bottom 3px left 3px, #0000 25%, #000 0) 0 100% / calc(100% - 175px + 3px) 100%
-      repeat-y;
-} */
 
 .outer-frame-piece.bottom-right-frame {
   top: calc(50% + 90px);
   left: 50%;
-  /* clip-path: polygon(0% 0%, 100% 0%, 100% 0%, 80% 100%, 0% 100%);
-  background-image: linear-gradient(45deg, rgba(60, 65, 85, 0.85) 0%, rgba(35, 40, 55, 0.65) 100%); */
 }
 
 .outer-frame-piece.bottom-left-frame {
   top: calc(50% + 90px);
   right: 50%;
-  /* clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 20% 100%, 0% 0%);
-  background-image: linear-gradient(-45deg, rgba(60, 65, 85, 0.85) 0%, rgba(35, 40, 55, 0.65) 100%); */
 }
 
 .main-hud-area {
@@ -533,37 +487,48 @@
   transform: scale(1.1);
 }
 
-.secondary-navigation-container {
+.frame-integrated-nav-button {
   position: absolute;
-  bottom: 5%;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 15px;
-}
-
-.secondary-navigation-container .nav-button {
-  background-color: rgba(40, 40, 60, 0.8);
-  border: 1px solid rgba(100, 100, 150, 0.7);
-  color: #c0c0e0;
-  padding: 10px 20px;
-  font-size: 0.8rem;
+  bottom: 0px;
+  border: none;
+  border-bottom: 3px solid #707484;
+  color: #d0d0f0;
+  padding: 10px;
+  font-size: 0.75rem;
   text-transform: uppercase;
-  letter-spacing: 1px;
-  border-radius: 5px;
-  transition: all 0.3s ease;
-  box-shadow:
-    0 2px 5px rgba(0, 0, 0, 0.3),
-    inset 0 0 10px rgba(120, 120, 200, 0.1);
+  letter-spacing: 0.08em;
+  border-radius: 0px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
   font-weight: 600;
+  width: 100%;
+  height: 55px;
+  z-index: 5;
 }
 
-.secondary-navigation-container .nav-button:hover {
-  background-color: rgba(60, 60, 90, 0.9);
-  border-color: rgba(150, 150, 200, 0.9);
+.frame-integrated-nav-button.left-button {
+  clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 14% 100%, 11% 0%);
+  border-right: 1px solid #000;
+  padding-left: 40px;
+  padding-right: 7.5px;
+  background-image: linear-gradient(45deg, rgba(60, 65, 85, 0.85) 50%, rgba(35, 40, 55, 0.65) 100%);
+}
+
+.frame-integrated-nav-button.right-button {
+  clip-path: polygon(0% 0%, 89% 0%, 86% 100%, 0% 100%, 0% 0%);
+  padding-right: 40px;
+  padding-left: 7.5px;
+  background-image: linear-gradient(
+    315deg,
+    rgba(60, 65, 85, 0.85) 50%,
+    rgba(35, 40, 55, 0.65) 100%
+  );
+}
+
+.frame-integrated-nav-button:hover {
+  background-color: rgba(65, 70, 95, 0.95);
   color: #fff;
   box-shadow:
-    0 4px 10px rgba(0, 0, 0, 0.4),
-    0 0 15px rgba(150, 150, 200, 0.3);
-  transform: translateY(-2px);
+    0 2px 6px rgba(0, 0, 0, 0.5),
+    0 0 15px rgba(160, 165, 210, 0.4);
 }

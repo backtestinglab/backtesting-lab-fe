@@ -1,0 +1,16 @@
+.hud-layout-container {
+  position: relative;
+  width: 90vw;
+  max-width: 1400px;
+  /* height: 90vh; */
+  /* max-height: 900px; */
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* For debugging its bounds initially: */
+  border: 1px dashed limegreen;
+
+  /* This is where global scaling/aspect-ratio logic would go later */
+}
