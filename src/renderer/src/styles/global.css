@@ -1,3 +1,9 @@
+:root {
+  --focus-outline-color: rgba(160, 180, 255, 0.8);
+  --focus-outline-width: 2px;
+  --focus-outline-offset: 2px;
+}
+
 /* Basic Reset & Font */
 *,
 *::before,
