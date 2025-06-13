@@ -1,6 +1,4 @@
-import PropTypes from 'prop-types'
 import CentralDisplayCore from '../CentralDisplayCore/CentralDisplayCore'
-import NavIconButtonsContainer from '../../components/NavIconButtonsContainer/NavIconButtonsContainer'
 
 /**
  * @description Wrapper for the central part of the HUD, containing the display core.
@@ -11,10 +9,7 @@ const CentralHUDDisplay = ({
   renderCoreTextContent,
   coreTextContentVisibleClass,
   coreDisplay,
-  currentUsername,
-  segmentData,
-  onMouseEnter,
-  onMouseLeave
+  currentUsername
 }) => {
   return (
     <div className="main-hud-area">
@@ -25,26 +20,12 @@ const CentralHUDDisplay = ({
         coreDisplay={coreDisplay}
         currentUsername={currentUsername}
       />
-      <NavIconButtonsContainer
-        segmentData={segmentData}
-        onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}
-      />
     </div>
   )
 }
 
 CentralHUDDisplay.propTypes = {
-  ...CentralDisplayCore.propTypes,
-  segmentData: PropTypes.objectOf(
-    PropTypes.shape({
-      title: PropTypes.string.isRequired,
-      description: PropTypes.string.isRequired,
-      icon: PropTypes.string.isRequired
-    })
-  ).isRequired,
-  onMouseEnter: PropTypes.func.isRequired,
-  onMouseLeave: PropTypes.func.isRequired
+  ...CentralDisplayCore.propTypes
 }
 
 export default CentralHUDDisplay

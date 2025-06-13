@@ -237,7 +237,7 @@
   justify-content: center;
   position: relative;
   background-color: transparent;
-  z-index: 2;
+  z-index: 0;
   /* background-color: rgb(26, 26, 38); */
   /* box-shadow: 0 0 30px rgba(79, 79, 112, 0.3); */
 }
@@ -429,62 +429,49 @@
   cursor: pointer;
 }
 
-.navigation-segments-container {
+.frame-main-nav-icon-button {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-}
-
-.nav-segment-button {
-  position: absolute;
-  pointer-events: auto;
-  background-color: rgba(55, 60, 110, 0.65);
-  color: #e0e0e0;
-  width: 60px;
-  height: 60px;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 12px;
-  border: 1px solid rgba(100, 105, 150, 0.5);
-  box-shadow: 0 0 10px rgba(100, 105, 150, 0.25);
+  font-size: 2.7rem;
+  /* color: #c0c8ff; /* Icon color */
   cursor: pointer;
-  transition: all 0.25s ease-out;
-  font-size: 1.6rem;
+  transition: all 0.3s ease-out;
+  z-index: 10;
 }
 
-/* Top-left quadrant */
-.nav-segment-button.develop {
-  top: 0%;
-  left: 4%;
+.top-left-frame .frame-main-nav-icon-button.develop {
+  top: 50px;
+  left: 100px;
+}
+.top-right-frame .frame-main-nav-icon-button.refine {
+  top: 50px;
+  right: 100px;
+}
+.bottom-left-frame .frame-main-nav-icon-button.analyze {
+  bottom: 70px;
+  left: 50px;
+}
+.bottom-right-frame .frame-main-nav-icon-button.fine-tune {
+  bottom: 70px;
+  right: 50px;
 }
 
-/* Top-right quadrant */
-.nav-segment-button.refine {
-  top: 0%;
-  right: 4%;
-}
-
-/* Bottom-right quadrant */
-.nav-segment-button.fine-tune {
-  bottom: 2%;
-  right: 20%;
-}
-
-/* Bottom-left quadrant */
-.nav-segment-button.analyze {
-  bottom: 2%;
-  left: 20%;
-}
-
-.nav-segment-button:hover {
-  background-color: rgba(75, 80, 130, 0.85);
-  border-color: rgba(150, 155, 200, 0.7);
-  box-shadow: 0 0 15px rgba(150, 155, 200, 0.4);
-  transform: scale(1.1);
+.frame-main-nav-icon-button:hover {
+  /* color: #e0c070; */
+  border: 2px solid #e0c070;
+  box-shadow:
+    0 0 15px 3px rgba(224, 192, 112, 0.55),
+    0 0 25px 8px rgba(224, 192, 112, 0.35);
+  /* box-shadow:
+    inset 2px 2px 5px rgba(20, 22, 30, 0.6),
+    inset -1px -1px 3px rgba(180, 185, 220, 0.3),
+    0 0 15px rgba(100, 110, 200, 0.5); */
+  transform: scale(1.05);
 }
 
 .frame-integrated-nav-button {

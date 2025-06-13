@@ -65,14 +65,14 @@ const HomeScreen = () => {
     return () => clearTimeout(logoTimer)
   }, [currentUsername])
 
-  const handleSegmentHover = (segmentKey) => {
+  const handleMainNavLinkHover = (segmentKey) => {
     if (!isLogoVisible) {
       const { title, description } = segmentData[segmentKey]
       setCoreDisplay({ greeting: ' ', userNameOrTitle: title, description })
     }
   }
 
-  const handleSegmentLeave = () => {
+  const handleMainNavLinkLeave = () => {
     if (!isLogoVisible) {
       setCoreDisplay({ ...defaultCoreText, userNameOrTitle: currentUsername })
     }
@@ -85,16 +85,18 @@ const HomeScreen = () => {
   return (
     <div className="home-screen">
       <HudLayoutContainer>
-        <OuterFrame onSecondaryNavClick={handleSecondaryNavClick} />
+        <OuterFrame
+          segmentData={segmentData}
+          onMainNavLinkHover={handleMainNavLinkHover}
+          onMainNavLinkLeave={handleMainNavLinkLeave}
+          onSecondaryNavClick={handleSecondaryNavClick}
+        />
         <CentralHudDisplay
           isLogoVisible={isLogoVisible}
           renderCoreTextContent={renderCoreTextContent}
           coreTextContentVisibleClass={coreTextContentVisibleClass}
           coreDisplay={coreDisplay}
           currentUsername={currentUsername}
-          segmentData={segmentData}
-          onMouseEnter={handleSegmentHover}
-          onMouseLeave={handleSegmentLeave}
         />
         {/* Placeholder for the "rectangles" or pulsing lights between segments */}
         {/* These could be part of the .central-navigator background or ::before/::after elements */}

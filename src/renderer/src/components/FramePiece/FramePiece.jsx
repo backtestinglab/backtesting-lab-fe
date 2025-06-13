@@ -9,16 +9,23 @@ import PropTypes from 'prop-types'
  * @param {function} [props.onSecondaryNavClick] - Optional click handler for secondary nav.
  */
 
-const FramePiece = ({ position, onSecondaryNavClick }) => {
+const FramePiece = ({
+  position,
+  segmentIcon,
+  segmentKey,
+  onMainNavLinkHover,
+  onMainNavLinkLeave,
+  onSecondaryNavClick
+}) => {
   const isLower = position.startsWith('bottom-')
   const positionClass = `${position}-frame`
 
   const isBottomLeft = position === 'bottom-left'
   const isBottomRight = position === 'bottom-right'
 
-  let buttonText = null
-  if (isBottomLeft) buttonText = 'Explore Trading Models'
-  if (isBottomRight) buttonText = 'Studies/Research'
+  let secondaryButtonText = null
+  if (isBottomLeft) secondaryButtonText = 'Explore Trading Models'
+  if (isBottomRight) secondaryButtonText = 'Studies/Research'
 
   return (
     <div className={`outer-frame-piece ${positionClass} ${isLower ? 'lower-frame' : ''}`}>
@@ -28,12 +35,25 @@ const FramePiece = ({ position, onSecondaryNavClick }) => {
       </div>
       <div className="trapezoid"></div>
 
-      {(isBottomLeft || isBottomRight) && buttonText && (
+      {segmentIcon && segmentKey && (
+        <div
+          className={`frame-main-nav-icon-button ${segmentKey}`}
+          onMouseEnter={() => onMainNavLinkHover && onMainNavLinkHover(segmentKey)}
+          onMouseLeave={() => onMainNavLinkLeave && onMainNavLinkLeave(segmentKey)}
+          role="button"
+          tabIndex={0}
+        >
+          {segmentIcon}
+          {/* This is where we'll add CSS for recess/bevel and glow */}
+        </div>
+      )}
+
+      {(isBottomLeft || isBottomRight) && secondaryButtonText && (
         <button
           className={`frame-integrated-nav-button ${isBottomLeft ? 'left-button' : 'right-button'}`}
-          onClick={() => onSecondaryNavClick && onSecondaryNavClick(buttonText)}
+          onClick={() => onSecondaryNavClick && onSecondaryNavClick(secondaryButtonText)}
         >
-          {buttonText}
+          {secondaryButtonText}
         </button>
       )}
     </div>
@@ -42,6 +62,10 @@ const FramePiece = ({ position, onSecondaryNavClick }) => {
 
 FramePiece.propTypes = {
   position: PropTypes.oneOf(['top-left', 'top-right', 'bottom-left', 'bottom-right']).isRequired,
+  segmentIcon: PropTypes.string,
+  segmentKey: PropTypes.string,
+  onMainNavLinkHover: PropTypes.func,
+  onMainNavLinkLeave: PropTypes.func,
   onSecondaryNavClick: PropTypes.func
 }
 
