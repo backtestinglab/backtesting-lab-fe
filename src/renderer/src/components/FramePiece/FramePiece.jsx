@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import PropTypes from 'prop-types'
 
 /**
@@ -11,12 +12,14 @@ import PropTypes from 'prop-types'
 
 const FramePiece = ({
   position,
-  segmentIcon,
+  segment,
   segmentKey,
   onMainNavLinkHover,
   onMainNavLinkLeave,
   onSecondaryNavClick
 }) => {
+  const [isMainIconHovered, setIsMainIconHovered] = useState(false)
+
   const isLower = position.startsWith('bottom-')
   const positionClass = `${position}-frame`
 
@@ -27,6 +30,12 @@ const FramePiece = ({
   if (isBottomLeft) secondaryButtonText = 'Explore Trading Models'
   if (isBottomRight) secondaryButtonText = 'Studies/Research'
 
+  const IconToRender = segment?.IconOutline
+    ? isMainIconHovered
+      ? segment.IconSolid
+      : segment.IconOutline
+    : null
+
   return (
     <div className={`outer-frame-piece ${positionClass} ${isLower ? 'lower-frame' : ''}`}>
       <div className="square"></div>
@@ -35,16 +44,21 @@ const FramePiece = ({
       </div>
       <div className="trapezoid"></div>
 
-      {segmentIcon && segmentKey && (
+      {IconToRender && segmentKey && (
         <div
-          className={`frame-main-nav-icon-button ${segmentKey}`}
-          onMouseEnter={() => onMainNavLinkHover && onMainNavLinkHover(segmentKey)}
-          onMouseLeave={() => onMainNavLinkLeave && onMainNavLinkLeave(segmentKey)}
+          className={`frame-main-nav-icon-button ${segmentKey.replace(/\s+/g, '-')}`}
+          onMouseEnter={() => {
+            setIsMainIconHovered(true)
+            if (onMainNavLinkHover) onMainNavLinkHover(segmentKey)
+          }}
+          onMouseLeave={() => {
+            setIsMainIconHovered(false)
+            if (onMainNavLinkLeave) onMainNavLinkLeave(segmentKey)
+          }}
           role="button"
           tabIndex={0}
         >
-          {segmentIcon}
-          {/* This is where we'll add CSS for recess/bevel and glow */}
+          <IconToRender className="main-nav-svg-icon-instance" />
         </div>
       )}
 
@@ -62,11 +76,23 @@ const FramePiece = ({
 
 FramePiece.propTypes = {
   position: PropTypes.oneOf(['top-left', 'top-right', 'bottom-left', 'bottom-right']).isRequired,
-  segmentIcon: PropTypes.string,
+  segment: PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    IconOutline: PropTypes.elementType.isRequired,
+    IconSolid: PropTypes.elementType.isRequired
+  }),
   segmentKey: PropTypes.string,
   onMainNavLinkHover: PropTypes.func,
   onMainNavLinkLeave: PropTypes.func,
   onSecondaryNavClick: PropTypes.func
+}
+
+FramePiece.defaultProps = {
+  segment: null,
+  segmentKey: null,
+  onMainNavLinkHover: null,
+  onMainNavLinkLeave: null
 }
 
 export default FramePiece

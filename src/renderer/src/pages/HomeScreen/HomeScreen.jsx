@@ -4,6 +4,15 @@ import CentralHudDisplay from '../../components/CentralHudDisplay/CentralHudDisp
 import HudLayoutContainer from '../../components/HudLayoutContainer/HudLayoutContainer'
 import OuterFrame from '../../components/OuterFrame/OuterFrame'
 
+import AnalysisOutlineIcon from '../../assets/icons/AnalysisOutlineIcon'
+import AnalysisSolidIcon from '../../assets/icons/AnalysisSolidIcon'
+import DevelopOutlineIcon from '../../assets/icons/DevelopOutlineIcon'
+import DevelopSolidIcon from '../../assets/icons/DevelopSolidIcon'
+import FineTuneOutlineIcon from '../../assets/icons/FineTuneOutlineIcon'
+import FineTuneSolidIcon from '../../assets/icons/FineTuneSolidIcon'
+import RefineSolidIcon from '../../assets/icons/RefineSolidIcon'
+import RefineOutlineIcon from '../../assets/icons/RefineOutlineIcon'
+
 import './HomeScreen.css'
 
 const segmentData = {
@@ -11,24 +20,28 @@ const segmentData = {
     title: 'Develop',
     description:
       'Lay the foundation for a new trading or bias model. Test initial concepts and gather baseline data.',
-    icon: '🔬'
+    IconOutline: DevelopOutlineIcon,
+    IconSolid: DevelopSolidIcon
   },
   refine: {
     title: 'Refine',
     description:
       'Iterate and add conditions to enhance your model. Focus on improving model quality.',
-    icon: '🔧'
+    IconOutline: RefineOutlineIcon,
+    IconSolid: RefineSolidIcon
   },
   'fine-tune': {
     title: 'Fine-Tune',
     description: 'Optimize parameters like Stop Loss, Take Profit, and precise entry points',
-    icon: '🎯'
+    IconOutline: FineTuneOutlineIcon,
+    IconSolid: FineTuneSolidIcon
   },
   analyze: {
     title: 'Analyze',
     description:
       'Review comprehensive performance metrics and finalize your strategy for live trading.',
-    icon: '📊'
+    IconOutline: AnalysisOutlineIcon,
+    IconSolid: AnalysisSolidIcon
   }
 }
 
@@ -98,8 +111,6 @@ const HomeScreen = () => {
           coreDisplay={coreDisplay}
           currentUsername={currentUsername}
         />
-        {/* Placeholder for the "rectangles" or pulsing lights between segments */}
-        {/* These could be part of the .central-navigator background or ::before/::after elements */}
       </HudLayoutContainer>
     </div>
   )

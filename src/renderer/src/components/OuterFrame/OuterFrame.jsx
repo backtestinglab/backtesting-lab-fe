@@ -12,38 +12,26 @@ const OuterFrame = ({
   onMainNavLinkLeave,
   onSecondaryNavClick
 }) => {
+  const segmentsOrder = ['develop', 'refine', 'analyze', 'fine-tune']
+  const positions = ['top-left', 'top-right', 'bottom-left', 'bottom-right']
+
   return (
     <>
-      <FramePiece
-        position="top-left"
-        segmentKey="develop"
-        segmentIcon={segmentData?.develop?.icon}
-        onMainNavLinkHover={onMainNavLinkHover}
-        onMainNavLinkLeave={onMainNavLinkLeave}
-      />
-      <FramePiece
-        position="top-right"
-        segmentKey="refine"
-        segmentIcon={segmentData?.refine?.icon}
-        onMainNavLinkHover={onMainNavLinkHover}
-        onMainNavLinkLeave={onMainNavLinkLeave}
-      />
-      <FramePiece
-        position="bottom-left"
-        segmentKey="analyze"
-        segmentIcon={segmentData?.analyze?.icon}
-        onMainNavLinkHover={onMainNavLinkHover}
-        onMainNavLinkLeave={onMainNavLinkLeave}
-        onSecondaryNavClick={onSecondaryNavClick}
-      />
-      <FramePiece
-        position="bottom-right"
-        segmentKey="fine-tune"
-        segmentIcon={segmentData?.['fine-tune']?.icon}
-        onMainNavLinkHover={onMainNavLinkHover}
-        onMainNavLinkLeave={onMainNavLinkLeave}
-        onSecondaryNavClick={onSecondaryNavClick}
-      />
+      {positions.map((position, index) => {
+        const segmentKey = segmentsOrder[index]
+        const currentSegmentData = segmentData[segmentKey]
+        return (
+          <FramePiece
+            key={position}
+            position={position}
+            segment={currentSegmentData}
+            segmentKey={segmentKey}
+            onMainNavLinkHover={onMainNavLinkHover}
+            onMainNavLinkLeave={onMainNavLinkLeave}
+            onSecondaryNavClick={onSecondaryNavClick}
+          />
+        )
+      })}
     </>
   )
 }
@@ -53,7 +41,8 @@ OuterFrame.propTypes = {
     PropTypes.shape({
       title: PropTypes.string.isRequired,
       description: PropTypes.string.isRequired,
-      icon: PropTypes.string.isRequired
+      IconOutline: PropTypes.elementType.isRequired,
+      IconSolid: PropTypes.elementType.isRequired
     })
   ).isRequired,
   onMainNavLinkHover: PropTypes.func,
