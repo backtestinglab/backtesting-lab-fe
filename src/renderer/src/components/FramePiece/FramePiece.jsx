@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import PropTypes from 'prop-types'
 
+import './FramePiece.css'
+
 /**
  * @function FramePiece
  * @description Renders a single piece of the outer cockpit frame,
@@ -58,7 +60,7 @@ const FramePiece = ({
           role="button"
           tabIndex={0}
         >
-          <IconToRender className="main-nav-svg-icon-instance" />
+          <IconToRender />
         </div>
       )}
 

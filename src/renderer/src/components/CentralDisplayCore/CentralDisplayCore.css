@@ -1,0 +1,186 @@
+.central-display-core {
+  width: 65%;
+  height: 65%;
+  max-width: 480px;
+  max-height: 480px;
+  background-color: rgb(30, 32, 42);
+  border-radius: 50%;
+  border: 3px solid rgba(100, 105, 150, 0.5);
+  box-shadow:
+    0 0 20px rgba(50, 50, 80, 0.25),
+    inset 0 0 15px rgba(0, 0, 0, 0.2),
+    0 0 35px rgba(100, 105, 150, 0.2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 15px;
+  position: relative;
+  overflow: hidden;
+}
+
+.logo {
+  width: 65%;
+  max-width: 160px;
+  height: auto;
+  object-fit: contain;
+  animation-name: logoPowerUpSequence;
+  animation-duration: 3s;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: forwards;
+}
+
+@keyframes logoPowerUpSequence {
+  0% {
+    /* Initial fade-in and scale */
+    opacity: 0;
+    transform: scale(0.82);
+    filter: drop-shadow(0 0 0px rgba(105, 136, 230, 0));
+  }
+  20% {
+    /* Fully visible, scaled up, start of glow */
+    opacity: 1;
+    transform: scale(1);
+    filter: drop-shadow(0 0 0.3em rgba(105, 136, 230, 0.25));
+  }
+
+  /* First Flicker Event during glow build-up */
+  35% {
+    /* Approaching first flicker - glow building */
+    opacity: 1;
+    filter: drop-shadow(0 0 0.6em rgba(105, 136, 230, 0.45));
+  }
+  38% {
+    /* Flicker OFF */
+    opacity: 0.9;
+    filter: drop-shadow(0 0 0.5em rgba(105, 136, 230, 0.35));
+  }
+  41% {
+    /* Flicker ON - slightly brighter before settling */
+    opacity: 1;
+    filter: drop-shadow(0 0 0.72em rgba(105, 136, 230, 0.5));
+  }
+  44% {
+    /* Settle after first flicker, glow continues to build */
+    opacity: 1;
+    filter: drop-shadow(0 0 0.65em rgba(105, 136, 230, 0.48));
+  }
+
+  /* Second, more intense Flicker Event */
+  60% {
+    /* Approaching second flicker - glow stronger */
+    opacity: 1;
+    filter: drop-shadow(0 0 0.95em rgba(105, 136, 230, 0.6));
+  }
+  63% {
+    /* Flicker OFF */
+    opacity: 0.4; /* More pronounced opacity drop */
+    filter: drop-shadow(0 0 0.8em rgba(105, 136, 230, 0.5));
+  }
+  66% {
+    /* Flicker ON - more intense */
+    opacity: 1;
+    filter: drop-shadow(0 0 1.1em rgba(105, 136, 230, 0.63));
+  }
+  69% {
+    /* Settle after second flicker, approaching full glow */
+    opacity: 1;
+    filter: drop-shadow(0 0 1em rgba(105, 136, 230, 0.6));
+  }
+
+  85% {
+    /* Full target glow */
+    opacity: 1;
+    filter: drop-shadow(0 0 1.2em rgba(105, 136, 230, 0.66));
+  }
+  100% {
+    /* Hold final glow and scale */
+    opacity: 1;
+    filter: drop-shadow(0 0 1.2em rgba(105, 136, 230, 0.66));
+  }
+}
+
+.core-text-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+  pointer-events: none; /* Initially not interactive */
+}
+
+.core-text-content.visible {
+  opacity: 1;
+  pointer-events: auto; /* Make interactive when visible */
+}
+
+.core-greeting {
+  font-size: clamp(0.8rem, 3vw, 1rem);
+  color: #b0b0d0;
+  margin-bottom: 3px;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  min-height: 1.2em;
+  line-height: 1.2em;
+}
+
+.core-main-title {
+  font-size: clamp(1.4rem, 6vw, 2.2rem);
+  color: #e0c070;
+  line-height: 1.1;
+  margin-bottom: 8px;
+  font-weight: 700;
+  text-shadow: 0 0 5px rgba(224, 192, 112, 0.5);
+  text-transform: uppercase;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 95%;
+}
+
+.description-marquee-container {
+  width: 90%;
+  overflow: hidden;
+  position: relative;
+  height: 1.5em;
+  margin-bottom: 8px;
+}
+
+.core-description.marquee {
+  font-size: clamp(0.7rem, 2.5vw, 0.85rem);
+  color: #a0a0c0;
+  white-space: nowrap;
+  position: absolute;
+  left: 100%;
+  animation: marquee-scroll 12s linear infinite;
+}
+
+@keyframes marquee-scroll {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-150%);
+  }
+  /* If text is shorter than container, translateX(-100% - containerWidth) might be needed */
+}
+
+/* TODO: Add fading edges to marquee-container using pseudo-elements or mask-image */
+
+.navigation-arrows {
+  font-size: 1.2rem;
+  color: #777799;
+  margin-top: 5px;
+  min-height: 1.5em;
+  line-height: 1.5em;
+  transition: opacity 0.15s ease-in-out;
+}
+
+.navigation-arrows span {
+  margin: 0 8px;
+  cursor: pointer;
+}

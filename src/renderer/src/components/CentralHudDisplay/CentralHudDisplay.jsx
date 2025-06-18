@@ -1,5 +1,7 @@
 import CentralDisplayCore from '../CentralDisplayCore/CentralDisplayCore'
 
+import './CentralHudDisplay.css'
+
 /**
  * @description Wrapper for the central part of the HUD, containing the display core.
  */

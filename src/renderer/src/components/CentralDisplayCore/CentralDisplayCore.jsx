@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types'
 import logo from '../../assets/logo.svg'
 
+import './CentralDisplayCore.css'
+
 const CentralDisplayCore = ({
   isLogoVisible,
   renderCoreTextContent,
