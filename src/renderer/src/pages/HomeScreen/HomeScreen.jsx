@@ -97,6 +97,43 @@ const HomeScreen = () => {
 
   return (
     <div className="home-screen">
+      <div className="side-panel left-panel">
+        <div className="panel-section-group">
+          <h3 className="panel-main-section-title">Recent</h3>
+          <div className="panel-content-sticky-note">
+            <ul className="panel-content-list">
+              <li>Trading Model Alpha (05/23)</li>
+              <li>Bias Study - SPX (05/22)</li>
+              <li>Another Recent Item (05/21)</li>
+            </ul>
+          </div>
+        </div>
+        <div className="panel-section-group">
+          <h3 className="panel-main-section-title">Favourites</h3>
+          <div className="panel-content-sticky-note">
+            <ul className="panel-content-list">
+              <li>Gold Standard Model</li>
+              <li>Key Insight Study Omega</li>
+            </ul>
+          </div>
+        </div>
+        <div className="panel-section-group">
+          <h3 className="panel-main-section-title">Quick Stats</h3>
+          <div className="panel-content-sticky-note">
+            <div className="panel-content-text">
+              <p>
+                <span>Best P/F:</span> 3.1 (NQ Scalper)
+              </p>
+              <p>
+                <span>Win Rate:</span> 68% (Overall)
+              </p>
+              <p>
+                <span>Active Models:</span> 5
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
       <HudLayoutContainer>
         <OuterFrame
           segmentData={segmentData}
@@ -112,6 +149,31 @@ const HomeScreen = () => {
           currentUsername={currentUsername}
         />
       </HudLayoutContainer>
+      <div className="side-panel right-panel">
+        <div className="panel-section-group panel-icon-buttons-header">
+          <button className="panel-icon-button user-profile-button">⭐</button>{' '}
+          <button className="panel-icon-button settings-button">⚙️</button>{' '}
+        </div>
+        <div className="panel-section-group">
+          <h3 className="panel-main-section-title">Notifications</h3>
+          <div className="panel-content-sticky-note notifications-content">
+            <ul className="panel-content-list notification-list">
+              <li>
+                <span>New:</span> Update v1.1 Available!
+              </li>
+              <li>
+                <span>Tip:</span> Try the new &#39;Refine&#39; tool...
+              </li>
+              <li>
+                <span>Done:</span> Backtest &#39;Gamma Squeeze&#39; complete.
+              </li>
+              <li>
+                <span>Alert:</span> Market data connection lost.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
