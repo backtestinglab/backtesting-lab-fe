@@ -1,0 +1,143 @@
+.panel-section-group {
+  padding: 15px 20px;
+  border-bottom: 1px solid rgba(50, 55, 75, 0.5);
+}
+
+.panel-section-group:first-child {
+  padding-top: 100px;
+}
+
+.panel-section-group:last-child {
+  border-bottom: none;
+}
+
+.panel-main-section-title {
+  color: #c0c8e0;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 10px;
+  padding-left: 5px;
+  font-weight: 600;
+}
+
+.panel-content-sticky-note {
+  background-color: rgba(20, 22, 35, 0.7);
+  border-radius: 6px;
+  border: 1px solid rgba(50, 55, 75, 0.3);
+  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.2);
+}
+
+.panel-content-list,
+.panel-content-text {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+  font-size: 0.8rem;
+  color: #a8b0d0;
+}
+
+.panel-content-list li {
+  padding: 12px 15px;
+  border-bottom: 1px solid rgba(50, 55, 75, 0.4);
+  cursor: pointer;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+  color: #b0b8d0;
+}
+
+.panel-content-list li:last-child {
+  border-bottom: none;
+}
+
+.panel-content-list li:hover {
+  background-color: rgba(80, 85, 115, 0.3);
+  color: #e0e8ff;
+}
+
+.panel-list-item {
+  outline: none;
+}
+
+.panel-list-item:hover {
+  background-color: rgba(80, 85, 115, 0.3);
+  color: #e0e8ff;
+}
+
+.panel-list-item:focus-visible {
+  outline: var(--focus-outline-width) solid var(--focus-outline-color);
+  outline-offset: var(--focus-outline-offset);
+  background-color: rgba(90, 95, 125, 0.4);
+}
+
+.panel-list-item:active {
+  background-color: rgba(70, 75, 105, 0.5);
+  color: #fff;
+  transform: scale(0.98);
+}
+
+.panel-content-text {
+  padding: 12px 15px;
+}
+
+.panel-content-text p {
+  margin-bottom: 5px;
+  color: #b0b8d0;
+}
+
+.panel-content-text p:last-child {
+  margin: 0;
+}
+
+.panel-content-text p span {
+  font-weight: 600;
+  color: #d0d8f0;
+  margin-right: 5px;
+}
+
+/* RHS Panel Specifics */
+.panel-icon-buttons-header {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 10px;
+}
+
+.panel-icon-button {
+  background-color: rgba(55, 60, 110, 0.6);
+  color: #d0d8f0;
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  border: 1px solid rgba(80, 85, 110, 0.5);
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.panel-icon-button:hover {
+  background-color: rgba(75, 80, 130, 0.8);
+  border-color: rgba(120, 125, 170, 0.7);
+}
+
+.panel-icon-button:focus-visible {
+  outline: var(--focus-outline-width) solid var(--focus-outline-color);
+  outline-offset: 1px;
+}
+
+/* .notifications-section .panel-content-sticky-note { /* If specific styling needed for notification's sticky note */
+/* For example, make it taller to fit more notifications */
+/* max-height: 200px; */
+/* overflow-y: auto; */ /* Add scroll if content exceeds max-height */
+/* } */
+
+.notification-list li span {
+  font-weight: 600;
+  color: #e0c070;
+  margin-right: 5px;
+}

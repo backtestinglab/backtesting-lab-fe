@@ -3,6 +3,8 @@ import React, { useEffect, useState, useRef } from 'react'
 import CentralHudDisplay from '../../components/CentralHudDisplay/CentralHudDisplay'
 import HudLayoutContainer from '../../components/HudLayoutContainer/HudLayoutContainer'
 import OuterFrame from '../../components/OuterFrame/OuterFrame'
+import SidePanelSection from '../../components/SidePanelSection/SidePanelSection'
+import SidePanel from '../../components/SidePanel/SidePanel'
 
 import AnalysisOutlineIcon from '../../assets/icons/AnalysisOutlineIcon'
 import AnalysisSolidIcon from '../../assets/icons/AnalysisSolidIcon'
@@ -128,53 +130,44 @@ const HomeScreen = () => {
 
   return (
     <div className="home-screen">
-      <div className="side-panel left-panel">
-        <div className="panel-section-group">
-          <h3 className="panel-main-section-title">Recent</h3>
-          <div className="panel-content-sticky-note">
-            <ul className="panel-content-list">
-              <li tabIndex={0} className="panel-list-item">
-                Trading Model Alpha (05/23)
-              </li>
-              <li tabIndex={0} className="panel-list-item">
-                Bias Study - SPX (05/22)
-              </li>
-              <li tabIndex={0} className="panel-list-item">
-                Another Recent Item (05/21)
-              </li>
-            </ul>
+      <SidePanel position="left">
+        <SidePanelSection title="Recent" className="recent-section">
+          <ul className="panel-content-list">
+            <li tabIndex={0} className="panel-list-item">
+              Trading Model Alpha (05/23)
+            </li>
+            <li tabIndex={0} className="panel-list-item">
+              Bias Study - SPX (05/22)
+            </li>
+            <li tabIndex={0} className="panel-list-item">
+              Another Recent Item (05/21)
+            </li>
+          </ul>
+        </SidePanelSection>
+        <SidePanelSection title="Favourites" className="favourites-section">
+          <ul className="panel-content-list">
+            <li tabIndex={0} className="panel-list-item">
+              Gold Standard Model
+            </li>
+            <li tabIndex={0} className="panel-list-item">
+              Key Insight Study Omega
+            </li>
+          </ul>
+        </SidePanelSection>
+        <SidePanelSection title="Quick Stats" className="quick-stats-section">
+          <div className="panel-content-text">
+            <p>
+              <span>Best P/F:</span> 3.1 (NQ Scalper)
+            </p>
+            <p>
+              <span>Win Rate:</span> 68% (Overall)
+            </p>
+            <p>
+              <span>Total Backtests:</span> 408
+            </p>
           </div>
-        </div>
-        <div className="panel-section-group">
-          <h3 className="panel-main-section-title">Favourites</h3>
-          <div className="panel-content-sticky-note">
-            <ul className="panel-content-list">
-              <li tabIndex={0} className="panel-list-item">
-                Gold Standard Model
-              </li>
-              <li tabIndex={0} className="panel-list-item">
-                Key Insight Study Omega
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div className="panel-section-group">
-          <h3 className="panel-main-section-title">Quick Stats</h3>
-          <div className="panel-content-sticky-note">
-            <div className="panel-content-text">
-              <p>
-                <span>Best P/F:</span> 3.1 (NQ Scalper)
-              </p>
-              <p>
-                <span>Win Rate:</span> 68% (Overall)
-              </p>
-              <p>
-                <span>Total Backtests:</span> 408
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
+        </SidePanelSection>
+      </SidePanel>
       <HudLayoutContainer>
         <OuterFrame
           segmentData={segmentData}
@@ -190,31 +183,28 @@ const HomeScreen = () => {
           currentUsername={currentUsername}
         />
       </HudLayoutContainer>
-      <div className="side-panel right-panel">
+      <SidePanel position="right">
         <div className="panel-section-group panel-icon-buttons-header">
           <button className="panel-icon-button user-profile-button">⭐</button>{' '}
           <button className="panel-icon-button settings-button">⚙️</button>{' '}
         </div>
-        <div className="panel-section-group">
-          <h3 className="panel-main-section-title">Notifications</h3>
-          <div className="panel-content-sticky-note notifications-content">
-            <ul className="panel-content-list notification-list">
-              <li tabIndex={0} className="panel-list-item">
-                <span>New:</span> Update v1.1 Available!
-              </li>
-              <li tabIndex={0} className="panel-list-item">
-                <span>Tip:</span> Try the new &#39;Refine&#39; tool...
-              </li>
-              <li tabIndex={0} className="panel-list-item">
-                <span>Done:</span> Backtest &#39;Gamma Squeeze&#39; complete.
-              </li>
-              <li tabIndex={0} className="panel-list-item">
-                <span>Alert:</span> Market data connection lost.
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
+        <SidePanelSection title="Notifications" className="notifications-section">
+          <ul className="panel-content-list notification-list">
+            <li tabIndex={0} className="panel-list-item">
+              <span>New:</span> Update v1.1 Available!
+            </li>
+            <li tabIndex={0} className="panel-list-item">
+              <span>Tip:</span> Try the new &#39;Refine&#39; tool...
+            </li>
+            <li tabIndex={0} className="panel-list-item">
+              <span>Done:</span> Backtest &#39;Gamma Squeeze&#39; complete.
+            </li>
+            <li tabIndex={0} className="panel-list-item">
+              <span>Alert:</span> Market data connection lost.
+            </li>
+          </ul>
+        </SidePanelSection>
+      </SidePanel>
     </div>
   )
 }

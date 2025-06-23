@@ -1,0 +1,53 @@
+.side-panel {
+  position: absolute;
+  top: 5vh;
+  height: 90vh;
+  width: 250px;
+  background-color: rgba(30, 33, 48, 0.9);
+  border: 1px solid rgba(60, 65, 85, 0.7);
+  box-shadow: 0 0 25px rgba(10, 10, 20, 0.3);
+  z-index: 20;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.side-panel.left-panel {
+  left: 10px;
+  transform: translateX(0%);
+  clip-path: polygon(0% 0%, 80% 0%, 100% 15%, 100% 85%, 80% 100%, 0% 100%);
+}
+
+.side-panel.left-panel:hover {
+  transform: translateX(30px);
+}
+
+.side-panel.right-panel {
+  right: 10px;
+  transform: translateX(0%);
+  clip-path: polygon(20% 0%, 100% 0%, 100% 100%, 20% 100%, 0% 85%, 0% 15%);
+}
+
+.side-panel.right-panel:hover {
+  transform: translateX(-30px);
+}
+
+.side-panel::before,
+.side-panel::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 75px;
+  background-color: rgba(80, 85, 115, 0.7);
+  z-index: -1;
+}
+
+.side-panel::before {
+  top: 0;
+}
+
+.side-panel::after {
+  bottom: 0;
+}
