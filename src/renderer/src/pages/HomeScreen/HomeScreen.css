@@ -126,6 +126,27 @@
   color: #e0e8ff;
 }
 
+.panel-list-item {
+  outline: none;
+}
+
+.panel-list-item:hover {
+  background-color: rgba(80, 85, 115, 0.3);
+  color: #e0e8ff;
+}
+
+.panel-list-item:focus-visible {
+  outline: var(--focus-outline-width) solid var(--focus-outline-color);
+  outline-offset: var(--focus-outline-offset);
+  background-color: rgba(90, 95, 125, 0.4);
+}
+
+.panel-list-item:active {
+  background-color: rgba(70, 75, 105, 0.5);
+  color: #fff;
+  transform: scale(0.98);
+}
+
 .panel-content-text {
   padding: 12px 15px;
 }
@@ -172,6 +193,11 @@
 .panel-icon-button:hover {
   background-color: rgba(75, 80, 130, 0.8);
   border-color: rgba(120, 125, 170, 0.7);
+}
+
+.panel-icon-button:focus-visible {
+  outline: var(--focus-outline-width) solid var(--focus-outline-color);
+  outline-offset: 1px;
 }
 
 .notification-list li span {

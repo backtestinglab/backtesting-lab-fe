@@ -4,7 +4,7 @@ const FineTuneSolidIcon = ({ className, fill, size = '2.7em', stroke, strokeWidt
   <svg
     xmlns="http://www.w3.org/2000/svg"
     xmlSpace="preserve"
-    viewBox="0 0 464 480"
+    viewBox="10 30 442 420"
     width={size}
     size={size}
     className={className || ''}

@@ -8,7 +8,7 @@ import FramePiece from '../FramePiece/FramePiece'
 
 const OuterFrame = ({
   segmentData,
-  onMainNavLinkHover,
+  onMainNavLinkEnter,
   onMainNavLinkLeave,
   onSecondaryNavClick
 }) => {
@@ -26,7 +26,7 @@ const OuterFrame = ({
             position={position}
             segment={currentSegmentData}
             segmentKey={segmentKey}
-            onMainNavLinkHover={onMainNavLinkHover}
+            onMainNavLinkEnter={onMainNavLinkEnter}
             onMainNavLinkLeave={onMainNavLinkLeave}
             onSecondaryNavClick={onSecondaryNavClick}
           />
@@ -45,7 +45,7 @@ OuterFrame.propTypes = {
       IconSolid: PropTypes.elementType.isRequired
     })
   ).isRequired,
-  onMainNavLinkHover: PropTypes.func,
+  onMainNavLinkEnter: PropTypes.func,
   onMainNavLinkLeave: PropTypes.func,
   onSecondaryNavClick: PropTypes.func
 }

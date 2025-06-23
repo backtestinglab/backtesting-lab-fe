@@ -4,7 +4,7 @@ const RefineSolidIcon = ({ className, fill, size = '2.7em', stroke, strokeWidth,
   <svg
     xmlns="http://www.w3.org/2000/svg"
     xmlSpace="preserve"
-    viewBox="0 0 404 384"
+    viewBox="-16 -15 444 412"
     width={size}
     size={size}
     className={className || ''}

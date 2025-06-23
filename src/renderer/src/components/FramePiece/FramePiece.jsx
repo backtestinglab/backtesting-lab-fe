@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import PropTypes from 'prop-types'
 
 import './FramePiece.css'
@@ -16,12 +15,10 @@ const FramePiece = ({
   position,
   segment,
   segmentKey,
-  onMainNavLinkHover,
+  onMainNavLinkEnter,
   onMainNavLinkLeave,
   onSecondaryNavClick
 }) => {
-  const [isMainIconHovered, setIsMainIconHovered] = useState(false)
-
   const isLower = position.startsWith('bottom-')
   const positionClass = `${position}-frame`
 
@@ -32,11 +29,8 @@ const FramePiece = ({
   if (isBottomLeft) secondaryButtonText = 'Explore Trading Models'
   if (isBottomRight) secondaryButtonText = 'Studies/Research'
 
-  const IconToRender = segment?.IconOutline
-    ? isMainIconHovered
-      ? segment.IconSolid
-      : segment.IconOutline
-    : null
+  const IconOutline = segment?.IconOutline
+  const IconSolid = segment?.IconSolid
 
   return (
     <div className={`outer-frame-piece ${positionClass} ${isLower ? 'lower-frame' : ''}`}>
@@ -46,21 +40,26 @@ const FramePiece = ({
       </div>
       <div className="trapezoid"></div>
 
-      {IconToRender && segmentKey && (
+      {IconOutline && IconSolid && segmentKey && (
         <div
           className={`frame-main-nav-icon-button ${segmentKey.replace(/\s+/g, '-')}`}
           onMouseEnter={() => {
-            setIsMainIconHovered(true)
-            if (onMainNavLinkHover) onMainNavLinkHover(segmentKey)
+            if (onMainNavLinkEnter) onMainNavLinkEnter(segmentKey, true)
           }}
           onMouseLeave={() => {
-            setIsMainIconHovered(false)
+            if (onMainNavLinkLeave) onMainNavLinkLeave(segmentKey)
+          }}
+          onFocus={() => {
+            if (onMainNavLinkEnter) onMainNavLinkEnter(segmentKey)
+          }}
+          onBlur={() => {
             if (onMainNavLinkLeave) onMainNavLinkLeave(segmentKey)
           }}
           role="button"
           tabIndex={0}
         >
-          <IconToRender />
+          <IconOutline className="main-nav-svg-icon-instance icon-outline" />
+          <IconSolid className="main-nav-svg-icon-instance icon-solid" />
         </div>
       )}
 
@@ -85,7 +84,7 @@ FramePiece.propTypes = {
     IconSolid: PropTypes.elementType.isRequired
   }),
   segmentKey: PropTypes.string,
-  onMainNavLinkHover: PropTypes.func,
+  onMainNavLinkEnter: PropTypes.func,
   onMainNavLinkLeave: PropTypes.func,
   onSecondaryNavClick: PropTypes.func
 }
@@ -93,7 +92,7 @@ FramePiece.propTypes = {
 FramePiece.defaultProps = {
   segment: null,
   segmentKey: null,
-  onMainNavLinkHover: null,
+  onMainNavLinkEnter: null,
   onMainNavLinkLeave: null
 }
 

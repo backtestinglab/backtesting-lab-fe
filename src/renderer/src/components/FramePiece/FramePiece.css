@@ -215,10 +215,6 @@
   height: 90px;
   padding: 6px;
   border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 2.7em;
   color: #e0c070;
   cursor: pointer;
   transition: all 0.3s ease-out;
@@ -230,18 +226,48 @@
   outline-offset: var(--focus-outline-offset);
 }
 
+.main-nav-svg-icon-instance {
+  position: absolute;
+  padding: 6px;
+  height: 100%;
+  width: 100%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: opacity 0.25s ease-in-out;
+}
+
+.main-nav-svg-icon-instance.icon-outline {
+  opacity: 1;
+}
+
+.main-nav-svg-icon-instance.icon-solid {
+  opacity: 0;
+}
+
+.frame-main-nav-icon-button:hover .main-nav-svg-icon-instance.icon-outline {
+  opacity: 0;
+}
+
+.frame-main-nav-icon-button:hover .main-nav-svg-icon-instance.icon-solid {
+  opacity: 1;
+}
+
 .top-left-frame .frame-main-nav-icon-button.develop {
   top: 50px;
   left: 100px;
 }
+
 .top-right-frame .frame-main-nav-icon-button.refine {
   top: 50px;
   right: 100px;
 }
+
 .bottom-left-frame .frame-main-nav-icon-button.analyze {
   bottom: 70px;
   left: 50px;
 }
+
 .bottom-right-frame .frame-main-nav-icon-button.fine-tune {
   bottom: 70px;
   right: 50px;

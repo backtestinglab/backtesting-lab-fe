@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 
 import CentralHudDisplay from '../../components/CentralHudDisplay/CentralHudDisplay'
 import HudLayoutContainer from '../../components/HudLayoutContainer/HudLayoutContainer'
@@ -62,6 +62,7 @@ const HomeScreen = () => {
   const [renderCoreTextContent, setRenderCoreTextContent] = React.useState(false)
   const [coreDisplay, setCoreDisplay] = useState(defaultCoreText)
   const [isLogoVisible, setIsLogoVisible] = useState(true)
+  const leaveTimeoutIdRef = useRef(null)
 
   const currentUsername = 'David'
 
@@ -78,8 +79,12 @@ const HomeScreen = () => {
     return () => clearTimeout(logoTimer)
   }, [currentUsername])
 
-  const handleMainNavLinkHover = (segmentKey) => {
+  const handleMainNavLinkEnter = (segmentKey) => {
     if (!isLogoVisible) {
+      if (leaveTimeoutIdRef.current) {
+        clearTimeout(leaveTimeoutIdRef.current)
+        leaveTimeoutIdRef.current = null
+      }
       const { title, description } = segmentData[segmentKey]
       setCoreDisplay({ greeting: ' ', userNameOrTitle: title, description })
     }
@@ -87,9 +92,35 @@ const HomeScreen = () => {
 
   const handleMainNavLinkLeave = () => {
     if (!isLogoVisible) {
-      setCoreDisplay({ ...defaultCoreText, userNameOrTitle: currentUsername })
+      if (leaveTimeoutIdRef.current) clearTimeout(leaveTimeoutIdRef.current)
+      leaveTimeoutIdRef.current = setTimeout(() => {
+        if (leaveTimeoutIdRef.current) {
+          setCoreDisplay({ ...defaultCoreText, userNameOrTitle: currentUsername })
+        }
+        leaveTimeoutIdRef.current = null
+      }, 75)
     }
   }
+
+  useEffect(() => {
+    const handleWindowBlur = () => {
+      if (!isLogoVisible) {
+        if (leaveTimeoutIdRef.current) {
+          clearTimeout(leaveTimeoutIdRef.current)
+          leaveTimeoutIdRef.current = null
+        }
+        if (coreDisplay.greeting === ' ') {
+          setCoreDisplay({ ...defaultCoreText, userNameOrTitle: currentUsername })
+        }
+      }
+    }
+
+    window.addEventListener('blur', handleWindowBlur)
+    return () => {
+      window.removeEventListener('blur', handleWindowBlur)
+      if (leaveTimeoutIdRef.current) clearTimeout(leaveTimeoutIdRef.current)
+    }
+  }, [isLogoVisible, currentUsername, coreDisplay.greeting])
 
   const handleSecondaryNavClick = (buttonText) => {
     console.log(`${buttonText} clicked`)
@@ -102,9 +133,15 @@ const HomeScreen = () => {
           <h3 className="panel-main-section-title">Recent</h3>
           <div className="panel-content-sticky-note">
             <ul className="panel-content-list">
-              <li>Trading Model Alpha (05/23)</li>
-              <li>Bias Study - SPX (05/22)</li>
-              <li>Another Recent Item (05/21)</li>
+              <li tabIndex={0} className="panel-list-item">
+                Trading Model Alpha (05/23)
+              </li>
+              <li tabIndex={0} className="panel-list-item">
+                Bias Study - SPX (05/22)
+              </li>
+              <li tabIndex={0} className="panel-list-item">
+                Another Recent Item (05/21)
+              </li>
             </ul>
           </div>
         </div>
@@ -112,8 +149,12 @@ const HomeScreen = () => {
           <h3 className="panel-main-section-title">Favourites</h3>
           <div className="panel-content-sticky-note">
             <ul className="panel-content-list">
-              <li>Gold Standard Model</li>
-              <li>Key Insight Study Omega</li>
+              <li tabIndex={0} className="panel-list-item">
+                Gold Standard Model
+              </li>
+              <li tabIndex={0} className="panel-list-item">
+                Key Insight Study Omega
+              </li>
             </ul>
           </div>
         </div>
@@ -128,7 +169,7 @@ const HomeScreen = () => {
                 <span>Win Rate:</span> 68% (Overall)
               </p>
               <p>
-                <span>Active Models:</span> 5
+                <span>Total Backtests:</span> 408
               </p>
             </div>
           </div>
@@ -137,7 +178,7 @@ const HomeScreen = () => {
       <HudLayoutContainer>
         <OuterFrame
           segmentData={segmentData}
-          onMainNavLinkHover={handleMainNavLinkHover}
+          onMainNavLinkEnter={handleMainNavLinkEnter}
           onMainNavLinkLeave={handleMainNavLinkLeave}
           onSecondaryNavClick={handleSecondaryNavClick}
         />
@@ -158,16 +199,16 @@ const HomeScreen = () => {
           <h3 className="panel-main-section-title">Notifications</h3>
           <div className="panel-content-sticky-note notifications-content">
             <ul className="panel-content-list notification-list">
-              <li>
+              <li tabIndex={0} className="panel-list-item">
                 <span>New:</span> Update v1.1 Available!
               </li>
-              <li>
+              <li tabIndex={0} className="panel-list-item">
                 <span>Tip:</span> Try the new &#39;Refine&#39; tool...
               </li>
-              <li>
+              <li tabIndex={0} className="panel-list-item">
                 <span>Done:</span> Backtest &#39;Gamma Squeeze&#39; complete.
               </li>
-              <li>
+              <li tabIndex={0} className="panel-list-item">
                 <span>Alert:</span> Market data connection lost.
               </li>
             </ul>
