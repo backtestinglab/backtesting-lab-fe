@@ -1,0 +1,208 @@
+.settings-page {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  background-color: #181a26;
+  /* background-color: rgba(80, 85, 115, 0.1); */
+  /* background-color: rgba(30, 33, 48, 0.9); */
+  color: #c0c8e0;
+}
+
+.settings-sidebar {
+  width: 220px;
+  /* background-color: rgba(80, 85, 115, 0.15); */
+  background-image: linear-gradient(85deg, rgba(30, 32, 42, 0.95) 0%, rgba(40, 44, 60, 0.9) 100%);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid rgba(20, 22, 30, 0.7);
+  box-shadow: 2px 0 15px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.settings-sidebar h2 {
+  font-size: 1.4rem;
+  margin-bottom: 25px;
+  text-align: left;
+  color: #e0e8ff;
+  padding-left: 10px;
+  padding-bottom: 15px;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(100, 105, 150, 0.2);
+}
+
+.settings-sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.settings-sidebar li {
+  padding: 10px 15px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  border-radius: 4px;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+  font-size: 0.85rem;
+}
+
+.settings-sidebar li:hover {
+  background-color: rgba(224, 192, 112, 0.1);
+  color: #e0c070;
+}
+
+.settings-sidebar li.active {
+  /* background-color: rgba(224, 192, 112, 0.2); */
+  background-color: #e0c070;
+  color: rgb(30, 32, 42);
+  font-weight: 700;
+  box-shadow: 0 0 10px rgba(224, 192, 112, 0.3);
+}
+
+.close-settings-button {
+  background: none;
+  /* border: none; */
+  border: 1px solid rgba(100, 105, 150, 0.4);
+  color: #a0a8c0;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  padding: 8px 15px;
+  border-radius: 4px;
+  margin: 0 auto 20px;
+  display: block;
+  width: fit-content;
+
+  /* position: absolute;
+  top: 10px;
+  right: 15px;
+  cursor: pointer;
+  padding: 5px;
+  line-height: 1; */
+}
+.close-settings-button:hover {
+  background-color: rgba(100, 105, 150, 0.2);
+  color: #fff;
+  border-color: rgba(120, 125, 170, 0.6);
+}
+
+.settings-content-area {
+  flex-grow: 1;
+  padding: 30px 40px;
+  overflow-y: auto;
+}
+
+/* Placeholder DataManagement styles (will move to its own component/CSS) */
+.data-management-section {
+  /* Example */
+  color: white; /* to remove later */
+}
+
+.data-management-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid rgba(60, 65, 85, 0.3);
+}
+
+.data-management-header h3 {
+  font-size: 1.5rem;
+  color: #e0e8ff;
+  font-weight: 600;
+}
+
+.import-data-button-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 0;
+  /* background-color: rgba(0,0,0,0.05); /* Optional subtle bg */
+  /* border-radius: 8px; */
+  /* margin-bottom: 30px; */
+}
+
+.import-data-button-area .description-text {
+  font-size: 0.9rem;
+  color: #a0a8c0;
+  margin-bottom: 10px;
+  max-width: 400px;
+  text-align: center;
+}
+
+.import-data-button-area .divider-line {
+  width: 70%;
+  height: 1px;
+  background-color: rgba(100, 105, 150, 0.3);
+  margin: 20px 0;
+  position: relative;
+}
+
+.import-data-button-container {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.import-data-button {
+  padding: 12px 25px;
+  font-size: 0.9rem;
+  background-color: #e0c070;
+  color: #121218;
+  border: none;
+  border-radius: 50px;
+  cursor: pointer;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  box-shadow: 0 2px 8px rgba(224, 192, 112, 0.3);
+  transition: all 0.2s ease;
+}
+
+.import-data-button:hover {
+  background-color: #f0d080;
+  box-shadow: 0 4px 12px rgba(224, 192, 112, 0.4);
+  transform: translateY(-1px);
+}
+
+.import-data-button .plus-icon {
+  margin-right: 8px;
+  font-size: 1.1em;
+}
+
+.dataset-list-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+.dataset-list-table th,
+.dataset-list-table td {
+  border-bottom: 1px solid rgba(60, 65, 85, 0.5);
+  padding: 10px 12px;
+  text-align: left;
+  font-size: 0.85rem;
+}
+.dataset-list-table th {
+  color: #d0d8f0;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+.dataset-list-table tr:hover td {
+  background-color: rgba(60, 65, 85, 0.2);
+}
+.dataset-list-table .actions-cell button {
+  background: none;
+  border: none;
+  color: #9098b0;
+  cursor: pointer;
+  margin-right: 8px;
+  font-size: 1rem;
+}
+.dataset-list-table .actions-cell button:hover {
+  color: #e0e8ff;
+}
