@@ -1,7 +1,21 @@
+import { useState } from 'react'
+import ImportDataModal from '../../components/Modals/ImportDataModal'
+
 const DataManagement = () => {
+  const [isImportModalOpen, setIsImportModalOpen] = useState(false)
+
   const handleImportClick = () => {
-    console.log('Open Import Data Modal')
-    // Here we would trigger a modal for file import
+    setIsImportModalOpen(true)
+  }
+
+  const handleModalClose = () => {
+    setIsImportModalOpen(false)
+  }
+
+  const handleDataImported = (importedData) => {
+    console.log('Data to import:', importedData)
+    // Here, you'd eventually trigger the actual backend import process
+    // and update your list of datasets.
   }
 
   // Placeholder data
@@ -14,7 +28,8 @@ const DataManagement = () => {
       dateRange: '3 Years',
       size: '350MB',
       importDate: '2023-05-01',
-      availableTF: '1m,5m,15m,1H,4H,D'
+      availableTF: '1m,5m,15m,1H,4H,D',
+      status: 'Ready'
     },
     {
       id: 2,
@@ -24,7 +39,8 @@ const DataManagement = () => {
       dateRange: '4 Years',
       size: '450MB',
       importDate: '2023-04-15',
-      availableTF: '1m,5m,15m,1H,D'
+      availableTF: '1m,5m,15m,1H,D',
+      status: 'Processing'
     }
   ]
 
@@ -53,6 +69,7 @@ const DataManagement = () => {
               <th>Range</th>
               <th>Imported</th>
               <th>Available TFs</th>
+              <th>Status</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -64,6 +81,7 @@ const DataManagement = () => {
                 <td>{ds.dateRange}</td>
                 <td>{ds.importDate}</td>
                 <td>{ds.availableTF}</td>
+                <td>{ds.status}</td>
                 <td className="actions-cell">
                   <button title="View Details">ℹ️</button>
                   <button title="Delete Dataset">🗑️</button>
@@ -73,6 +91,11 @@ const DataManagement = () => {
           </tbody>
         </table>
       )}
+      <ImportDataModal
+        isOpen={isImportModalOpen}
+        onClose={handleModalClose}
+        onImport={handleDataImported}
+      />
     </div>
   )
 }

@@ -1,0 +1,233 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(10, 12, 20, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(3px);
+}
+
+.modal-content {
+  background-color: rgb(38, 41, 56);
+  padding: 25px 30px;
+  border-radius: 8px;
+  box-shadow: 0 5px 25px rgba(0, 0, 0, 0.4);
+  width: 90%;
+  max-width: 550px;
+  border: 1px solid rgba(80, 85, 115, 0.5);
+  color: #c0c8e0;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(80, 85, 115, 0.4);
+  padding-bottom: 15px;
+  margin-bottom: 20px;
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 1.3rem;
+  color: #e0e8ff;
+  font-weight: 600;
+}
+
+.modal-close-button {
+  background: none;
+  border: none;
+  color: #a0a8c0;
+  font-size: 1.8rem;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  padding: 0 5px;
+  line-height: 1;
+}
+.modal-close-button:hover {
+  color: #fff;
+}
+
+.modal-body {
+  margin-bottom: 25px;
+  max-height: 60vh;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+/* File Selection Area */
+.file-selection-area {
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.browse-files-button {
+  padding: 10px 20px;
+  font-size: 0.9rem;
+  background-color: rgba(100, 105, 150, 0.3);
+  color: #d0d8f0;
+  border: 1px dashed rgba(120, 125, 170, 0.6);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.browse-files-button:hover {
+  background-color: rgba(110, 115, 160, 0.4);
+  border-color: rgba(140, 145, 190, 0.8);
+}
+
+.selected-file-info {
+  margin-top: 15px;
+  background-color: rgba(20, 22, 35, 0.5);
+  padding: 10px 15px;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  text-align: left;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.selected-file-info p {
+  margin: 3px 0;
+}
+
+.file-details {
+  flex-grow: 1;
+}
+
+.file-details p {
+  margin: 3px 0;
+}
+
+.remove-file-button {
+  background: none;
+  border: 1px solid transparent;
+  color: #a0a8c0;
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  font-size: 1.3rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-left: 15px;
+}
+
+.remove-file-button:hover {
+  background-color: rgba(200, 80, 80, 0.8);
+  color: #fff;
+  border-color: rgba(220, 100, 100, 0.9);
+}
+
+.disclaimer-text strong,
+.agreement-checkbox-label strong {
+  color: #e0c070;
+  font-weight: 600;
+}
+
+/* Dataset Naming */
+.dataset-naming-area {
+  margin-bottom: 20px;
+}
+
+.dataset-naming-area label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.dataset-naming-area input[type='text'] {
+  width: 100%;
+  padding: 8px 10px;
+  background-color: rgba(20, 22, 35, 0.7);
+  border: 1px solid rgba(80, 85, 115, 0.5);
+  border-radius: 4px;
+  color: #e0e8ff;
+  font-size: 0.9rem;
+}
+
+/* Disclaimer & Agreement */
+.disclaimer-area {
+  margin-bottom: 20px;
+}
+
+.disclaimer-text {
+  font-size: 0.8rem;
+  color: #9098b0;
+  margin-bottom: 15px;
+  line-height: 1.5;
+  background-color: rgba(20, 22, 35, 0.3);
+  padding: 10px;
+  border-radius: 4px;
+  border-left: 3px solid rgba(224, 192, 112, 0.5);
+}
+
+.agreement-checkbox-label {
+  display: flex;
+  align-items: center;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.agreement-checkbox-label input[type='checkbox'] {
+  margin-right: 24px;
+}
+
+/* Modal Footer */
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  border-top: 1px solid rgba(80, 85, 115, 0.4);
+  padding-top: 20px;
+}
+
+.modal-button {
+  padding: 8px 18px;
+  font-size: 0.85rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  transition: all 0.2s ease;
+}
+
+.cancel-button {
+  background-color: rgba(80, 85, 115, 0.3);
+  border: 1px solid rgba(100, 105, 150, 0.5);
+  color: #b0b8d0;
+}
+
+.cancel-button:hover {
+  background-color: rgba(90, 95, 125, 0.4);
+}
+
+.import-button {
+  background-color: #e0c070;
+  border: 1px solid #e0c070;
+  color: #1a1c26;
+}
+
+.import-button:hover {
+  background-color: #f0d080;
+}
+
+.import-button:disabled {
+  background-color: rgba(100, 105, 120, 0.4);
+  border-color: rgba(100, 105, 120, 0.4);
+  color: #707890;
+  cursor: not-allowed;
+}

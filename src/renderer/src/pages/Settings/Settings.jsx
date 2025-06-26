@@ -25,8 +25,12 @@ const Settings = () => {
   return (
     <div className="settings-page">
       <div className="settings-sidebar">
-        <button className="close-settings-button" onClick={() => navigateTo('home')}>
-          Back to Home
+        <button
+          className="settings-close-button"
+          onClick={() => navigateTo('home')}
+          title="Close Settings"
+        >
+          ×
         </button>
         <h2>Settings</h2>
         <ul>
