@@ -1,34 +1,20 @@
 {
-  "name": "backtesting-lab",
+  "name": "@backtestinglab/ui",
   "version": "1.0.0",
-  "description": "Automated & manual backtesting software for daytraders",
-  "main": "./out/main/index.js",
+  "description": "The frontend UI for BacktestingLab | An automated & manual backtesting software for daytraders",
+  "main": "dist/index.js",
   "author": "https://davidpnowak.com",
-  "homepage": "https://electron-vite.org",
+  "homepage": "https://davidpnowak.com",
   "packageManager": "yarn@4.9.2",
   "scripts": {
     "format": "prettier --write .",
     "lint": "eslint --cache .",
-    "start": "electron-vite preview",
-    "dev": "electron-vite dev",
-    "build": "electron-vite build",
-    "postinstall": "electron-builder install-app-deps",
-    "build:unpack": "npm run build && electron-builder --dir",
-    "build:win": "npm run build && electron-builder --win",
-    "build:mac": "npm run build && electron-builder --mac",
-    "build:linux": "npm run build && electron-builder --linux"
-  },
-  "dependencies": {
-    "@electron-toolkit/preload": "^3.0.1",
-    "@electron-toolkit/utils": "^4.0.0"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "devDependencies": {
-    "@electron-toolkit/eslint-config": "^2.0.0",
-    "@electron-toolkit/eslint-config-prettier": "^3.0.0",
     "@vitejs/plugin-react": "^4.3.4",
-    "electron": "^35.1.5",
-    "electron-builder": "^25.1.8",
-    "electron-vite": "^3.1.0",
     "eslint": "^9.24.0",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
