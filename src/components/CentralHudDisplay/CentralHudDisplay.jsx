@@ -1,3 +1,5 @@
+import React from 'react'
+
 import CentralDisplayCore from '../CentralDisplayCore/CentralDisplayCore'
 
 import './CentralHudDisplay.css'

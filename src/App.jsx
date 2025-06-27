@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 
 import HomeScreen from './pages/HomeScreen/HomeScreen'
 import Settings from './pages/Settings/Settings'

@@ -1,3 +1,4 @@
+import React from 'react'
 import PropTypes from 'prop-types'
 
 const AnalysisSolidIcon = ({ className, fill, size = '2.7em', stroke, strokeWidth, ...props }) => (

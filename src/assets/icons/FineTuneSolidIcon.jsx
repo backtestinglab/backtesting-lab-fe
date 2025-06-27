@@ -1,3 +1,4 @@
+import React from 'react'
 import PropTypes from 'prop-types'
 
 const FineTuneSolidIcon = ({ className, fill, size = '2.7em', stroke, strokeWidth, ...props }) => (
