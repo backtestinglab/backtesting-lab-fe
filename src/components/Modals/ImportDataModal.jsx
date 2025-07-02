@@ -7,6 +7,7 @@ const ImportDataModal = ({ isOpen, onClose, onImport }) => {
   const [selectedFile, setSelectedFile] = useState(null)
   const [datasetName, setDatasetName] = useState('')
   const [agreementChecked, setAgreementChecked] = useState(false)
+  const [isImporting, setIsImporting] = useState(false)
 
   useEffect(() => {
     if (!isOpen) {
@@ -16,12 +17,25 @@ const ImportDataModal = ({ isOpen, onClose, onImport }) => {
     }
   }, [isOpen])
 
-  const handleFileSelectClick = () => {
-    console.log('Trigger system file dialog (mocked)')
-    // Mock file selection
-    const mockFile = { name: 'SPY_1min_2022.csv', size: 1024 * 1024 * 50 }
-    setSelectedFile(mockFile)
-    setDatasetName(mockFile.name.replace(/\.[^/.]+$/, ''))
+  const handleFileSelectClick = async () => {
+    console.log('Requesting to open file dialog via main process...')
+
+    const filePath = await window.api.openFileDialog()
+
+    if (filePath) {
+      console.log('File selected:', filePath)
+      // In a real app, you'd get file size from the main process too, but we can mock it
+      const fileName = filePath.split(/[\\/]/).pop()
+
+      setSelectedFile({
+        path: filePath,
+        name: fileName,
+        size: 0
+      })
+      setDatasetName(fileName.replace(/\.[^/.]+$/, ''))
+    } else {
+      console.log('File selection canceled.')
+    }
   }
 
   const handleRemoveFile = () => {
@@ -30,13 +44,26 @@ const ImportDataModal = ({ isOpen, onClose, onImport }) => {
     setAgreementChecked(false)
   }
 
-  const handleImportClick = () => {
+  const handleImportClick = async () => {
     if (selectedFile && datasetName.trim() && agreementChecked) {
-      onImport({
-        file: selectedFile, // In reality, this would be a file path or File object
-        name: datasetName.trim()
+      setIsImporting(true)
+
+      const result = await window.api.importDataFile({
+        filePath: selectedFile.path,
+        datasetName: datasetName.trim()
       })
-      onClose()
+
+      setIsImporting(false)
+
+      if (result.success) {
+        console.log('Import success from renderer:', result.message)
+        onImport(result)
+        onClose()
+      } else {
+        console.error('Import error from renderer:', result.message)
+        // TODO: Show an error message to the user inside the modal
+        alert(`Error: ${result.message}`)
+      }
     }
   }
 
@@ -56,7 +83,7 @@ const ImportDataModal = ({ isOpen, onClose, onImport }) => {
         <div className="modal-body">
           <div className="file-selection-area">
             <button onClick={handleFileSelectClick} className="browse-files-button">
-              {selectedFile ? 'Change File...' : 'Select .CSV File'}
+              {selectedFile ? 'Change File...' : 'Select .CSV or .JSON File'}
             </button>
             {selectedFile && (
               <div className="selected-file-info">
@@ -96,7 +123,9 @@ const ImportDataModal = ({ isOpen, onClose, onImport }) => {
             <p className="disclaimer-text">
               All data is <strong>stored locally on your machine.</strong> BacktestingLab does not
               upload or store your data on any external servers. Please ensure you have{' '}
-              <strong>backups of your original data files.</strong>
+              <strong>backups of</strong> your <strong>original data files and </strong> any{' '}
+              <strong>data created from</strong> using <strong>this app.</strong> See the{' '}
+              <strong>"Backup" tab</strong> in settings for full details.
             </p>
             <label className="agreement-checkbox-label">
               <input
@@ -118,9 +147,9 @@ const ImportDataModal = ({ isOpen, onClose, onImport }) => {
           <button
             onClick={handleImportClick}
             className="modal-button import-button"
-            disabled={!selectedFile || !datasetName.trim() || !agreementChecked}
+            disabled={!selectedFile || !datasetName.trim() || !agreementChecked || isImporting}
           >
-            Import
+            {isImporting ? 'Importing...' : 'Import'}
           </button>
         </div>
       </div>
