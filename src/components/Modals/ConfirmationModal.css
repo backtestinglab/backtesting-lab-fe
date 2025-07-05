@@ -1,0 +1,14 @@
+.modal-body strong {
+  color: #e0c070;
+  font-weight: 600;
+}
+
+.confirm-button-destructive {
+  background-color: #c53030;
+  border: 1px solid #c53030;
+  color: #fff;
+}
+
+.confirm-button-destructive:hover {
+  background-color: #e53e3e;
+}
