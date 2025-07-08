@@ -281,11 +281,57 @@
   transform: scale(1.05);
 }
 
+.frame-main-nav-icon-button.hover-disabled:hover {
+  background-color: transparent;
+  box-shadow: 0 0 0px rgba(224, 192, 112, 0);
+  border: none;
+  transform: scale(1);
+  cursor: default;
+}
+
+.frame-main-nav-icon-button.hover-disabled:hover .main-nav-svg-icon-instance.icon-solid {
+  opacity: 0;
+}
+
+.frame-main-nav-icon-button.hover-disabled:hover .main-nav-svg-icon-instance.icon-outline {
+  opacity: 1;
+}
+
+.frame-main-nav-icon-button.locked-active,
+.frame-main-nav-icon-button.locked-active.hover-disabled:hover {
+  background-color: transparent;
+  box-shadow:
+    0 0 15px 3px rgba(224, 192, 112, 0.55),
+    0 0 25px 8px rgba(224, 192, 112, 0.35);
+  border: 2px solid #e0c070;
+  transform: scale(1.05);
+}
+
+.frame-main-nav-icon-button.locked-active .main-nav-svg-icon-instance.icon-outline,
+.frame-main-nav-icon-button.locked-active.hover-disabled:hover
+  .main-nav-svg-icon-instance.icon-outline {
+  opacity: 0;
+}
+
+.frame-main-nav-icon-button.locked-active .main-nav-svg-icon-instance.icon-solid,
+.frame-main-nav-icon-button.locked-active.hover-disabled:hover
+  .main-nav-svg-icon-instance.icon-solid {
+  opacity: 1;
+}
+
+/* Optional: Highlight for the entire FramePiece */
+/* .outer-frame-piece.locked-active {
+  box-shadow:
+    0 0 25px rgba(224, 192, 112, 0.2),
+    inset 0 0 15px rgba(224, 192, 112, 0.1);
+} */
+
 .frame-integrated-nav-button {
   position: absolute;
   bottom: 0px;
   border: none;
   border-bottom: 3px solid #707484;
+  background-color: #2a2a2a;
   color: #d0d0f0;
   padding: 10px;
   font-size: 0.75rem;

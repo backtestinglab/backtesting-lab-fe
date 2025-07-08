@@ -14,15 +14,24 @@ import './FramePiece.css'
  * @param {function} [props.onSecondaryNavClick] - Optional click handler for secondary nav.
  */
 
-const FramePiece = ({
-  position,
-  segment,
-  segmentKey,
-  onMainNavLinkEnter,
-  onMainNavLinkLeave,
-  onSecondaryNavClick
-}) => {
-  const { startSetupFlow } = useHomeScreen()
+const FramePiece = ({ position, segment, segmentKey, onSecondaryNavClick }) => {
+  const {
+    activeNavSegmentKey,
+    handleMainNavLinkEnter,
+    handleMainNavLinkLeave,
+    setupStep,
+    startSetupFlow
+  } = useHomeScreen()
+
+  const isLockedActive = activeNavSegmentKey === segmentKey
+  const isHoverDisabled = !!setupStep
+
+  const buttonClassName = `
+    frame-main-nav-icon-button
+    ${segmentKey.replace(/\s+/g, '-')}
+    ${isLockedActive ? 'locked-active' : ''}
+    ${isHoverDisabled ? 'hover-disabled' : ''}
+  `
 
   const isLower = position.startsWith('bottom-')
   const positionClass = `${position}-frame`
@@ -38,27 +47,29 @@ const FramePiece = ({
   const IconSolid = segment?.IconSolid
 
   return (
-    <div className={`outer-frame-piece ${positionClass} ${isLower ? 'lower-frame' : ''}`}>
+    <div
+      className={`outer-frame-piece ${positionClass} ${isLower ? 'lower-frame' : ''} ${isLockedActive ? 'locked-active' : ''}`}
+    >
       <div className="square"></div>
       <div className="invert-circle-container">
         <div className="invert-circle"></div>
       </div>
       <div className="trapezoid"></div>
 
-      {IconOutline && IconSolid && segmentKey && (
+      {IconOutline && segmentKey && (
         <div
-          className={`frame-main-nav-icon-button ${segmentKey.replace(/\s+/g, '-')}`}
+          className={buttonClassName}
           onMouseEnter={() => {
-            if (onMainNavLinkEnter) onMainNavLinkEnter(segmentKey, true)
+            !isHoverDisabled && handleMainNavLinkEnter(segmentKey, true)
           }}
           onMouseLeave={() => {
-            if (onMainNavLinkLeave) onMainNavLinkLeave(segmentKey)
+            !isHoverDisabled && handleMainNavLinkLeave(segmentKey)
           }}
           onFocus={() => {
-            if (onMainNavLinkEnter) onMainNavLinkEnter(segmentKey)
+            !isHoverDisabled && handleMainNavLinkEnter(segmentKey)
           }}
           onBlur={() => {
-            if (onMainNavLinkLeave) onMainNavLinkLeave(segmentKey)
+            !isHoverDisabled && handleMainNavLinkLeave(segmentKey)
           }}
           onClick={() => startSetupFlow(segmentKey)}
           role="button"
@@ -90,16 +101,12 @@ FramePiece.propTypes = {
     IconSolid: PropTypes.elementType.isRequired
   }),
   segmentKey: PropTypes.string,
-  onMainNavLinkEnter: PropTypes.func,
-  onMainNavLinkLeave: PropTypes.func,
   onSecondaryNavClick: PropTypes.func
 }
 
 FramePiece.defaultProps = {
   segment: null,
-  segmentKey: null,
-  onMainNavLinkEnter: null,
-  onMainNavLinkLeave: null
+  segmentKey: null
 }
 
 export default FramePiece

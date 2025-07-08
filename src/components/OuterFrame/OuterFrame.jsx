@@ -1,6 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import { useHomeScreen } from '../../contexts/HomeScreenContext'
+
 import FramePiece from '../FramePiece/FramePiece'
 
 /**
@@ -8,12 +10,9 @@ import FramePiece from '../FramePiece/FramePiece'
  * @description Container for all four pieces of the outer cockpit frame.
  */
 
-const OuterFrame = ({
-  segmentData,
-  onMainNavLinkEnter,
-  onMainNavLinkLeave,
-  onSecondaryNavClick
-}) => {
+const OuterFrame = ({ onSecondaryNavClick }) => {
+  const { segmentData } = useHomeScreen()
+
   const segmentsOrder = ['develop', 'refine', 'analyze', 'fine-tune']
   const positions = ['top-left', 'top-right', 'bottom-left', 'bottom-right']
 
@@ -28,8 +27,6 @@ const OuterFrame = ({
             position={position}
             segment={currentSegmentData}
             segmentKey={segmentKey}
-            onMainNavLinkEnter={onMainNavLinkEnter}
-            onMainNavLinkLeave={onMainNavLinkLeave}
             onSecondaryNavClick={onSecondaryNavClick}
           />
         )
@@ -39,16 +36,6 @@ const OuterFrame = ({
 }
 
 OuterFrame.propTypes = {
-  segmentData: PropTypes.objectOf(
-    PropTypes.shape({
-      title: PropTypes.string.isRequired,
-      description: PropTypes.string.isRequired,
-      IconOutline: PropTypes.elementType.isRequired,
-      IconSolid: PropTypes.elementType.isRequired
-    })
-  ).isRequired,
-  onMainNavLinkEnter: PropTypes.func,
-  onMainNavLinkLeave: PropTypes.func,
   onSecondaryNavClick: PropTypes.func
 }
 

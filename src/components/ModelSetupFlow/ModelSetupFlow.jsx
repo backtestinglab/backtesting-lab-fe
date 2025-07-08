@@ -1,5 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+
+import { useHomeScreen } from '../../contexts/HomeScreenContext'
+
 import './ModelSetupFlow.css'
 
 /**
@@ -7,25 +10,37 @@ import './ModelSetupFlow.css'
  */
 
 const ModelSetupFlow = ({ step, onSelectType }) => {
-  if (step === 'selectType') {
-    return (
-      <div className="model-setup-flow">
-        <h3 className="setup-prompt">Select the type of model to develop</h3>
-        <div className="setup-options">
-          <button onClick={() => onSelectType('trading')} className="setup-option-button">
-            Trading
-          </button>
-          <button onClick={() => onSelectType('bias')} className="setup-option-button">
-            Bias
-          </button>
-        </div>
-      </div>
-    )
+  const { cancelSetupFlow } = useHomeScreen()
+
+  const renderStepContent = () => {
+    if (step === 'selectType') {
+      return (
+        <>
+          <h3 className="setup-prompt">Select the type of model to develop</h3>
+          <div className="setup-options">
+            <button onClick={() => onSelectType('trading')} className="setup-text-button">
+              <span>Trading</span>
+            </button>
+            <button onClick={() => onSelectType('bias')} className="setup-text-button">
+              <span>Bias</span>
+            </button>
+          </div>
+        </>
+      )
+    }
+    // Add other steps here later
+    return <p>Loading next step...</p>
   }
 
   // We will add 'selectDataset' and 'selectTimeframe' steps here later
-
-  return null // Or a loading/default state
+  return (
+    <div className="model-setup-flow">
+      <button onClick={cancelSetupFlow} className="setup-close-button" title="Cancel Setup">
+        ×
+      </button>
+      {renderStepContent()}
+    </div>
+  )
 }
 
 ModelSetupFlow.propTypes = {

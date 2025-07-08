@@ -12,6 +12,8 @@ const App = () => {
   const [currentView, setCurrentView] = useState('home')
   const [hasInitialAnimationPlayed, setHasInitialAnimationPlayed] = useState(false)
 
+  const currentUsername = 'David'
+
   const navigateTo = (view) => {
     setCurrentView(view)
   }
@@ -23,7 +25,7 @@ const App = () => {
   let viewToRender
   if (currentView === 'home') {
     viewToRender = (
-      <HomeScreenProvider>
+      <HomeScreenProvider currentUsername={currentUsername}>
         <HomeScreen
           hasInitialAnimationPlayed={hasInitialAnimationPlayed}
           onInitialAnimationComplete={handleInitialAnimationComplete}
