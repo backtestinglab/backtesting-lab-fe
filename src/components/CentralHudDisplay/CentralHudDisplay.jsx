@@ -8,22 +8,10 @@ import './CentralHudDisplay.css'
  * @description Wrapper for the central part of the HUD, containing the display core.
  */
 
-const CentralHUDDisplay = ({
-  isLogoVisible,
-  renderCoreTextContent,
-  coreTextContentVisibleClass,
-  coreDisplay,
-  currentUsername
-}) => {
+const CentralHUDDisplay = ({ isLogoVisible, coreDisplay }) => {
   return (
     <div className="main-hud-area">
-      <CentralDisplayCore
-        isLogoVisible={isLogoVisible}
-        renderCoreTextContent={renderCoreTextContent}
-        coreTextContentVisibleClass={coreTextContentVisibleClass}
-        coreDisplay={coreDisplay}
-        currentUsername={currentUsername}
-      />
+      <CentralDisplayCore isLogoVisible={isLogoVisible} coreDisplay={coreDisplay} />
     </div>
   )
 }

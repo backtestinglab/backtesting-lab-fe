@@ -7,6 +7,7 @@ import OuterFrame from '../../components/OuterFrame/OuterFrame'
 import SidePanelSection from '../../components/SidePanelSection/SidePanelSection'
 import SidePanel from '../../components/SidePanel/SidePanel'
 
+import { useHomeScreen } from '../../contexts/HomeScreenContext'
 import { AppViewContext } from '../../contexts/AppViewContext'
 
 import AnalysisOutlineIcon from '../../assets/icons/AnalysisOutlineIcon'
@@ -64,12 +65,11 @@ const defaultCoreText = {
 
 const HomeScreen = ({ hasInitialAnimationPlayed, onInitialAnimationComplete }) => {
   const { navigateTo } = useContext(AppViewContext)
-  const [coreTextContentVisibleClass, setCoreTextContentVisibleClass] = React.useState(false)
-  const [renderCoreTextContent, setRenderCoreTextContent] = React.useState(false)
   const [coreDisplay, setCoreDisplay] = useState(defaultCoreText)
   const [isLogoVisible, setIsLogoVisible] = useState(!hasInitialAnimationPlayed)
   const leaveTimeoutIdRef = useRef(null)
 
+  const { setupStep } = useHomeScreen()
   const currentUsername = 'David'
 
   useEffect(() => {
@@ -79,8 +79,6 @@ const HomeScreen = ({ hasInitialAnimationPlayed, onInitialAnimationComplete }) =
       const logoTimer = setTimeout(() => {
         setIsLogoVisible(false)
         setCoreDisplay((prev) => ({ ...prev, greeting: 'Hello', userNameOrTitle: currentUsername }))
-        setRenderCoreTextContent(true)
-        requestAnimationFrame(() => setCoreTextContentVisibleClass(true))
         onInitialAnimationComplete()
       }, logoAnimationTime)
 
@@ -88,12 +86,11 @@ const HomeScreen = ({ hasInitialAnimationPlayed, onInitialAnimationComplete }) =
     } else {
       setIsLogoVisible(false)
       setCoreDisplay((prev) => ({ ...prev, greeting: 'Hello', userNameOrTitle: currentUsername }))
-      setRenderCoreTextContent(true)
-      setCoreTextContentVisibleClass(true)
     }
   }, [currentUsername, hasInitialAnimationPlayed, onInitialAnimationComplete])
 
   const handleMainNavLinkEnter = (segmentKey) => {
+    if (setupStep) return
     if (!isLogoVisible) {
       if (leaveTimeoutIdRef.current) {
         clearTimeout(leaveTimeoutIdRef.current)
@@ -105,6 +102,7 @@ const HomeScreen = ({ hasInitialAnimationPlayed, onInitialAnimationComplete }) =
   }
 
   const handleMainNavLinkLeave = () => {
+    if (setupStep) return
     if (!isLogoVisible) {
       if (leaveTimeoutIdRef.current) clearTimeout(leaveTimeoutIdRef.current)
       leaveTimeoutIdRef.current = setTimeout(() => {
@@ -191,13 +189,7 @@ const HomeScreen = ({ hasInitialAnimationPlayed, onInitialAnimationComplete }) =
           onMainNavLinkLeave={handleMainNavLinkLeave}
           onSecondaryNavClick={handleSecondaryNavClick}
         />
-        <CentralHudDisplay
-          isLogoVisible={isLogoVisible}
-          renderCoreTextContent={renderCoreTextContent}
-          coreTextContentVisibleClass={coreTextContentVisibleClass}
-          coreDisplay={coreDisplay}
-          currentUsername={currentUsername}
-        />
+        <CentralHudDisplay coreDisplay={coreDisplay} isLogoVisible={isLogoVisible} />
       </HudLayoutContainer>
       <SidePanel position="right">
         <div className="panel-section-group panel-icon-buttons-header">

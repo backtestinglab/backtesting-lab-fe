@@ -4,6 +4,7 @@ import HomeScreen from './pages/HomeScreen/HomeScreen'
 import Settings from './pages/Settings/Settings'
 
 import { AppViewContext } from './contexts/AppViewContext'
+import { HomeScreenProvider } from './contexts/HomeScreenContext'
 
 import './styles/global.css'
 
@@ -22,10 +23,12 @@ const App = () => {
   let viewToRender
   if (currentView === 'home') {
     viewToRender = (
-      <HomeScreen
-        hasInitialAnimationPlayed={hasInitialAnimationPlayed}
-        onInitialAnimationComplete={handleInitialAnimationComplete}
-      />
+      <HomeScreenProvider>
+        <HomeScreen
+          hasInitialAnimationPlayed={hasInitialAnimationPlayed}
+          onInitialAnimationComplete={handleInitialAnimationComplete}
+        />
+      </HomeScreenProvider>
     )
   } else if (currentView === 'settings') {
     viewToRender = <Settings />

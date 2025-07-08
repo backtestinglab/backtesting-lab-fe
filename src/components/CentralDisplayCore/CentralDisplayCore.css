@@ -184,3 +184,7 @@
   margin: 0 8px;
   cursor: pointer;
 }
+
+.navigation-arrows:not(.active) {
+  opacity: 0;
+}

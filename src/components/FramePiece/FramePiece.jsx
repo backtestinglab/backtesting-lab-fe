@@ -1,6 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import { useHomeScreen } from '../../contexts/HomeScreenContext'
+
 import './FramePiece.css'
 
 /**
@@ -20,6 +22,8 @@ const FramePiece = ({
   onMainNavLinkLeave,
   onSecondaryNavClick
 }) => {
+  const { startSetupFlow } = useHomeScreen()
+
   const isLower = position.startsWith('bottom-')
   const positionClass = `${position}-frame`
 
@@ -56,6 +60,7 @@ const FramePiece = ({
           onBlur={() => {
             if (onMainNavLinkLeave) onMainNavLinkLeave(segmentKey)
           }}
+          onClick={() => startSetupFlow(segmentKey)}
           role="button"
           tabIndex={0}
         >
