@@ -28,6 +28,16 @@
   background-image: linear-gradient(45deg, rgba(60, 65, 85, 0.85) 40%, rgba(35, 40, 55, 0.65) 100%);
 }
 
+.top-left-frame.locked-active .square {
+  background-image: linear-gradient(
+    45deg,
+    rgba(224, 192, 112, 0.85) 45%,
+    rgba(224, 192, 112, 0.5) 98%
+  );
+  border-top: 1px solid #e0c070;
+  border-right: 2px solid #e0c070;
+}
+
 .top-right-frame .square {
   left: 0px;
   border-left: 2px solid #707484;
@@ -85,6 +95,16 @@
     rgba(60, 65, 85, 0.85) 0%,
     rgba(35, 40, 55, 0.65) 100%
   );
+}
+
+.top-left-frame.locked-active .trapezoid {
+  background-image: linear-gradient(
+    to left,
+    rgba(224, 192, 112, 0.84) 0%,
+    rgba(224, 192, 112, 0.45) 100%
+  );
+  border-bottom: 3px solid #e0c070;
+  border-top: 1px solid #e0c070;
 }
 
 .top-right-frame .trapezoid {
@@ -169,6 +189,10 @@
   top: 0;
   left: 0;
   box-shadow: -50px -50px 0 0 rgba(60, 65, 85, 0.9);
+}
+
+.top-left-frame.locked-active .invert-circle:before {
+  box-shadow: -50px -50px 0 0 rgba(224, 192, 112, 0.85);
 }
 
 .top-right-frame .invert-circle:before {
@@ -300,11 +324,17 @@
 .frame-main-nav-icon-button.locked-active,
 .frame-main-nav-icon-button.locked-active.hover-disabled:hover {
   background-color: transparent;
-  box-shadow:
+  /* box-shadow:
     0 0 15px 3px rgba(224, 192, 112, 0.55),
-    0 0 25px 8px rgba(224, 192, 112, 0.35);
-  border: 2px solid #e0c070;
+    0 0 25px 8px rgba(224, 192, 112, 0.35); */
+  /* border: 2px solid #e0c070; */
   transform: scale(1.05);
+  color: rgba(60, 65, 85, 1);
+  border: 2px solid rgba(60, 65, 85, 1);
+  box-shadow:
+    0 0 15px 3px rgba(60, 65, 85, 0.85),
+    0 0 25px 8px rgba(35, 40, 55, 0.65);
+  transition: all 0.25s ease-in-out;
 }
 
 .frame-main-nav-icon-button.locked-active .main-nav-svg-icon-instance.icon-outline,
@@ -318,13 +348,6 @@
   .main-nav-svg-icon-instance.icon-solid {
   opacity: 1;
 }
-
-/* Optional: Highlight for the entire FramePiece */
-/* .outer-frame-piece.locked-active {
-  box-shadow:
-    0 0 25px rgba(224, 192, 112, 0.2),
-    inset 0 0 15px rgba(224, 192, 112, 0.1);
-} */
 
 .frame-integrated-nav-button {
   position: absolute;
