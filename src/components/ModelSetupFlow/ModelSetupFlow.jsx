@@ -1,6 +1,9 @@
-import React from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 
+import CarouselSelector from '../CarouselSelector/CarouselSelector'
+
+import { AppViewContext } from '../../contexts/AppViewContext'
 import { useHomeScreen } from '../../contexts/HomeScreenContext'
 
 import './ModelSetupFlow.css'
@@ -10,7 +13,31 @@ import './ModelSetupFlow.css'
  */
 
 const ModelSetupFlow = ({ step, onSelectType }) => {
-  const { cancelSetupFlow } = useHomeScreen()
+  const { cancelSetupFlow, datasets, selectDataset, setupStep } = useHomeScreen()
+  const [countdown, setCountdown] = useState(3)
+
+  const { navigateTo } = useContext(AppViewContext)
+
+  useEffect(() => {
+    let redirectTimer
+    let countdownInterval
+
+    if (setupStep === 'noDatasets') {
+      setCountdown(3)
+
+      countdownInterval = setInterval(() => {
+        setCountdown((prev) => (prev > 1 ? prev - 1 : 1))
+      }, 1000)
+
+      redirectTimer = setTimeout(() => {
+        navigateTo('settings')
+      }, 3100)
+    }
+    return () => {
+      clearTimeout(redirectTimer)
+      clearInterval(countdownInterval)
+    }
+  }, [setupStep, navigateTo, cancelSetupFlow])
 
   const renderStepContent = () => {
     if (step === 'selectType') {
@@ -28,11 +55,31 @@ const ModelSetupFlow = ({ step, onSelectType }) => {
         </>
       )
     }
+
+    if (step === 'noDatasets') {
+      return (
+        <div className="setup-message-container">
+          <h3 className="setup-prompt">No Datasets Found</h3>
+          <p className="setup-sub-prompt">Redirecting to Data Management to import data...</p>
+          <div className="countdown-timer">{countdown}</div>
+        </div>
+      )
+    }
+
+    if (step === 'selectDataset') {
+      return (
+        <>
+          <h3 className="setup-prompt">Select a Dataset</h3>
+          <CarouselSelector items={datasets} onSelect={selectDataset} />
+        </>
+      )
+    }
+
     // Add other steps here later
     return <p>Loading next step...</p>
   }
 
-  // We will add 'selectDataset' and 'selectTimeframe' steps here later
+  // We will add 'selectTimeframe' steps here later
   return (
     <div className="model-setup-flow">
       <button onClick={cancelSetupFlow} className="setup-close-button" title="Cancel Setup">

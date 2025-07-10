@@ -60,7 +60,24 @@ export const HomeScreenProvider = ({ children, currentUsername }) => {
     ...defaultCoreText,
     userNameOrTitle: currentUsername
   })
+  const [datasets, setDatasets] = useState([])
   const leaveTimeoutIdRef = useRef(null)
+
+  const toCamelCase = (str) => str.replace(/_([a-z])/g, (g) => g[1].toUpperCase())
+
+  const convertKeysToCamelCase = (obj) => {
+    if (Array.isArray(obj)) return obj.map((v) => convertKeysToCamelCase(v))
+    if (obj !== null && obj.constructor === Object) {
+      return Object.keys(obj).reduce(
+        (result, key) => ({
+          ...result,
+          [toCamelCase(key)]: convertKeysToCamelCase(obj[key])
+        }),
+        {}
+      )
+    }
+    return obj
+  }
 
   const handleMainNavLinkEnter = (segmentKey) => {
     if (setupStep) return
@@ -86,6 +103,7 @@ export const HomeScreenProvider = ({ children, currentUsername }) => {
   }
 
   const startSetupFlow = (segmentKey) => {
+    if (setupStep) return
     if (segmentKey === 'develop') {
       if (leaveTimeoutIdRef.current) clearTimeout(leaveTimeoutIdRef.current)
       setActiveNavSegmentKey('develop')
@@ -101,19 +119,46 @@ export const HomeScreenProvider = ({ children, currentUsername }) => {
     setCoreDisplay({ ...defaultCoreText, userNameOrTitle: currentUsername })
   }
 
-  const selectModelType = (type) => {
-    console.log(`Model type selected: ${type}`)
-    setNewModelConfig({ type })
-    setSetupStep('selectDataset')
+  const fetchAndSetDatasets = async () => {
+    const result = await window.api.getAllDatasets()
+    if (result.success) {
+      const camelCaseData = convertKeysToCamelCase(result.data)
+      setDatasets(camelCaseData)
+      return camelCaseData
+    }
+    console.error('Failed to fetch datasets:', result.message)
+    return []
   }
 
-  // We will add more functions here later for selectDataset, selectTimeframe, etc.
+  const selectModelType = async (type) => {
+    console.log(`Model type selected: ${type}`)
+    setNewModelConfig({ type })
+
+    const availableDatasets = await fetchAndSetDatasets()
+    // const availableDatasets = [] // for testing purposes
+
+    if (availableDatasets.length > 0) {
+      setSetupStep('selectDataset')
+    } else {
+      setSetupStep('noDatasets')
+    }
+  }
+
+  const selectDataset = (datasetId) => {
+    const selected = datasets.find((data) => data.id === datasetId)
+    console.log('Dataset selected:', selected)
+    setNewModelConfig((prev) => ({ ...prev, dataset: selected }))
+    setSetupStep('selectTimeframe')
+  }
+
+  // We will add more functions here later for selectTimeframe, etc.
 
   const value = {
     // State
     activeNavSegmentKey,
     coreDisplay,
     currentUsername,
+    datasets,
     defaultCoreText,
     newModelConfig,
     leaveTimeoutIdRef,
@@ -122,10 +167,13 @@ export const HomeScreenProvider = ({ children, currentUsername }) => {
 
     // Actions
     cancelSetupFlow,
+    fetchAndSetDatasets,
     handleMainNavLinkEnter,
     handleMainNavLinkLeave,
+    selectDataset,
     selectModelType,
     setActiveNavSegmentKey,
+    setCoreDisplay,
     startSetupFlow
   }
 

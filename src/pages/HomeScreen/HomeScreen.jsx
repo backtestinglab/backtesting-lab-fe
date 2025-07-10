@@ -22,7 +22,8 @@ const HomeScreen = ({ hasInitialAnimationPlayed, onInitialAnimationComplete }) =
   const { navigateTo } = useContext(AppViewContext)
   const [isLogoVisible, setIsLogoVisible] = useState(!hasInitialAnimationPlayed)
 
-  const { coreDisplay, currentUsername, leaveTimeoutIdRef } = useHomeScreen()
+  const { coreDisplay, currentUsername, defaultCoreText, leaveTimeoutIdRef, setCoreDisplay } =
+    useHomeScreen()
 
   useEffect(() => {
     if (!hasInitialAnimationPlayed) {
