@@ -13,7 +13,15 @@ import './ModelSetupFlow.css'
  */
 
 const ModelSetupFlow = ({ step, onSelectType }) => {
-  const { cancelSetupFlow, datasets, selectDataset, setupStep } = useHomeScreen()
+  const {
+    cancelSetupFlow,
+    datasets,
+    finalizeSetup,
+    newModelConfig,
+    selectDataset,
+    setupStep,
+    toggleTimeframe
+  } = useHomeScreen()
   const [countdown, setCountdown] = useState(3)
 
   const { navigateTo } = useContext(AppViewContext)
@@ -75,11 +83,46 @@ const ModelSetupFlow = ({ step, onSelectType }) => {
       )
     }
 
-    // Add other steps here later
-    return <p>Loading next step...</p>
+    if (setupStep === 'selectTimeframe') {
+      const availableTFs = newModelConfig.dataset?.availableTimeframes?.split(',') || []
+      const selectedTFs = newModelConfig.selectedTimeframes || []
+      const maxSelected = selectedTFs.length >= 3
+
+      return (
+        <>
+          <h3 className="setup-prompt">Select up to 3 Timeframes</h3>
+          <div className="setup-options timeframe-chips-container">
+            {availableTFs.map((tf) => {
+              const isSelected = selectedTFs.includes(tf)
+              const isDisabled = !isSelected && maxSelected
+              return (
+                <button
+                  key={tf}
+                  className={`timeframe-chip ${isSelected ? 'selected' : ''}`}
+                  onClick={() => toggleTimeframe(tf)}
+                  disabled={isDisabled}
+                >
+                  {tf}
+                </button>
+              )
+            })}
+          </div>
+          <button
+            className="setup-next-button"
+            onClick={finalizeSetup}
+            disabled={selectedTFs.length === 0}
+          >
+            Next →
+          </button>
+        </>
+      )
+    }
+
+    if (setupStep === 'transitioning') {
+      return <p className="setup-prompt">Preparing development environment...</p>
+    }
   }
 
-  // We will add 'selectTimeframe' steps here later
   return (
     <div className="model-setup-flow">
       <button onClick={cancelSetupFlow} className="setup-close-button" title="Cancel Setup">

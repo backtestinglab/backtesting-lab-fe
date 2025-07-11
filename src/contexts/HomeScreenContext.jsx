@@ -147,11 +147,35 @@ export const HomeScreenProvider = ({ children, currentUsername }) => {
   const selectDataset = (datasetId) => {
     const selected = datasets.find((data) => data.id === datasetId)
     console.log('Dataset selected:', selected)
-    setNewModelConfig((prev) => ({ ...prev, dataset: selected }))
+    setNewModelConfig((prev) => ({ ...prev, dataset: selected, selectedTimeframes: [] }))
     setSetupStep('selectTimeframe')
   }
 
-  // We will add more functions here later for selectTimeframe, etc.
+  const toggleTimeframe = (timeframe) => {
+    setNewModelConfig((prev) => {
+      const currentSelection = prev.selectedTimeframes || []
+      const isSelected = currentSelection.includes(timeframe)
+
+      if (isSelected) {
+        return { ...prev, selectedTimeframes: currentSelection.filter((tf) => tf !== timeframe) }
+      } else {
+        if (currentSelection.length < 3) {
+          return { ...prev, selectedTimeframes: [...currentSelection, timeframe] }
+        }
+      }
+      return prev
+    })
+  }
+
+  const finalizeSetup = () => {
+    console.log('Final Model Config:', newModelConfig)
+    // TODO: Transition to the 'Develop' page, passing the newModelConfig
+    setSetupStep('transitioning')
+    setTimeout(() => {
+      console.log('Pretending to transition, now resetting...')
+      cancelSetupFlow()
+    }, 1500)
+  }
 
   const value = {
     // State
@@ -168,13 +192,15 @@ export const HomeScreenProvider = ({ children, currentUsername }) => {
     // Actions
     cancelSetupFlow,
     fetchAndSetDatasets,
+    finalizeSetup,
     handleMainNavLinkEnter,
     handleMainNavLinkLeave,
     selectDataset,
     selectModelType,
     setActiveNavSegmentKey,
     setCoreDisplay,
-    startSetupFlow
+    startSetupFlow,
+    toggleTimeframe
   }
 
   return <HomeScreenContext.Provider value={value}>{children}</HomeScreenContext.Provider>

@@ -94,3 +94,70 @@
   color: #e0c070;
   text-shadow: 0 0 10px rgba(224, 192, 112, 0.4);
 }
+
+.timeframe-chips-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  max-width: 300px;
+  margin-bottom: 20px;
+}
+
+.timeframe-chip {
+  padding: 6px 14px;
+  border: 1px solid rgba(120, 125, 170, 0.5);
+  background-color: rgba(60, 65, 85, 0.4);
+  color: #c0c8e0;
+  border-radius: 50px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.timeframe-chip:hover {
+  border-color: rgba(150, 155, 200, 0.8);
+  background-color: rgba(80, 85, 115, 0.6);
+}
+
+.timeframe-chip.selected {
+  background-color: #e0c070;
+  color: rgb(30, 32, 42);
+  border-color: #e0c070;
+  font-weight: 700;
+  box-shadow: 0 0 10px rgba(224, 192, 112, 0.3);
+}
+
+.timeframe-chip:disabled {
+  opacity: 0.4;
+  cursor: default;
+  background-color: rgba(60, 65, 85, 0.4);
+  border: 1px solid rgba(120, 125, 170, 0.5);
+}
+
+.setup-next-button {
+  margin-top: 10px;
+  padding: 8px 25px;
+  background-color: rgba(224, 192, 112, 0.2);
+  border: 1px solid #e0c070;
+  color: #e0c070;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.setup-next-button:hover:not(:disabled) {
+  background-color: #e0c070;
+  color: #1a1c26;
+  box-shadow: 0 0 10px rgba(224, 192, 112, 0.3);
+}
+
+.setup-next-button:disabled {
+  opacity: 0.5;
+  cursor: default;
+  border-color: rgba(120, 125, 170, 0.5);
+  color: #8085a0;
+  background-color: transparent;
+}
