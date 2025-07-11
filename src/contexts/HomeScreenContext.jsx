@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 
+import { AppViewContext } from './AppViewContext'
+
 import AnalysisOutlineIcon from '../assets/icons/AnalysisOutlineIcon'
 import AnalysisSolidIcon from '../assets/icons/AnalysisSolidIcon'
 import DevelopOutlineIcon from '../assets/icons/DevelopOutlineIcon'
@@ -61,6 +63,7 @@ export const HomeScreenProvider = ({ children, currentUsername }) => {
     userNameOrTitle: currentUsername
   })
   const [datasets, setDatasets] = useState([])
+  const { navigateTo } = useContext(AppViewContext)
   const leaveTimeoutIdRef = useRef(null)
 
   const toCamelCase = (str) => str.replace(/_([a-z])/g, (g) => g[1].toUpperCase())
@@ -169,12 +172,10 @@ export const HomeScreenProvider = ({ children, currentUsername }) => {
 
   const finalizeSetup = () => {
     console.log('Final Model Config:', newModelConfig)
-    // TODO: Transition to the 'Develop' page, passing the newModelConfig
-    setSetupStep('transitioning')
     setTimeout(() => {
-      console.log('Pretending to transition, now resetting...')
+      navigateTo('develop', newModelConfig)
       cancelSetupFlow()
-    }, 1500)
+    }, 1200)
   }
 
   const value = {

@@ -1,0 +1,23 @@
+.develop-page {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  /* background-color: #181a26; */
+  background-color: rgba(30, 33, 48, 0.9);
+  color: #c0c8e0;
+}
+
+.develop-page-header {
+  padding: 15px 20px;
+  background-color: rgba(40, 44, 60, 0.5);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(60, 65, 85, 0.5);
+}
+
+.develop-page-content {
+  flex-grow: 1;
+  padding: 20px;
+}
