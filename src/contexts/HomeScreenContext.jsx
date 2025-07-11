@@ -50,9 +50,7 @@ const defaultCoreText = {
 
 const HomeScreenContext = createContext()
 
-export const useHomeScreen = () => {
-  return useContext(HomeScreenContext)
-}
+export const useHomeScreen = () => useContext(HomeScreenContext)
 
 export const HomeScreenProvider = ({ children, currentUsername }) => {
   const [setupStep, setSetupStep] = useState(null)
@@ -172,10 +170,13 @@ export const HomeScreenProvider = ({ children, currentUsername }) => {
 
   const finalizeSetup = () => {
     console.log('Final Model Config:', newModelConfig)
+    setSetupStep('transitioning')
+    const transitionDuration = 1300
     setTimeout(() => {
       navigateTo('develop', newModelConfig)
-      cancelSetupFlow()
-    }, 1200)
+      setSetupStep(null)
+      setNewModelConfig({})
+    }, transitionDuration)
   }
 
   const value = {

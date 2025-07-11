@@ -21,9 +21,20 @@ import './HomeScreen.css'
 const HomeScreen = ({ hasInitialAnimationPlayed, onInitialAnimationComplete }) => {
   const { navigateTo } = useContext(AppViewContext)
   const [isLogoVisible, setIsLogoVisible] = useState(!hasInitialAnimationPlayed)
+  const {
+    coreDisplay,
+    currentUsername,
+    defaultCoreText,
+    leaveTimeoutIdRef,
+    setCoreDisplay,
+    setupStep
+  } = useHomeScreen()
 
-  const { coreDisplay, currentUsername, defaultCoreText, leaveTimeoutIdRef, setCoreDisplay } =
-    useHomeScreen()
+  const isTransitioning = setupStep === 'transitioning'
+  const homeScreenClassName = `
+    home-screen 
+    ${isTransitioning ? 'transitioning-out' : ''}
+  `
 
   useEffect(() => {
     if (!hasInitialAnimationPlayed) {
@@ -69,7 +80,7 @@ const HomeScreen = ({ hasInitialAnimationPlayed, onInitialAnimationComplete }) =
   }
 
   return (
-    <div className="home-screen">
+    <div className={homeScreenClassName}>
       <SidePanel position="left">
         <SidePanelSection title="Recent" className="recent-section">
           <ul className="panel-content-list">

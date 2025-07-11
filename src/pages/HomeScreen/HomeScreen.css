@@ -13,3 +13,72 @@
   background-size: 30px 30px;
   background-position: center center;
 }
+
+/* --- Keyframe Definitions --- */
+@keyframes slideOutLeft {
+  to {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+}
+@keyframes slideOutRight {
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+@keyframes slideOutUp {
+  to {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+}
+@keyframes slideOutDown {
+  to {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}
+@keyframes shrinkOut {
+  to {
+    transform: scale(0);
+    opacity: 0;
+  }
+}
+
+/* Base styles for transitionable elements */
+.side-panel,
+.outer-frame-piece,
+.main-hud-area {
+  transition:
+    transform 1.4s cubic-bezier(0.6, -0.28, 0.735, 0.045),
+    opacity 1.05s ease-in;
+}
+
+/* --- Applying Animations on Transition --- */
+.home-screen.transitioning-out .side-panel.left-panel {
+  animation: slideOutLeft 1.4s forwards ease-in-out;
+}
+.home-screen.transitioning-out .side-panel.right-panel {
+  animation: slideOutRight 1.4s forwards ease-in-out;
+}
+
+/* Target the top OuterFrame pieces */
+.home-screen.transitioning-out .outer-frame-piece.top-left-frame,
+.home-screen.transitioning-out .outer-frame-piece.top-right-frame {
+  animation: slideOutUp 1.225s forwards ease-in-out;
+  animation-delay: 0.175s;
+}
+
+/* Target the bottom OuterFrame pieces */
+.home-screen.transitioning-out .outer-frame-piece.bottom-left-frame,
+.home-screen.transitioning-out .outer-frame-piece.bottom-right-frame {
+  animation: slideOutDown 1.225s forwards ease-in-out;
+  animation-delay: 0.175s;
+}
+
+/* Target the central HUD display (containing the core and icon buttons) */
+.home-screen.transitioning-out .main-hud-area {
+  animation: shrinkOut 1.05s forwards ease-in;
+  animation-delay: 0.35s;
+}
