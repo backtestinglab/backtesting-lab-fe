@@ -1,5 +1,7 @@
 import React, { useContext, useEffect } from 'react'
 
+import logo from '../../assets/logo.svg'
+
 import { AppViewContext } from '../../contexts/AppViewContext'
 import './Develop.css'
 
@@ -16,16 +18,48 @@ const Develop = ({ modelConfig }) => {
   return (
     <div className="develop-page">
       <header className="develop-page-header">
-        <h1>Develop: {modelConfig?.dataset?.name || 'New Model'}</h1>
-        <button onClick={() => navigateTo('home')}>← Back to Home</button>
+        <div className="header-left">
+          <img src={logo} className="header-logo" alt="BacktestingLab Logo" />
+        </div>
+        <div className="header-center">
+          <div className="header-title">
+            <span className="header-prefix">Develop:</span>
+            <span className="header-dataset-name">{modelConfig?.dataset?.name || 'New Model'}</span>
+          </div>
+        </div>
+        <div className="header-right">
+          <button className="back-button" onClick={() => navigateTo('home')}>
+            ← Home
+          </button>
+        </div>
       </header>
-      <main className="develop-page-content">
-        <p>Selected Model Type: {modelConfig?.type}</p>
-        <p>Selected Dataset ID: {modelConfig?.dataset?.id}</p>
-        <p>Selected Timeframes: {modelConfig?.selectedTimeframes?.join(', ')}</p>
-        <p>--- Chart Area Placeholder ---</p>
-        <p>--- Condition Editor Placeholder ---</p>
-        <p>--- Results Table Placeholder ---</p>
+      <main className="develop-workspace">
+        <section className="chart-area">
+          <div className="placeholder-text">Chart Area</div>
+        </section>
+
+        <section className="condition-editor-area">
+          <div className="panel-header">
+            <h3>Base Condition</h3>
+            {/* Add buttons for GUI/JS mode, minimize, etc. later */}
+          </div>
+          <div className="placeholder-text">Condition Editor</div>
+        </section>
+
+        <section className="results-area">
+          <div className="panel-header">
+            <h3>Occurrences (0)</h3>
+            <div className="results-controls">
+              <button title="Previous Occurrence" className="up-arrow">
+                ▲
+              </button>
+              <button title="Next Occurrence" className="down-arrow">
+                ▲
+              </button>
+            </div>
+          </div>
+          <div className="placeholder-text">Results Table</div>
+        </section>
       </main>
     </div>
   )
