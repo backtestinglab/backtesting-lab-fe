@@ -52,6 +52,26 @@ const HomeScreenContext = createContext()
 
 export const useHomeScreen = () => useContext(HomeScreenContext)
 
+const TIMEFRAME_ORDER_MAP = {
+  '1m': 1,
+  '5M': 5,
+  '15M': 15,
+  '1H': 60,
+  '4H': 240,
+  '1D': 1440,
+  '1W': 10080,
+  '1Mo': 43200
+}
+
+const sortTimeframes = (timeframes) => {
+  const sorted = [...timeframes].sort((a, b) => {
+    const valueA = TIMEFRAME_ORDER_MAP[a] || 999999
+    const valueB = TIMEFRAME_ORDER_MAP[b] || 999999
+    return valueA - valueB
+  })
+  return sorted
+}
+
 export const HomeScreenProvider = ({ children, currentUsername }) => {
   const [setupStep, setSetupStep] = useState(null)
   const [newModelConfig, setNewModelConfig] = useState({})
@@ -155,16 +175,21 @@ export const HomeScreenProvider = ({ children, currentUsername }) => {
   const toggleTimeframe = (timeframe) => {
     setNewModelConfig((prev) => {
       const currentSelection = prev.selectedTimeframes || []
-      const isSelected = currentSelection.includes(timeframe)
+      let newSelection
 
-      if (isSelected) {
-        return { ...prev, selectedTimeframes: currentSelection.filter((tf) => tf !== timeframe) }
+      if (currentSelection.includes(timeframe)) {
+        newSelection = currentSelection.filter((tf) => tf !== timeframe)
       } else {
         if (currentSelection.length < 3) {
-          return { ...prev, selectedTimeframes: [...currentSelection, timeframe] }
+          newSelection = [...currentSelection, timeframe]
+        } else {
+          return prev
         }
       }
-      return prev
+
+      const sortedSelection = sortTimeframes(newSelection)
+
+      return { ...prev, selectedTimeframes: sortedSelection }
     })
   }
 
