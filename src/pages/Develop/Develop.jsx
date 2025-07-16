@@ -16,6 +16,7 @@ const Develop = ({ modelConfig }) => {
   const [activeTimeframe, setActiveTimeframe] = useState(
     modelConfig?.selectedTimeframes?.[0] || null
   )
+  const [isVolumeVisible, setIsVolumeVisible] = useState(false)
 
   useEffect(() => {
     console.log('DevelopPage mounted with config:', modelConfig)
@@ -80,7 +81,19 @@ const Develop = ({ modelConfig }) => {
                   </button>
                 ))}
               </div>
-              <Chart data={chartData} />
+              <div className="chart-indicators-display">
+                <div className="indicator-item">
+                  <span className="indicator-name">Volume</span>
+                  <button
+                    className="indicator-toggle-visibility"
+                    onClick={() => setIsVolumeVisible(!isVolumeVisible)}
+                    title={isVolumeVisible ? 'Hide Volume' : 'Show Volume'}
+                  >
+                    {isVolumeVisible ? '👁️' : '👁️‍🗨️'}
+                  </button>
+                </div>
+              </div>
+              <Chart data={chartData} isVolumeVisible={isVolumeVisible} />
             </>
           )}
         </section>

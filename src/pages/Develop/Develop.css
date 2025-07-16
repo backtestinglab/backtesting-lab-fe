@@ -214,6 +214,44 @@
   transform: rotate(180deg);
 }
 
+.chart-indicators-display {
+  position: absolute;
+  top: 40px;
+  left: 10px;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.indicator-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: rgba(30, 33, 48, 0.8);
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  color: #a0a8c0;
+  pointer-events: auto;
+}
+
+.indicator-name {
+  font-weight: 600;
+}
+
+.indicator-toggle-visibility {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0;
+  color: #a0a8c0;
+  transition: color 0.2s ease;
+}
+
+.indicator-toggle-visibility:hover {
+  color: #fff;
+}
+
 /* --- Layout for Wider Screens --- */
 /* side-by-side layout on ultrawide monitors */
 @media (min-width: 1800px) {
