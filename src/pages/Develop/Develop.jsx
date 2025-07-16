@@ -13,12 +13,15 @@ const Develop = ({ modelConfig }) => {
   const { navigateTo } = useContext(AppViewContext)
   const [chartData, setChartData] = useState([])
   const [isLoading, setIsLoading] = useState(true)
+  const [activeTimeframe, setActiveTimeframe] = useState(
+    modelConfig?.selectedTimeframes?.[0] || null
+  )
 
   useEffect(() => {
     console.log('DevelopPage mounted with config:', modelConfig)
 
     const fetchChartData = async () => {
-      if (!modelConfig?.dataset?.id || !modelConfig?.selectedTimeframes?.[0]) {
+      if (!modelConfig?.dataset?.id || !activeTimeframe) {
         return
       }
 
@@ -26,7 +29,7 @@ const Develop = ({ modelConfig }) => {
 
       const result = await window.api.getChartData({
         datasetId: modelConfig.dataset.id,
-        timeframe: modelConfig.selectedTimeframes[0]
+        timeframe: activeTimeframe
       })
 
       if (result.success) {
@@ -38,7 +41,9 @@ const Develop = ({ modelConfig }) => {
     }
 
     fetchChartData()
-  }, [modelConfig])
+  }, [activeTimeframe, modelConfig])
+
+  const selectedTimeframes = modelConfig?.selectedTimeframes || []
 
   return (
     <div className="develop-page">
@@ -60,6 +65,17 @@ const Develop = ({ modelConfig }) => {
       </header>
       <main className="develop-workspace">
         <section className="chart-area">
+          <div className="timeframe-switcher">
+            {selectedTimeframes.map((tf) => (
+              <button
+                key={tf}
+                className={`timeframe-button ${activeTimeframe === tf ? 'active' : ''}`}
+                onClick={() => setActiveTimeframe(tf)}
+              >
+                {tf}
+              </button>
+            ))}
+          </div>
           {isLoading ? (
             <div className="placeholder-text">Loading Chart Data...</div>
           ) : (

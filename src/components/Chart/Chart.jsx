@@ -1,12 +1,16 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { CandlestickSeries, ColorType, createChart } from 'lightweight-charts'
 
 import './Chart.css'
 
+/**
+ * @description Renders a TradingView Lightweight Chart with OHLC overlay.
+ */
 const Chart = ({ data }) => {
   const chartContainerRef = useRef(null)
   const chartRef = useRef(null)
   const seriesRef = useRef(null)
+  const [ohlc, setOhlc] = useState(null)
 
   useEffect(() => {
     if (chartRef.current) return
@@ -43,6 +47,16 @@ const Chart = ({ data }) => {
 
     seriesRef.current = candlestickSeries
 
+    chart.subscribeCrosshairMove((param) => {
+      const candleData = param.seriesData.get(candlestickSeries)
+      if (candleData) {
+        setOhlc(candleData)
+      } else {
+        const seriesData = data[data.length - 1]
+        setOhlc(seriesData)
+      }
+    })
+
     // Handle chart resizing
     const handleResize = () => {
       if (chartContainerRef.current) {
@@ -66,7 +80,27 @@ const Chart = ({ data }) => {
     }
   }, [data])
 
-  return <div ref={chartContainerRef} className="chart-container" />
+  return (
+    <div className="chart-wrapper">
+      {ohlc && (
+        <div className="ohlc-overlay">
+          <span>
+            O <span className="ohlc-value">{ohlc.open?.toFixed(2)}</span>
+          </span>
+          <span>
+            H <span className="ohlc-value">{ohlc.high?.toFixed(2)}</span>
+          </span>
+          <span>
+            L <span className="ohlc-value">{ohlc.low?.toFixed(2)}</span>
+          </span>
+          <span>
+            C <span className="ohlc-value">{ohlc.close?.toFixed(2)}</span>
+          </span>
+        </div>
+      )}
+      <div ref={chartContainerRef} className="chart-container" />
+    </div>
+  )
 }
 
 export default Chart
