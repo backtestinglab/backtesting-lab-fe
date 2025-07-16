@@ -65,21 +65,23 @@ const Develop = ({ modelConfig }) => {
       </header>
       <main className="develop-workspace">
         <section className="chart-area">
-          <div className="timeframe-switcher">
-            {selectedTimeframes.map((tf) => (
-              <button
-                key={tf}
-                className={`timeframe-button ${activeTimeframe === tf ? 'active' : ''}`}
-                onClick={() => setActiveTimeframe(tf)}
-              >
-                {tf}
-              </button>
-            ))}
-          </div>
           {isLoading ? (
             <div className="placeholder-text">Loading Chart Data...</div>
           ) : (
-            <Chart data={chartData} />
+            <>
+              <div className="timeframe-switcher">
+                {selectedTimeframes.map((tf) => (
+                  <button
+                    key={tf}
+                    className={`timeframe-button ${activeTimeframe === tf ? 'active' : ''}`}
+                    onClick={() => setActiveTimeframe(tf)}
+                  >
+                    {tf}
+                  </button>
+                ))}
+              </div>
+              <Chart data={chartData} />
+            </>
           )}
         </section>
 
