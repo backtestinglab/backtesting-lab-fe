@@ -1,7 +1,8 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
+
+import Chart from '../../components/Chart/Chart'
 
 import logo from '../../assets/logo.svg'
-
 import { AppViewContext } from '../../contexts/AppViewContext'
 import './Develop.css'
 
@@ -10,9 +11,33 @@ import './Develop.css'
  */
 const Develop = ({ modelConfig }) => {
   const { navigateTo } = useContext(AppViewContext)
+  const [chartData, setChartData] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     console.log('DevelopPage mounted with config:', modelConfig)
+
+    const fetchChartData = async () => {
+      if (!modelConfig?.dataset?.id || !modelConfig?.selectedTimeframes?.[0]) {
+        return
+      }
+
+      setIsLoading(true)
+
+      const result = await window.api.getChartData({
+        datasetId: modelConfig.dataset.id,
+        timeframe: modelConfig.selectedTimeframes[0]
+      })
+
+      if (result.success) {
+        setChartData(result.data)
+      } else {
+        console.error('Failed to load chart data:', result.message)
+      }
+      setIsLoading(false)
+    }
+
+    fetchChartData()
   }, [modelConfig])
 
   return (
@@ -35,7 +60,11 @@ const Develop = ({ modelConfig }) => {
       </header>
       <main className="develop-workspace">
         <section className="chart-area">
-          <div className="placeholder-text">Chart Area</div>
+          {isLoading ? (
+            <div className="placeholder-text">Loading Chart Data...</div>
+          ) : (
+            <Chart data={chartData} />
+          )}
         </section>
 
         <section className="condition-editor-area">
