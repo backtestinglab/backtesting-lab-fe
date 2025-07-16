@@ -63,15 +63,16 @@ const Chart = ({ data, isVolumeVisible }) => {
     // --- Event Subscription ---
     chart.subscribeCrosshairMove((param) => {
       const candleData = param.seriesData.get(candleSeries)
+
       if (candleData) {
-        const volumeValue = isVolumeVisible ? param.seriesData.get(volumeSeries)?.value : null
-        setOhlcv({ ...candleData, volume: volumeValue })
+        const fullDataPoint = data.find(({ time }) => time === candleData.time)
+        setOhlcv(fullDataPoint)
       }
     })
 
-    const lastCandle = data[data.length - 1]
-    const lastVolume = isVolumeVisible ? lastCandle.volume : null
-    setOhlcv({ ...lastCandle, volume: lastVolume })
+    if (data.length > 0) {
+      setOhlcv(data[data.length - 1])
+    }
 
     // --- Cleanup ---
     const handleResize = () => chart.applyOptions({ width: chartContainerRef.current.clientWidth })
@@ -86,21 +87,21 @@ const Chart = ({ data, isVolumeVisible }) => {
   return (
     <div className="chart-wrapper">
       {ohlcv && (
-        <div className="ohlc-overlay">
+        <div className="ohlcv-overlay">
           <span>
-            O <span className="ohlc-value">{ohlcv.open?.toFixed(2)}</span>
+            O <span className="ohlcv-value">{ohlcv.open?.toFixed(2)}</span>
           </span>
           <span>
-            H <span className="ohlc-value">{ohlcv.high?.toFixed(2)}</span>
+            H <span className="ohlcv-value">{ohlcv.high?.toFixed(2)}</span>
           </span>
           <span>
-            L <span className="ohlc-value">{ohlcv.low?.toFixed(2)}</span>
+            L <span className="ohlcv-value">{ohlcv.low?.toFixed(2)}</span>
           </span>
           <span>
-            C <span className="ohlc-value">{ohlcv.close?.toFixed(2)}</span>
+            C <span className="ohlcv-value">{ohlcv.close?.toFixed(2)}</span>
           </span>
           <span>
-            Vol <span className="ohlc-value">{ohlcv.volume?.toLocaleString()}</span>
+            Vol <span className="ohlcv-value">{ohlcv.volume?.toLocaleString()}</span>
           </span>
         </div>
       )}

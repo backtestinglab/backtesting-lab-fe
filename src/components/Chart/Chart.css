@@ -9,7 +9,7 @@
   height: 100%;
 }
 
-.ohlc-overlay {
+.ohlcv-overlay {
   position: absolute;
   top: 10px;
   left: 15px;
@@ -22,12 +22,12 @@
   gap: 12px;
 }
 
-.ohlc-overlay span {
+.ohlcv-overlay span {
   display: inline-flex;
   gap: 4px;
 }
 
-.ohlc-overlay .ohlc-value {
+.ohlcv-overlay .ohlcv-value {
   color: #e0e8ff;
   font-weight: 600;
 }
