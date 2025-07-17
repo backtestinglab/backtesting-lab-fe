@@ -1,9 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react'
 
 import Chart from '../../components/Chart/Chart'
+import DrawingToolbar from '../../components/DrawingToolbar/DrawingToolbar'
 
 import logo from '../../assets/logo.svg'
 import { AppViewContext } from '../../contexts/AppViewContext'
+
 import './Develop.css'
 
 /**
@@ -17,6 +19,7 @@ const Develop = ({ modelConfig }) => {
     modelConfig?.selectedTimeframes?.[0] || null
   )
   const [isVolumeVisible, setIsVolumeVisible] = useState(false)
+  const [activeTool, setActiveTool] = useState('cursor')
 
   useEffect(() => {
     console.log('DevelopPage mounted with config:', modelConfig)
@@ -46,6 +49,10 @@ const Develop = ({ modelConfig }) => {
 
   const selectedTimeframes = modelConfig?.selectedTimeframes || []
 
+  const handleToolSelect = (toolId) => {
+    setActiveTool((prevTool) => (prevTool === toolId ? 'cursor' : toolId))
+  }
+
   return (
     <div className="develop-page">
       <header className="develop-page-header">
@@ -70,6 +77,7 @@ const Develop = ({ modelConfig }) => {
             <div className="placeholder-text">Loading Chart Data...</div>
           ) : (
             <>
+              <DrawingToolbar activeTool={activeTool} onToolSelect={handleToolSelect} />
               <div className="timeframe-switcher">
                 {selectedTimeframes.map((tf) => (
                   <button
