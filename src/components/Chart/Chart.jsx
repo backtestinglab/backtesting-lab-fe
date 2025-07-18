@@ -1,18 +1,20 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { CandlestickSeries, ColorType, createChart, HistogramSeries } from 'lightweight-charts'
+import { HorizontalLinePlugin } from './HorizontalLinePlugin'
 import PropTypes from 'prop-types'
 
 import './Chart.css'
 
 /**
- * @description Renders a TradingView Lightweight Chart with OHLC overlay.
+ * @description Renders a TradingView Lightweight Chart with OHLCV overlay.
  */
-const Chart = ({ data, isVolumeVisible }) => {
+const Chart = ({ activeTool, data, drawings, isVolumeVisible, onDrawingAdd }) => {
   const chartContainerRef = useRef(null)
   const [ohlcv, setOhlcv] = useState(null)
 
+  // --- Initialization ---
   useEffect(() => {
-    if (!chartContainerRef.current || data.length === 0) {
+    if (!chartContainerRef.current || !data || data.length === 0) {
       return
     }
 
@@ -27,7 +29,7 @@ const Chart = ({ data, isVolumeVisible }) => {
         horzLines: { color: 'rgba(60, 65, 85, 0.5)' }
       },
       timeScale: { timeVisible: true, secondsVisible: true, borderColor: 'rgba(80, 85, 110, 0.8)' },
-      crosshair: { mode: 1 }
+      crosshair: { mode: 0 } // 3 is MagnetOHLC
     })
 
     // --- Candlestick Series ---
@@ -46,10 +48,10 @@ const Chart = ({ data, isVolumeVisible }) => {
     if (isVolumeVisible) {
       volumeSeries = chart.addSeries(HistogramSeries, {
         priceFormat: { type: 'volume' },
-        priceScaleId: 'volume_scale'
+        priceScaleId: 'volume_scale',
+        lastValueVisible: false
       })
       chart.priceScale('volume_scale').applyOptions({ scaleMargins: { top: 0.8, bottom: 0 } })
-
       const volumeData = data.map((d) => ({
         time: d.time,
         value: d.volume,
@@ -58,31 +60,42 @@ const Chart = ({ data, isVolumeVisible }) => {
       volumeSeries.setData(volumeData)
     }
 
+    // --- Plugin Initialization ---
+    const horizontalLinePlugin = new HorizontalLinePlugin()
+    horizontalLinePlugin.onAdd = onDrawingAdd
+    horizontalLinePlugin.update({ drawings, activeTool })
+    candleSeries.attachPrimitive(horizontalLinePlugin)
+
     chart.timeScale().fitContent()
 
     // --- Event Subscription ---
-    chart.subscribeCrosshairMove((param) => {
-      const candleData = param.seriesData.get(candleSeries)
+    const handleResize = () => chart.applyOptions({ width: chartContainerRef.current.clientWidth })
 
+    const crosshairMoveHandler = (param) => {
+      const candleData = param.seriesData.get(candleSeries)
       if (candleData) {
         const fullDataPoint = data.find(({ time }) => time === candleData.time)
         setOhlcv(fullDataPoint)
       }
-    })
+    }
 
+    chart.subscribeCrosshairMove(crosshairMoveHandler)
+
+    // Set initial OHLCV display to the last candle
     if (data.length > 0) {
       setOhlcv(data[data.length - 1])
     }
 
-    // --- Cleanup ---
-    const handleResize = () => chart.applyOptions({ width: chartContainerRef.current.clientWidth })
+    // --- Event Listeners ---
     window.addEventListener('resize', handleResize)
 
+    // --- Cleanup ---
     return () => {
+      chart.unsubscribeCrosshairMove(crosshairMoveHandler)
       window.removeEventListener('resize', handleResize)
       chart.remove()
     }
-  }, [data, isVolumeVisible])
+  }, [data, drawings, activeTool, isVolumeVisible, onDrawingAdd])
 
   return (
     <div className="chart-wrapper">
@@ -111,8 +124,11 @@ const Chart = ({ data, isVolumeVisible }) => {
 }
 
 Chart.propTypes = {
+  activeTool: PropTypes.string,
   data: PropTypes.array.isRequired,
-  isVolumeVisible: PropTypes.bool.isRequired
+  drawings: PropTypes.array.isRequired,
+  isVolumeVisible: PropTypes.bool.isRequired,
+  onDrawingAdd: PropTypes.func
 }
 
 export default Chart

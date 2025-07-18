@@ -70,6 +70,13 @@
   color: #e0e8ff;
 }
 
+.header-model-type {
+  font-size: 1rem;
+  font-weight: 400;
+  color: #8085a0;
+  margin-left: 3px;
+}
+
 .back-button {
   background: none;
   border: 1px solid #505570;

@@ -20,6 +20,7 @@ const Develop = ({ modelConfig }) => {
   )
   const [isVolumeVisible, setIsVolumeVisible] = useState(false)
   const [activeTool, setActiveTool] = useState('cursor')
+  const [drawings, setDrawings] = useState([])
 
   useEffect(() => {
     console.log('DevelopPage mounted with config:', modelConfig)
@@ -53,6 +54,14 @@ const Develop = ({ modelConfig }) => {
     setActiveTool((prevTool) => (prevTool === toolId ? 'cursor' : toolId))
   }
 
+  const handleDrawingAdd = (newDrawing) => {
+    setDrawings((prevDrawings) => [...prevDrawings, newDrawing])
+  }
+
+  const modelTypeDisplay = modelConfig?.type
+    ? modelConfig.type.charAt(0).toUpperCase() + modelConfig.type.slice(1)
+    : ''
+
   return (
     <div className="develop-page">
       <header className="develop-page-header">
@@ -63,6 +72,9 @@ const Develop = ({ modelConfig }) => {
           <div className="header-title">
             <span className="header-prefix">Develop:</span>
             <span className="header-dataset-name">{modelConfig?.dataset?.name || 'New Model'}</span>
+            {modelTypeDisplay && (
+              <span className="header-model-type">({modelTypeDisplay} Model)</span>
+            )}
           </div>
         </div>
         <div className="header-right">
@@ -101,7 +113,13 @@ const Develop = ({ modelConfig }) => {
                   </button>
                 </div>
               </div>
-              <Chart data={chartData} isVolumeVisible={isVolumeVisible} />
+              <Chart
+                activeTool={activeTool}
+                data={chartData}
+                drawings={drawings}
+                isVolumeVisible={isVolumeVisible}
+                onDrawingAdd={handleDrawingAdd}
+              />
             </>
           )}
         </section>
