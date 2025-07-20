@@ -10,11 +10,15 @@ import './Chart.css'
  */
 const Chart = ({ activeTool, data, drawings, isVolumeVisible, onDrawingAdd }) => {
   const chartContainerRef = useRef(null)
+  const chartRef = useRef(null)
+  const candleSeriesRef = useRef(null)
+  const volumeSeriesRef = useRef(null)
+  const pluginRef = useRef(null)
   const [ohlcv, setOhlcv] = useState(null)
 
   // --- Initialization ---
   useEffect(() => {
-    if (!chartContainerRef.current || !data || data.length === 0) {
+    if (!chartContainerRef.current) {
       return
     }
 
@@ -31,6 +35,7 @@ const Chart = ({ activeTool, data, drawings, isVolumeVisible, onDrawingAdd }) =>
       timeScale: { timeVisible: true, secondsVisible: true, borderColor: 'rgba(80, 85, 110, 0.8)' },
       crosshair: { mode: 0 } // 3 is MagnetOHLC
     })
+    chartRef.current = chart
 
     // --- Candlestick Series ---
     const candleSeries = chart.addSeries(CandlestickSeries, {
@@ -41,50 +46,25 @@ const Chart = ({ activeTool, data, drawings, isVolumeVisible, onDrawingAdd }) =>
       wickDownColor: '#ef5350',
       wickUpColor: '#26a69a'
     })
-    candleSeries.setData(data)
-
-    // --- Volume Series (Conditional) ---
-    let volumeSeries = null
-    if (isVolumeVisible) {
-      volumeSeries = chart.addSeries(HistogramSeries, {
-        priceFormat: { type: 'volume' },
-        priceScaleId: 'volume_scale',
-        lastValueVisible: false
-      })
-      chart.priceScale('volume_scale').applyOptions({ scaleMargins: { top: 0.8, bottom: 0 } })
-      const volumeData = data.map((d) => ({
-        time: d.time,
-        value: d.volume,
-        color: d.close >= d.open ? 'rgba(38, 166, 154, 0.5)' : 'rgba(239, 83, 80, 0.5)'
-      }))
-      volumeSeries.setData(volumeData)
-    }
+    candleSeriesRef.current = candleSeries
 
     // --- Plugin Initialization ---
     const horizontalLinePlugin = new HorizontalLinePlugin()
-    horizontalLinePlugin.onAdd = onDrawingAdd
-    horizontalLinePlugin.update({ drawings, activeTool })
+    pluginRef.current = horizontalLinePlugin
     candleSeries.attachPrimitive(horizontalLinePlugin)
-
-    chart.timeScale().fitContent()
 
     // --- Event Subscription ---
     const handleResize = () => chart.applyOptions({ width: chartContainerRef.current.clientWidth })
 
     const crosshairMoveHandler = (param) => {
-      const candleData = param.seriesData.get(candleSeries)
-      if (candleData) {
-        const fullDataPoint = data.find(({ time }) => time === candleData.time)
+      if (param.seriesData.has(candleSeriesRef.current)) {
+        const candleData = param.seriesData.get(candleSeriesRef.current)
+        const fullDataPoint = data.find((d) => d.time === candleData.time)
         setOhlcv(fullDataPoint)
       }
     }
 
     chart.subscribeCrosshairMove(crosshairMoveHandler)
-
-    // Set initial OHLCV display to the last candle
-    if (data.length > 0) {
-      setOhlcv(data[data.length - 1])
-    }
 
     // --- Event Listeners ---
     window.addEventListener('resize', handleResize)
@@ -95,7 +75,60 @@ const Chart = ({ activeTool, data, drawings, isVolumeVisible, onDrawingAdd }) =>
       window.removeEventListener('resize', handleResize)
       chart.remove()
     }
-  }, [data, drawings, activeTool, isVolumeVisible, onDrawingAdd])
+  }, [])
+
+  // --- For DATA updates ---
+  useEffect(() => {
+    if (!candleSeriesRef.current || !chartRef.current || !data) return
+
+    candleSeriesRef.current.setData(data)
+    chartRef.current.timeScale().fitContent()
+
+    if (data.length > 0) {
+      setOhlcv(data[data.length - 1])
+    }
+  }, [data])
+
+  // --- Effect for VOLUME visibility updates ---
+  useEffect(() => {
+    if (!chartRef.current || !data) return
+
+    if (isVolumeVisible) {
+      if (!volumeSeriesRef.current) {
+        const volumeSeries = chartRef.current.addSeries(HistogramSeries, {
+          priceFormat: { type: 'volume' },
+          priceScaleId: 'volume_scale',
+          lastValueVisible: false
+        })
+        volumeSeriesRef.current = volumeSeries
+      }
+      chartRef.current
+        .priceScale('volume_scale')
+        .applyOptions({ scaleMargins: { top: 0.8, bottom: 0 } })
+      const volumeData = data.map((d) => ({
+        time: d.time,
+        value: d.volume,
+        color: d.close >= d.open ? 'rgba(38, 166, 154, 0.5)' : 'rgba(239, 83, 80, 0.5)'
+      }))
+      volumeSeriesRef.current.setData(volumeData)
+    } else {
+      if (volumeSeriesRef.current) {
+        chartRef.current.removeSeries(volumeSeriesRef.current)
+        volumeSeriesRef.current = null
+        try {
+          chartRef.current.removePriceScale('volume_scale')
+        } catch (error) {}
+      }
+    }
+  }, [isVolumeVisible, data])
+
+  // --- For PLUGIN updates (drawings and active tool) ---
+  useEffect(() => {
+    if (!pluginRef.current) return
+
+    pluginRef.current.onAdd = onDrawingAdd
+    pluginRef.current.update({ drawings, activeTool })
+  }, [drawings, activeTool, onDrawingAdd])
 
   return (
     <div className="chart-wrapper">
