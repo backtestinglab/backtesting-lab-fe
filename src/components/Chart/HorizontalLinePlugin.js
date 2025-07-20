@@ -6,10 +6,11 @@
 export class HorizontalLinePlugin {
   constructor() {
     this._state = {
-      drawings: [],
       activeTool: 'cursor',
-      series: null,
-      chart: null
+      chart: null,
+      drawings: [],
+      magnetMode: 0,
+      series: null
     }
     this._paneView = new HorizontalLinePaneView(this._state)
     this.onAdd = null
@@ -59,8 +60,32 @@ export class HorizontalLinePlugin {
     if (!this._state.series || !param.point || this._state.activeTool !== 'horzline') {
       return
     }
-    const price = this._state.series.coordinateToPrice(param.point.y)
-    if (price !== null && this.onAdd) {
+
+    let price = this._state.series.coordinateToPrice(param.point.y)
+
+    if (price === null) return
+
+    if (
+      (this._state.magnetMode === 3 || this._state.magnetMode === 1) &&
+      param.seriesData.has(this._state.series)
+    ) {
+      const candle = param.seriesData.get(this._state.series)
+      const prices = [candle.open, candle.high, candle.low, candle.close]
+
+      let closestPrice = prices[0]
+      let minDistance = Math.abs(closestPrice - price)
+
+      for (let i = 1; i < prices.length; i++) {
+        const distance = Math.abs(prices[i] - price)
+        if (distance < minDistance) {
+          minDistance = distance
+          closestPrice = prices[i]
+        }
+      }
+      price = closestPrice
+    }
+
+    if (this.onAdd) {
       this.onAdd({
         color: 'rgba(200, 220, 255, 0.7)',
         id: Date.now(),

@@ -5,6 +5,19 @@ import PropTypes from 'prop-types'
 
 import './Chart.css'
 
+const chartOptions = {
+  layout: {
+    background: { type: ColorType.Solid, color: 'rgba(30, 33, 48, 1)' },
+    textColor: '#c0c8e0'
+  },
+  grid: {
+    vertLines: { color: 'rgba(60, 65, 85, 0.5)' },
+    horzLines: { color: 'rgba(60, 65, 85, 0.5)' }
+  },
+  timeScale: { timeVisible: true, secondsVisible: true, borderColor: 'rgba(80, 85, 110, 0.8)' },
+  crosshair: { mode: 0 } // 3 is MagnetOHLC
+}
+
 /**
  * @description Renders a TradingView Lightweight Chart with OHLCV overlay.
  */
@@ -23,18 +36,7 @@ const Chart = ({ activeTool, data, drawings, isVolumeVisible, onDrawingAdd }) =>
     }
 
     // --- Chart Creation ---
-    const chart = createChart(chartContainerRef.current, {
-      layout: {
-        background: { type: ColorType.Solid, color: 'rgba(30, 33, 48, 1)' },
-        textColor: '#c0c8e0'
-      },
-      grid: {
-        vertLines: { color: 'rgba(60, 65, 85, 0.5)' },
-        horzLines: { color: 'rgba(60, 65, 85, 0.5)' }
-      },
-      timeScale: { timeVisible: true, secondsVisible: true, borderColor: 'rgba(80, 85, 110, 0.8)' },
-      crosshair: { mode: 0 } // 3 is MagnetOHLC
-    })
+    const chart = createChart(chartContainerRef.current, chartOptions)
     chartRef.current = chart
 
     // --- Candlestick Series ---
@@ -127,7 +129,7 @@ const Chart = ({ activeTool, data, drawings, isVolumeVisible, onDrawingAdd }) =>
     if (!pluginRef.current) return
 
     pluginRef.current.onAdd = onDrawingAdd
-    pluginRef.current.update({ drawings, activeTool })
+    pluginRef.current.update({ drawings, activeTool, magnetMode: chartOptions.crosshair.mode })
   }, [drawings, activeTool, onDrawingAdd])
 
   return (
