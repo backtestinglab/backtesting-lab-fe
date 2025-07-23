@@ -14,6 +14,11 @@ export class HorizontalLinePlugin {
     }
     this._paneView = new HorizontalLinePaneView(this._state)
     this.onAdd = null
+    this._container = null
+  }
+
+  init(container) {
+    this._container = container
   }
 
   update(newState) {
@@ -44,15 +49,59 @@ export class HorizontalLinePlugin {
     this._state.chart = chart
     this._state.series = series
     chart.subscribeClick(this._handleClick)
+    chart.subscribeCrosshairMove(this._handleCrosshairMove)
   }
 
   // Clean up when plugin is detached
   detached = () => {
     if (this._state.chart) {
       this._state.chart.unsubscribeClick(this._handleClick)
+      this._state.chart.unsubscribeCrosshairMove(this._handleCrosshairMove)
     }
     this._state.chart = null
     this._state.series = null
+  }
+
+  // NEW: Handler for mouse movement
+  _handleCrosshairMove = (param) => {
+    if (!this._state.series || !param.point) {
+      return
+    }
+
+    let cursorStyle = ''
+    const currentPrice = this._state.series.coordinateToPrice(param.point.y)
+    if (currentPrice === null) return
+
+    const pricePrecision = this._calculatePricePrecision()
+    const hoveredDrawing = this._state.drawings.find(
+      (drawing) =>
+        drawing.type === 'horizontalLine' && Math.abs(drawing.price - currentPrice) < pricePrecision
+    )
+
+    if (hoveredDrawing) {
+      cursorStyle = 'grab'
+    }
+
+    if (this._state.activeTool !== 'cursor') {
+      cursorStyle = 'crosshair'
+    }
+
+    if (this._container) {
+      this._container.style.cursor = cursorStyle
+    }
+  }
+
+  // NEW: Helper to make hit testing responsive to zoom level
+  _calculatePricePrecision = () => {
+    const coordinate1 = 100
+    const coordinate2 = 105
+    const price1 = this._state.series.coordinateToPrice(coordinate1)
+    const price2 = this._state.series.coordinateToPrice(coordinate2)
+
+    if (price1 !== null && price2 !== null) {
+      return Math.abs(price1 - price2)
+    }
+    return 1
   }
 
   // Handle chart clicks

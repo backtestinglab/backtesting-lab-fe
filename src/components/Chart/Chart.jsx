@@ -52,6 +52,7 @@ const Chart = ({ activeTool, data, drawings, isVolumeVisible, onDrawingAdd }) =>
 
     // --- Plugin Initialization ---
     const horizontalLinePlugin = new HorizontalLinePlugin()
+    horizontalLinePlugin.init(chartContainerRef.current)
     pluginRef.current = horizontalLinePlugin
     candleSeries.attachPrimitive(horizontalLinePlugin)
 
