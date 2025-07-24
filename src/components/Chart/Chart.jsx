@@ -21,7 +21,15 @@ const chartOptions = {
 /**
  * @description Renders a TradingView Lightweight Chart with OHLCV overlay.
  */
-const Chart = ({ activeTool, data, drawings, isVolumeVisible, onDrawingAdd }) => {
+const Chart = ({
+  activeTool,
+  data,
+  drawings,
+  isVolumeVisible,
+  onDrawingAdd,
+  onDrawingSelect,
+  selectedDrawingId
+}) => {
   const chartContainerRef = useRef(null)
   const chartRef = useRef(null)
   const candleSeriesRef = useRef(null)
@@ -130,8 +138,14 @@ const Chart = ({ activeTool, data, drawings, isVolumeVisible, onDrawingAdd }) =>
     if (!pluginRef.current) return
 
     pluginRef.current.onAdd = onDrawingAdd
-    pluginRef.current.update({ drawings, activeTool, magnetMode: chartOptions.crosshair.mode })
-  }, [drawings, activeTool, onDrawingAdd])
+    pluginRef.current.onSelect = onDrawingSelect
+    pluginRef.current.update({
+      activeTool,
+      drawings,
+      selectedDrawingId,
+      magnetMode: chartOptions.crosshair.mode
+    })
+  }, [drawings, activeTool, onDrawingAdd, onDrawingSelect, selectedDrawingId])
 
   return (
     <div className="chart-wrapper">
@@ -164,7 +178,9 @@ Chart.propTypes = {
   data: PropTypes.array.isRequired,
   drawings: PropTypes.array.isRequired,
   isVolumeVisible: PropTypes.bool.isRequired,
-  onDrawingAdd: PropTypes.func
+  onDrawingAdd: PropTypes.func,
+  onDrawingSelect: PropTypes.func,
+  selectedDrawingId: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
 }
 
 export default Chart

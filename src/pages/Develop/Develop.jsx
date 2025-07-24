@@ -21,6 +21,7 @@ const Develop = ({ modelConfig }) => {
   const [isVolumeVisible, setIsVolumeVisible] = useState(false)
   const [activeTool, setActiveTool] = useState('cursor')
   const [drawings, setDrawings] = useState([])
+  const [selectedDrawingId, setSelectedDrawingId] = useState(null)
 
   useEffect(() => {
     console.log('DevelopPage mounted with config:', modelConfig)
@@ -56,6 +57,10 @@ const Develop = ({ modelConfig }) => {
 
   const handleDrawingAdd = (newDrawing) => {
     setDrawings((prevDrawings) => [...prevDrawings, newDrawing])
+  }
+
+  const handleDrawingSelect = (drawingId) => {
+    setSelectedDrawingId((prevId) => (prevId === drawingId ? null : drawingId))
   }
 
   const modelTypeDisplay = modelConfig?.type
@@ -119,6 +124,8 @@ const Develop = ({ modelConfig }) => {
                 drawings={drawings}
                 isVolumeVisible={isVolumeVisible}
                 onDrawingAdd={handleDrawingAdd}
+                onDrawingSelect={handleDrawingSelect}
+                selectedDrawingId={selectedDrawingId}
               />
             </>
           )}
