@@ -6,16 +6,18 @@ import PropTypes from 'prop-types'
 import './Chart.css'
 
 const chartOptions = {
-  layout: {
-    background: { type: ColorType.Solid, color: 'rgba(30, 33, 48, 1)' },
-    textColor: '#c0c8e0'
-  },
+  crosshair: { mode: 0 }, // 3 is MagnetOHLC
   grid: {
     vertLines: { color: 'rgba(60, 65, 85, 0.5)' },
     horzLines: { color: 'rgba(60, 65, 85, 0.5)' }
   },
-  timeScale: { timeVisible: true, secondsVisible: true, borderColor: 'rgba(80, 85, 110, 0.8)' },
-  crosshair: { mode: 0 } // 3 is MagnetOHLC
+  handleScroll: { pressedMouseMove: true, vertTouchDrag: true },
+  handleScale: { pinch: true, mouseWheel: true },
+  layout: {
+    background: { type: ColorType.Solid, color: 'rgba(30, 33, 48, 1)' },
+    textColor: '#c0c8e0'
+  },
+  timeScale: { timeVisible: true, secondsVisible: true, borderColor: 'rgba(80, 85, 110, 0.8)' }
 }
 
 /**
@@ -28,6 +30,7 @@ const Chart = ({
   isVolumeVisible,
   onDrawingAdd,
   onDrawingSelect,
+  onDrawingUpdate,
   selectedDrawingId
 }) => {
   const chartContainerRef = useRef(null)
@@ -60,8 +63,39 @@ const Chart = ({
 
     // --- Plugin Initialization ---
     const horizontalLinePlugin = new HorizontalLinePlugin()
-    horizontalLinePlugin.init(chartContainerRef.current)
     pluginRef.current = horizontalLinePlugin
+    horizontalLinePlugin.init(chartContainerRef.current)
+
+    horizontalLinePlugin.disableChartPanning = () => {
+      chart.applyOptions({ handleScroll: { pressedMouseMove: false, vertTouchDrag: false } })
+    }
+
+    horizontalLinePlugin.enableChartPanning = () => {
+      chart.applyOptions({ handleScroll: { pressedMouseMove: true, vertTouchDrag: true } })
+    }
+
+    horizontalLinePlugin.onDragStart = () => {
+      chart.applyOptions({
+        crosshair: {
+          horzLine: {
+            visible: false,
+            labelVisible: false
+          }
+        }
+      })
+    }
+
+    horizontalLinePlugin.onDragEnd = () => {
+      chart.applyOptions({
+        crosshair: {
+          horzLine: {
+            visible: true,
+            labelVisible: true
+          }
+        }
+      })
+    }
+
     candleSeries.attachPrimitive(horizontalLinePlugin)
 
     // --- Event Subscription ---
@@ -80,10 +114,28 @@ const Chart = ({
     // --- Event Listeners ---
     window.addEventListener('resize', handleResize)
 
+    const container = chartContainerRef.current
+
+    const getEventCoordinates = (event) => {
+      const rect = container.getBoundingClientRect()
+      return { x: event.clientX - rect.left, y: event.clientY - rect.top }
+    }
+
+    const onMouseDown = (event) => pluginRef.current?.handleMouseDown(getEventCoordinates(event))
+    const onMouseMove = (event) => pluginRef.current?.handleMouseMove(getEventCoordinates(event))
+    const onMouseUp = () => pluginRef.current?.handleMouseUp()
+
+    container.addEventListener('mousedown', onMouseDown)
+    window.addEventListener('mousemove', onMouseMove)
+    window.addEventListener('mouseup', onMouseUp)
+
     // --- Cleanup ---
     return () => {
       chart.unsubscribeCrosshairMove(crosshairMoveHandler)
       window.removeEventListener('resize', handleResize)
+      container.removeEventListener('mousedown', onMouseDown)
+      window.removeEventListener('mousemove', onMouseMove)
+      window.removeEventListener('mouseup', onMouseUp)
       chart.remove()
     }
   }, [])
@@ -139,13 +191,13 @@ const Chart = ({
 
     pluginRef.current.onAdd = onDrawingAdd
     pluginRef.current.onSelect = onDrawingSelect
+    pluginRef.current.onUpdate = onDrawingUpdate
     pluginRef.current.update({
       activeTool,
       drawings,
-      selectedDrawingId,
-      magnetMode: chartOptions.crosshair.mode
+      selectedDrawingId
     })
-  }, [drawings, activeTool, onDrawingAdd, onDrawingSelect, selectedDrawingId])
+  }, [drawings, activeTool, onDrawingAdd, onDrawingSelect, onDrawingUpdate, selectedDrawingId])
 
   return (
     <div className="chart-wrapper">
@@ -178,8 +230,9 @@ Chart.propTypes = {
   data: PropTypes.array.isRequired,
   drawings: PropTypes.array.isRequired,
   isVolumeVisible: PropTypes.bool.isRequired,
-  onDrawingAdd: PropTypes.func,
-  onDrawingSelect: PropTypes.func,
+  onDrawingAdd: PropTypes.func.isRequired,
+  onDrawingSelect: PropTypes.func.isRequired,
+  onDrawingUpdate: PropTypes.func.isRequired,
   selectedDrawingId: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
 }
 

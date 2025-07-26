@@ -8,15 +8,22 @@ export class HorizontalLinePlugin {
     this._state = {
       activeTool: 'cursor',
       chart: null,
+      draggedDrawing: null,
       drawings: [],
-      magnetMode: 0,
+      isMouseOverPane: true,
+      lastCrosshairCandle: null,
       selectedDrawingId: null,
       series: null
     }
     this._paneView = new HorizontalLinePaneView(this._state)
     this.onAdd = null
+    this.onDragStart = null
+    this.onDragEnd = null
     this.onSelect = null
+    this.onUpdate = null
     this._container = null
+    this.disableChartPanning = null
+    this.enableChartPanning = null
   }
 
   init(container) {
@@ -26,22 +33,17 @@ export class HorizontalLinePlugin {
   update(newState) {
     // Syncs state from React component
     Object.assign(this._state, newState)
-    if (this._state.chart) {
-      this._state.chart.timeScale().applyOptions({})
-    }
+    this._requestRedraw()
   }
 
-  // Required method for plugins
   chart() {
     return this._state.chart
   }
 
-  // Required method for plugins
   series() {
     return this._state.series
   }
 
-  // Required method for plugins
   paneViews() {
     return [this._paneView]
   }
@@ -50,14 +52,12 @@ export class HorizontalLinePlugin {
   attached = ({ chart, series }) => {
     this._state.chart = chart
     this._state.series = series
-    chart.subscribeClick(this._handleClick)
-    chart.subscribeCrosshairMove(this._handleCrosshairMove)
+    this._state.chart.subscribeCrosshairMove(this._handleCrosshairMove)
   }
 
   // Clean up when plugin is detached
   detached = () => {
     if (this._state.chart) {
-      this._state.chart.unsubscribeClick(this._handleClick)
       this._state.chart.unsubscribeCrosshairMove(this._handleCrosshairMove)
     }
     this._state.chart = null
@@ -82,88 +82,81 @@ export class HorizontalLinePlugin {
       })
   }
 
-  // NEW: Handler for mouse movement
-  _handleCrosshairMove = (param) => {
-    if (!this._state.series || !param.point) {
-      return
-    }
+  handleMouseDown = (event) => {
+    if (!this._state.series || !this._state.isMouseOverPane) return
 
-    let cursorStyle = ''
-    const currentPrice = this._state.series.coordinateToPrice(param.point.y)
-    if (currentPrice === null) return
+    const clickedDrawing = this._findClickedDrawing(event)
 
-    const pricePrecision = this._calculatePricePrecision()
-    const hoveredDrawing = this._state.drawings.find(
-      (drawing) =>
-        drawing.type === 'horizontalLine' && Math.abs(drawing.price - currentPrice) < pricePrecision
-    )
+    if (this._state.activeTool === 'cursor' && clickedDrawing) {
+      if (this._state.selectedDrawingId !== clickedDrawing.id) {
+        if (this.onSelect) this.onSelect(clickedDrawing.id)
+      }
 
-    if (hoveredDrawing) {
-      cursorStyle = 'grab'
-    }
+      // A draggable item was clicked.
+      if (this.disableChartPanning) this.disableChartPanning()
 
-    if (this._state.activeTool !== 'cursor') {
-      cursorStyle = 'crosshair'
-    }
+      this._state.draggedDrawing = clickedDrawing
+      this._container.style.cursor = 'grabbing'
 
-    if (this._container) {
-      this._container.style.cursor = cursorStyle
-    }
-  }
-
-  // NEW: Helper to make hit testing responsive to zoom level
-  _calculatePricePrecision = () => {
-    const coordinate1 = 100
-    const coordinate2 = 105
-    const price1 = this._state.series.coordinateToPrice(coordinate1)
-    const price2 = this._state.series.coordinateToPrice(coordinate2)
-
-    if (price1 !== null && price2 !== null) {
-      return Math.abs(price1 - price2)
-    }
-    return 1
-  }
-
-  // Handle chart clicks
-  _handleClick = (param) => {
-    if (!this._state.series || !param.point) {
-      return
-    }
-
-    let price = this._state.series.coordinateToPrice(param.point.y)
-    const pricePrecision = this._calculatePricePrecision()
-
-    if (price === null) return
-
-    // --- 1. Check if we clicked on an existing line (Hit Testing) ---
-    const clickedDrawing = this._state.drawings.find(
-      (drawing) =>
-        drawing.type === 'horizontalLine' && Math.abs(drawing.price - price) < pricePrecision
-    )
-
-    if (clickedDrawing) {
-      if (this.onSelect) this.onSelect(clickedDrawing.id)
-      return
-    }
-
-    // --- 2. If no line was clicked, deselect any currently selected line ---
-    if (this._state.selectedDrawingId !== null && this._state.activeTool === 'cursor') {
+      if (this.onDragStart) this.onDragStart()
+    } else if (this._state.activeTool === 'cursor') {
+      // Clicked on empty space.
       if (this.onSelect) this.onSelect(null)
-    }
+    } else if (this._state.activeTool === 'horzline') {
+      const price = this._getActualPrice(event.y)
 
-    // --- 3. If in drawing mode, draw a new line ---
-    if (this._state.activeTool !== 'horzline') return
+      if (price !== null && this.onAdd) {
+        this.onAdd({
+          color: 'rgba(200, 220, 255, 0.7)',
+          id: Date.now(),
+          lineWidth: 1,
+          lineStyle: 0, // solid line
+          type: 'horizontalLine',
+          price
+        })
+      }
+    }
+  }
+
+  handleMouseUp = () => {
+    if (this._state.draggedDrawing) {
+      if (this.onUpdate) {
+        this.onUpdate(this._state.draggedDrawing)
+      }
+      this._state.draggedDrawing = null
+
+      if (this.enableChartPanning) this.enableChartPanning()
+      this._container.style.cursor = 'pointer'
+
+      if (this.onDragEnd) this.onDragEnd()
+    }
+  }
+
+  handleMouseMove = (event) => {
+    if (this._state.draggedDrawing) {
+      const price = this._getActualPrice(event.y)
+
+      if (price !== null) {
+        this._state.draggedDrawing.price = price
+        this._requestRedraw()
+      }
+    }
+  }
+
+  _getActualPrice = (y_coord) => {
+    let price = this._state.series.coordinateToPrice(y_coord)
+    if (price === null) return null
+
+    const chartOptions = this._state.chart.options()
 
     if (
-      (this._state.magnetMode === 3 || this._state.magnetMode === 1) &&
-      param.seriesData.has(this._state.series)
+      (chartOptions.crosshair.mode === 3 || chartOptions.crosshair.mode === 1) &&
+      this._state.lastCrosshairCandle
     ) {
-      const candle = param.seriesData.get(this._state.series)
+      const candle = this._state.lastCrosshairCandle
       const prices = [candle.open, candle.high, candle.low, candle.close]
-
       let closestPrice = prices[0]
       let minDistance = Math.abs(closestPrice - price)
-
       for (let i = 1; i < prices.length; i++) {
         const distance = Math.abs(prices[i] - price)
         if (distance < minDistance) {
@@ -173,17 +166,70 @@ export class HorizontalLinePlugin {
       }
       price = closestPrice
     }
+    return price
+  }
 
-    if (this.onAdd) {
-      this.onAdd({
-        color: 'rgba(200, 220, 255, 0.7)',
-        id: Date.now(),
-        lineWidth: 1,
-        lineStyle: 0, // solid line
-        type: 'horizontalLine',
-        price
-      })
+  _updateCursor = (param) => {
+    if (!this._container || !this._state.series || !param.point) {
+      this._container.style.cursor = ''
+      return
     }
+
+    if (this._state.activeTool !== 'cursor') {
+      this._container.style.cursor = 'crosshair'
+      return
+    }
+
+    const eventCoords = { x: param.point.x, y: param.point.y }
+    const hoveredDrawing = this._findClickedDrawing(eventCoords)
+    this._container.style.cursor = hoveredDrawing ? 'pointer' : ''
+  }
+
+  _findClickedDrawing = (eventCoords) => {
+    if (!eventCoords || eventCoords.y === undefined) return null
+
+    const currentPrice = this._state.series.coordinateToPrice(eventCoords.y)
+
+    if (currentPrice === null) return null
+
+    const pricePrecision = this._calculatePricePrecision()
+    return this._state.drawings.find(
+      (drawing) =>
+        drawing.type === 'horizontalLine' && Math.abs(drawing.price - currentPrice) < pricePrecision
+    )
+  }
+
+  _requestRedraw = () => {
+    if (this._state.chart) {
+      this._state.chart.timeScale().applyOptions({})
+    }
+  }
+
+  _handleCrosshairMove = (param) => {
+    this._state.isMouseOverPane = !!param.point
+
+    if (param.seriesData.has(this._state.series)) {
+      this._state.lastCrosshairCandle = param.seriesData.get(this._state.series)
+    } else {
+      this._state.lastCrosshairCandle = null
+    }
+
+    if (!this._state.draggedDrawing) {
+      this._updateCursor(param)
+    }
+  }
+
+  // Helper to make hit testing responsive to zoom level
+  _calculatePricePrecision = () => {
+    if (!this._state.series) return 1
+
+    const price1 = this._state.series.coordinateToPrice(100)
+    const price2 = this._state.series.coordinateToPrice(105)
+
+    if (price1 !== null && price2 !== null) {
+      return Math.abs(price1 - price2)
+    }
+    return 1
   }
 
   // Remove a line by ID
@@ -206,12 +252,12 @@ export class HorizontalLinePlugin {
   //   this._requestUpdate()
   // }
 
-  // Request chart update
-  _requestUpdate() {
-    if (this._state.chart) {
-      this._state.chart.timeScale().fitContent()
-    }
-  }
+  // // Request chart update
+  // _requestUpdate() {
+  //   if (this._state.chart) {
+  //     this._state.chart.timeScale().fitContent()
+  //   }
+  // }
 }
 
 /**
@@ -253,10 +299,6 @@ class HorizontalLineAxisView {
 class HorizontalLinePaneView {
   constructor(state) {
     this._renderer = new HorizontalLineRenderer(state)
-  }
-
-  update() {
-    // This method is called when the chart needs to update
   }
 
   renderer() {
@@ -308,7 +350,7 @@ class HorizontalLineRenderer {
           if (isSelected) {
             const handleSize = line.lineWidth + 4
             context.fillStyle = '#FFFFFF'
-            context.strokeStyle = '#2962FF' // Blue border for handles
+            context.strokeStyle = '#2962FF'
             context.lineWidth = line.lineWidth
 
             // Left handle

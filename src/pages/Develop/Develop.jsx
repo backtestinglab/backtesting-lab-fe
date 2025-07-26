@@ -49,6 +49,10 @@ const Develop = ({ modelConfig }) => {
     fetchChartData()
   }, [activeTimeframe, modelConfig])
 
+  useEffect(() => {
+    setSelectedDrawingId(null)
+  }, [activeTool])
+
   const selectedTimeframes = modelConfig?.selectedTimeframes || []
 
   const handleToolSelect = (toolId) => {
@@ -61,6 +65,14 @@ const Develop = ({ modelConfig }) => {
 
   const handleDrawingSelect = (drawingId) => {
     setSelectedDrawingId((prevId) => (prevId === drawingId ? null : drawingId))
+  }
+
+  const handleDrawingUpdate = (updatedDrawing) => {
+    setDrawings((prevDrawings) =>
+      prevDrawings.map((prevDrawing) =>
+        prevDrawing.id === updatedDrawing.id ? updatedDrawing : prevDrawing
+      )
+    )
   }
 
   const modelTypeDisplay = modelConfig?.type
@@ -125,6 +137,7 @@ const Develop = ({ modelConfig }) => {
                 isVolumeVisible={isVolumeVisible}
                 onDrawingAdd={handleDrawingAdd}
                 onDrawingSelect={handleDrawingSelect}
+                onDrawingUpdate={handleDrawingUpdate}
                 selectedDrawingId={selectedDrawingId}
               />
             </>
