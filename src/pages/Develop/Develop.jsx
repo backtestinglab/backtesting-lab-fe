@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react'
 
 import Chart from '../../components/Chart/Chart'
+import DrawingPropertiesToolbar from '../../components/DrawingPropertiesToolbar/DrawingPropertiesToolbar'
 import DrawingToolbar from '../../components/DrawingToolbar/DrawingToolbar'
 
 import logo from '../../assets/logo.svg'
@@ -75,6 +76,8 @@ const Develop = ({ modelConfig }) => {
     )
   }
 
+  const selectedDrawing = drawings.find((drawing) => drawing.id === selectedDrawingId)
+
   const modelTypeDisplay = modelConfig?.type
     ? modelConfig.type.charAt(0).toUpperCase() + modelConfig.type.slice(1)
     : ''
@@ -106,6 +109,7 @@ const Develop = ({ modelConfig }) => {
             <div className="placeholder-text">Loading Chart Data...</div>
           ) : (
             <>
+              {selectedDrawingId && <DrawingPropertiesToolbar drawingState={selectedDrawing} />}
               <DrawingToolbar activeTool={activeTool} onToolSelect={handleToolSelect} />
               <div className="timeframe-switcher">
                 {selectedTimeframes.map((tf) => (
