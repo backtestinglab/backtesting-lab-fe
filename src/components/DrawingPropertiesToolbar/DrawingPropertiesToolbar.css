@@ -1,8 +1,5 @@
 .drawing-properties-toolbar {
   position: absolute;
-  top: 15px;
-  left: 75%;
-  transform: translateX(-50%);
   display: flex;
   align-items: stretch;
   gap: 2px;
@@ -34,6 +31,12 @@
 
 .drawing-properties-toolbar button:hover {
   background-color: rgba(100, 110, 200, 0.3);
+}
+
+.drawing-properties-toolbar.is-dragging button:hover {
+  background-color: transparent;
+  color: #c0c8e0;
+  cursor: grabbing;
 }
 
 .toolbar-drag-handle {

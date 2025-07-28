@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
 
 import Chart from '../../components/Chart/Chart'
 import DrawingPropertiesToolbar from '../../components/DrawingPropertiesToolbar/DrawingPropertiesToolbar'
@@ -23,6 +23,49 @@ const Develop = ({ modelConfig }) => {
   const [activeTool, setActiveTool] = useState('cursor')
   const [drawings, setDrawings] = useState([])
   const [selectedDrawingId, setSelectedDrawingId] = useState(null)
+  const [toolbarPosition, setToolbarPosition] = useState({
+    top: 15,
+    left: '64%'
+  })
+  const [isToolbarDragging, setIsToolbarDragging] = useState(false)
+  const dragDrawingToolbarRef = useRef(null)
+  const chartAreaRef = useRef(null)
+  const toolbarRef = useRef(null)
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (!toolbarRef.current || !chartAreaRef.current || !dragDrawingToolbarRef.current?.lastPin)
+        return
+
+      const chartPane = chartAreaRef.current.querySelector(
+        '.tv-lightweight-charts table tr:first-child td:nth-child(2) div:first-child'
+      )
+
+      if (!chartPane) return
+
+      const toolbar = toolbarRef.current
+      const paneRect = chartPane.getBoundingClientRect()
+      const toolbarWidth = toolbar.offsetWidth
+      const toolbarHeight = toolbar.offsetHeight
+
+      let newLeft = toolbarPosition.left
+      let newTop = toolbarPosition.top
+
+      if (dragDrawingToolbarRef.current.lastPin === 'right') {
+        newLeft = paneRect.width - dragDrawingToolbarRef.current.distanceRight - toolbarWidth
+      }
+
+      const maxX = paneRect.width - toolbarWidth
+      const maxY = paneRect.height - toolbarHeight
+      newLeft = Math.max(0, Math.min(newLeft, maxX))
+      newTop = Math.max(0, Math.min(newTop, maxY))
+
+      setToolbarPosition({ left: newLeft, top: newTop })
+    }
+
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [toolbarPosition])
 
   useEffect(() => {
     console.log('DevelopPage mounted with config:', modelConfig)
@@ -53,6 +96,99 @@ const Develop = ({ modelConfig }) => {
   useEffect(() => {
     setSelectedDrawingId(null)
   }, [activeTool])
+
+  const handleToolbarDragStart = useCallback((event) => {
+    event.preventDefault()
+
+    if (!chartAreaRef.current || !toolbarRef.current) return
+
+    setIsToolbarDragging(true)
+
+    const toolbarElement = toolbarRef.current
+    const chartPane = chartAreaRef.current.querySelector(
+      '.tv-lightweight-charts table tr:first-child td:nth-child(2) div:first-child'
+    )
+
+    if (!chartPane || !toolbarElement) {
+      console.error('Could not find chart pane element for bounding.')
+      return
+    }
+
+    const paneRect = chartPane.getBoundingClientRect()
+    const chartAreaRect = chartAreaRef.current.getBoundingClientRect()
+
+    dragDrawingToolbarRef.current = {
+      chartAreaRect,
+      paneRect,
+      initialMouseX: event.clientX,
+      initialMouseY: event.clientY,
+      initialLeft: toolbarElement.offsetLeft,
+      initialTop: toolbarElement.offsetTop,
+      lastPin: dragDrawingToolbarRef.current?.lastPin || 'left',
+      toolbarWidth: toolbarElement.offsetWidth,
+      toolbarHeight: toolbarElement.offsetHeight
+    }
+
+    const handleToolbarDragMove = (moveEvent) => {
+      if (!dragDrawingToolbarRef.current) return
+
+      const {
+        chartAreaRect,
+        initialMouseX,
+        initialMouseY,
+        initialLeft,
+        initialTop,
+        paneRect,
+        toolbarWidth,
+        toolbarHeight
+      } = dragDrawingToolbarRef.current
+
+      const dx = moveEvent.clientX - initialMouseX
+      const dy = moveEvent.clientY - initialMouseY
+
+      let newLeft = initialLeft + dx
+      let newTop = initialTop + dy
+
+      const minX = paneRect.left - chartAreaRect.left
+      const maxX = paneRect.right - chartAreaRect.left - toolbarWidth
+      const minY = paneRect.top - chartAreaRect.top
+      const maxY = paneRect.bottom - chartAreaRect.top - toolbarHeight
+
+      newLeft = Math.max(minX, Math.min(newLeft, maxX))
+      newTop = Math.max(minY, Math.min(newTop, maxY))
+
+      setToolbarPosition({ top: newTop, left: newLeft })
+    }
+
+    const handleToolbarDragEnd = () => {
+      window.removeEventListener('mousemove', handleToolbarDragMove)
+      window.removeEventListener('mouseup', handleToolbarDragEnd)
+
+      setIsToolbarDragging(false)
+
+      if (!dragDrawingToolbarRef.current) return
+
+      const finalToolbarElement = toolbarRef.current
+
+      if (!finalToolbarElement) return
+
+      const currentToolbarLeft = finalToolbarElement.offsetLeft
+
+      const { paneRect, toolbarWidth } = dragDrawingToolbarRef.current
+      const distanceLeft = currentToolbarLeft
+      const distanceRight = paneRect.width - distanceLeft - toolbarWidth
+
+      if (distanceLeft <= distanceRight) {
+        dragDrawingToolbarRef.current.lastPin = 'left'
+      } else {
+        dragDrawingToolbarRef.current.lastPin = 'right'
+        dragDrawingToolbarRef.current.distanceRight = distanceRight
+      }
+    }
+
+    window.addEventListener('mousemove', handleToolbarDragMove)
+    window.addEventListener('mouseup', handleToolbarDragEnd)
+  }, [])
 
   const selectedTimeframes = modelConfig?.selectedTimeframes || []
 
@@ -104,12 +240,26 @@ const Develop = ({ modelConfig }) => {
         </div>
       </header>
       <main className="develop-workspace">
-        <section className="chart-area">
+        <section className="chart-area" ref={chartAreaRef}>
           {isLoading ? (
             <div className="placeholder-text">Loading Chart Data...</div>
           ) : (
             <>
-              {selectedDrawingId && <DrawingPropertiesToolbar drawingState={selectedDrawing} />}
+              {selectedDrawingId && (
+                <DrawingPropertiesToolbar
+                  customStyles={{
+                    top: `${toolbarPosition.top}px`,
+                    left:
+                      typeof toolbarPosition.left === 'string'
+                        ? toolbarPosition.left
+                        : `${toolbarPosition.left}px`
+                  }}
+                  drawingState={selectedDrawing}
+                  isDragging={isToolbarDragging}
+                  onDragStart={handleToolbarDragStart}
+                  toolbarRef={toolbarRef}
+                />
+              )}
               <DrawingToolbar activeTool={activeTool} onToolSelect={handleToolSelect} />
               <div className="timeframe-switcher">
                 {selectedTimeframes.map((tf) => (

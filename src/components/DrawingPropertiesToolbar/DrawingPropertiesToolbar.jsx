@@ -6,12 +6,23 @@ import './DrawingPropertiesToolbar.css'
 /**
  * @description A floating toolbar for editing the properties of a selected drawing.
  */
-const DrawingPropertiesToolbar = ({ drawingState }) => {
+const DrawingPropertiesToolbar = ({
+  customStyles,
+  drawingState,
+  isDragging,
+  onDragStart,
+  toolbarRef
+}) => {
   const { lineColor = '#2962FF', lineWidth = 1, textColor = '#FFFFFF' } = drawingState || {}
 
+  const toolbarClassName = `
+    drawing-properties-toolbar
+    ${isDragging ? 'is-dragging' : ''}
+  `
+
   return (
-    <div className="drawing-properties-toolbar">
-      <div className="toolbar-drag-handle">
+    <div className={toolbarClassName} style={customStyles} ref={toolbarRef}>
+      <div className="toolbar-drag-handle" onMouseDown={onDragStart}>
         <span className="dot"></span>
         <span className="dot"></span>
         <span className="dot"></span>
@@ -42,11 +53,18 @@ const DrawingPropertiesToolbar = ({ drawingState }) => {
 }
 
 DrawingPropertiesToolbar.propTypes = {
+  customStyles: PropTypes.shape({
+    left: PropTypes.string,
+    top: PropTypes.string
+  }),
   drawingState: PropTypes.shape({
     lineColor: PropTypes.string,
     lineWidth: PropTypes.number,
     textColor: PropTypes.string
-  })
+  }),
+  isDragging: PropTypes.bool,
+  onDragStart: PropTypes.func.isRequired,
+  toolbarRef: PropTypes.ref
 }
 
 export default DrawingPropertiesToolbar
