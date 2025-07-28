@@ -267,6 +267,7 @@ const Develop = ({ modelConfig }) => {
                   drawingState={selectedDrawing}
                   isDragging={isToolbarDragging}
                   onDelete={handleDeleteDrawing}
+                  onUpdate={handleDrawingUpdate}
                   onDragStart={handleToolbarDragStart}
                   toolbarRef={toolbarRef}
                 />
