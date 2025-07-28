@@ -10,6 +10,7 @@ const DrawingPropertiesToolbar = ({
   customStyles,
   drawingState,
   isDragging,
+  onDelete,
   onDragStart,
   toolbarRef
 }) => {
@@ -47,7 +48,9 @@ const DrawingPropertiesToolbar = ({
       <button title="Line Style">---</button>
       <button title="Settings">⚙️</button>
       <div className="toolbar-separator"></div>
-      <button title="Delete">🗑️</button>
+      <button title="Delete" onClick={onDelete}>
+        🗑️
+      </button>
     </div>
   )
 }
@@ -63,6 +66,7 @@ DrawingPropertiesToolbar.propTypes = {
     textColor: PropTypes.string
   }),
   isDragging: PropTypes.bool,
+  onDelete: PropTypes.func.isRequired,
   onDragStart: PropTypes.func.isRequired,
   toolbarRef: PropTypes.ref
 }

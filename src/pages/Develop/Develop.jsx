@@ -212,6 +212,16 @@ const Develop = ({ modelConfig }) => {
     )
   }
 
+  const handleDeleteDrawing = () => {
+    if (!selectedDrawingId) return
+
+    setDrawings((prevDrawings) =>
+      prevDrawings.filter((drawing) => drawing.id !== selectedDrawingId)
+    )
+
+    setSelectedDrawingId(null)
+  }
+
   const selectedDrawing = drawings.find((drawing) => drawing.id === selectedDrawingId)
 
   const modelTypeDisplay = modelConfig?.type
@@ -256,6 +266,7 @@ const Develop = ({ modelConfig }) => {
                   }}
                   drawingState={selectedDrawing}
                   isDragging={isToolbarDragging}
+                  onDelete={handleDeleteDrawing}
                   onDragStart={handleToolbarDragStart}
                   toolbarRef={toolbarRef}
                 />
