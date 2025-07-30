@@ -1,0 +1,55 @@
+.toolbar-popup.color-picker-popup {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 12px;
+  width: auto;
+}
+
+.color-grid {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 5px;
+}
+
+.color-swatch {
+  width: 21px;
+  height: 21px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 1px solid rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000;
+  transition: transform 0.15s ease-out;
+  position: relative;
+}
+
+.color-swatch:hover {
+  transform: scale(1.1);
+  border-color: rgba(255, 255, 255, 0.8);
+}
+
+.opacity-control {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+}
+
+.opacity-label {
+  color: #a0a8c0;
+}
+
+.opacity-slider {
+  flex-grow: 1;
+}
+
+.opacity-value {
+  background-color: rgba(20, 22, 35, 0.7);
+  padding: 2px 6px;
+  border-radius: 4px;
+  width: 45px;
+  text-align: center;
+}

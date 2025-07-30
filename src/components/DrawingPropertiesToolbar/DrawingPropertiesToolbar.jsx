@@ -1,6 +1,8 @@
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 
+import ColorPickerPopup from '../ColorPickerPopup/ColorPickerPopup'
+
 import './DrawingPropertiesToolbar.css'
 
 /**
@@ -16,15 +18,17 @@ const DrawingPropertiesToolbar = ({
   toolbarRef
 }) => {
   const [showThicknessOptions, setShowThicknessOptions] = useState(false)
+  const [showColorOptions, setShowColorOptions] = useState(false)
   const [popupPosition, setPopupPosition] = useState('top')
   const [isPopupVisible, setIsPopupVisible] = useState(false)
   const popupRef = useRef(null)
-  const wrapperRef = useRef(null)
+  const thicknessWrapperRef = useRef(null)
+  const colorWrapperRef = useRef(null)
 
   const { lineColor = '#2962FF', lineWidth = 1, textColor = '#FFFFFF' } = drawingState || {}
 
   useLayoutEffect(() => {
-    if (showThicknessOptions) {
+    if (showThicknessOptions || showColorOptions) {
       setIsPopupVisible(false)
 
       requestAnimationFrame(() => {
@@ -43,12 +47,16 @@ const DrawingPropertiesToolbar = ({
       setIsPopupVisible(false)
       setPopupPosition('top')
     }
-  }, [showThicknessOptions])
+  }, [showColorOptions, showThicknessOptions])
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
+      if (thicknessWrapperRef.current && !thicknessWrapperRef.current.contains(event.target)) {
         setShowThicknessOptions(false)
+      }
+
+      if (colorWrapperRef.current && !colorWrapperRef.current.contains(event.target)) {
+        setShowColorOptions(false)
       }
     }
     document.addEventListener('mousedown', handleClickOutside)
@@ -62,6 +70,12 @@ const DrawingPropertiesToolbar = ({
   const handleThicknessChange = (newWidth) => {
     onUpdate({ ...drawingState, lineWidth: newWidth })
     setShowThicknessOptions(false)
+  }
+
+  const handleColorChange = (newColor) => {
+    console.log({ newColor })
+    onUpdate({ ...drawingState, lineColor: newColor })
+    // setShowColorOptions(false)
   }
 
   const toolbarClassName = `
@@ -81,15 +95,30 @@ const DrawingPropertiesToolbar = ({
         <span className="dot"></span>
         <span className="dot"></span>
       </div>
-      <button className="toolbar-button color-button" title="Line Color">
-        🎨
-        <div className="color-indicator" style={{ backgroundColor: lineColor }}></div>
-      </button>
+      <div className="toolbar-button-wrapper" ref={colorWrapperRef}>
+        <button
+          className="toolbar-button color-button"
+          onClick={() => setShowColorOptions((prev) => !prev)}
+          title="Line Color"
+        >
+          🎨
+          <div className="color-indicator" style={{ backgroundColor: lineColor }}></div>
+        </button>
+        {showColorOptions && (
+          <ColorPickerPopup
+            initialColor={lineColor}
+            onColorChange={handleColorChange}
+            popupPosition={popupPosition}
+            popupRef={popupRef}
+            popupVisibility={isPopupVisible ? 'visible' : ''}
+          />
+        )}
+      </div>
       <button className="toolbar-button color-button" title="Text Color">
         <span className="text-icon">T</span>
         <div className="color-indicator" style={{ backgroundColor: textColor }}></div>
       </button>
-      <div className="toolbar-button-wrapper" ref={wrapperRef}>
+      <div className="toolbar-button-wrapper" ref={thicknessWrapperRef}>
         <button
           className="toolbar-button thickness-button"
           onClick={() => setShowThicknessOptions((prev) => !prev)}

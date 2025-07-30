@@ -76,8 +76,8 @@ export class HorizontalLinePlugin {
         return new HorizontalLineAxisView({
           series: this._state.series,
           price: line.price,
-          color: line.color,
-          isSelected: isSelected
+          lineColor: line.lineColor,
+          isSelected
         })
       })
   }
@@ -107,7 +107,7 @@ export class HorizontalLinePlugin {
 
       if (price !== null && this.onAdd) {
         this.onAdd({
-          color: 'rgba(200, 220, 255, 0.7)',
+          lineColor: 'rgba(200, 220, 255, 0.7)',
           id: Date.now(),
           lineWidth: 1,
           lineStyle: 0, // solid line
@@ -284,10 +284,10 @@ class HorizontalLineAxisView {
   }
 
   backColor() {
-    return this._state.isSelected ? 'rgba(41, 98, 255, 1)' : 'rgba(120, 120, 120, 1)'
+    return this._state.lineColor
   }
   borderColor() {
-    return this._state.isSelected ? '#2962FF' : 'rgba(120, 120, 120, 1)'
+    return this._state.lineColor
   }
 }
 
@@ -338,7 +338,8 @@ class HorizontalLineRenderer {
           const scaledY = y * pixelRatio
 
           context.beginPath()
-          context.strokeStyle = isSelected ? '#2962FF' : line.color
+          // context.strokeStyle = isSelected ? '#2962FF' : line.lineColor
+          context.strokeStyle = line.lineColor
           context.lineWidth = line.lineWidth * pixelRatio + (isSelected ? 1 : 0)
           context.setLineDash(line.lineStyle === 1 ? [5 * pixelRatio, 5 * pixelRatio] : [])
 
