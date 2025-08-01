@@ -110,7 +110,7 @@ export class HorizontalLinePlugin {
           lineColor: 'rgba(200, 220, 255, 0.7)',
           id: Date.now(),
           lineWidth: 1,
-          lineStyle: 0, // solid line
+          lineStyle: 'solid',
           type: 'horizontalLine',
           price
         })
@@ -341,7 +341,16 @@ class HorizontalLineRenderer {
           // context.strokeStyle = isSelected ? '#2962FF' : line.lineColor
           context.strokeStyle = line.lineColor
           context.lineWidth = line.lineWidth * pixelRatio + (isSelected ? 1 : 0)
-          context.setLineDash(line.lineStyle === 1 ? [5 * pixelRatio, 5 * pixelRatio] : [])
+          switch (line.lineStyle) {
+            case 'dashed':
+              context.setLineDash([4 * context.lineWidth, 4 * context.lineWidth])
+              break
+            case 'dotted':
+              context.setLineDash([context.lineWidth, context.lineWidth])
+              break
+            default: // solid
+              context.setLineDash([])
+          }
 
           context.moveTo(0, scaledY)
           context.lineTo(bitmapSize.width, scaledY)

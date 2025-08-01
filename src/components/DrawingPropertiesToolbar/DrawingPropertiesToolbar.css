@@ -163,3 +163,58 @@
   margin: -4px 4px;
   padding: 4px 0;
 }
+
+.line-style-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #c0c8e0;
+  text-wrap-mode: nowrap;
+}
+
+.toolbar-button.line-style-button {
+  width: auto;
+  padding: 0 8px;
+  gap: 8px;
+}
+
+.line-style-preview {
+  width: 24px;
+  height: 2px;
+  background-color: transparent;
+  border-color: #c0c8e0;
+  border-style: solid;
+  border-width: 0;
+  border-bottom-width: 2px;
+}
+
+.line-style-preview.dashed {
+  border-bottom-style: dashed;
+}
+
+.line-style-preview.dotted {
+  border-bottom-style: dotted;
+}
+
+.line-style-popup {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.line-style-option {
+  display: flex;
+  align-items: center;
+  padding: 6px 8px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  column-gap: 20px;
+}
+
+.line-style-option:hover {
+  background-color: rgba(100, 110, 200, 0.3);
+}
+
+.line-style-option .line-style-preview {
+  width: 50px;
+}

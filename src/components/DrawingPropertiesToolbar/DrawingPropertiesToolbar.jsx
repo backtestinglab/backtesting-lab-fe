@@ -18,17 +18,24 @@ const DrawingPropertiesToolbar = ({
   toolbarRef
 }) => {
   const [showThicknessOptions, setShowThicknessOptions] = useState(false)
+  const [showLineStyleOptions, setShowLineStyleOptions] = useState(false)
   const [showColorOptions, setShowColorOptions] = useState(false)
   const [popupPosition, setPopupPosition] = useState('top')
   const [isPopupVisible, setIsPopupVisible] = useState(false)
   const popupRef = useRef(null)
   const thicknessWrapperRef = useRef(null)
+  const lineStyleWrapperRef = useRef(null)
   const colorWrapperRef = useRef(null)
 
-  const { lineColor = '#2962FF', lineWidth = 1, textColor = '#FFFFFF' } = drawingState || {}
+  const {
+    lineColor = '#2962FF',
+    lineWidth = 1,
+    lineStyle = 'solid',
+    textColor = '#FFFFFF'
+  } = drawingState || {}
 
   useLayoutEffect(() => {
-    if (showThicknessOptions || showColorOptions) {
+    if (showThicknessOptions || showColorOptions || showLineStyleOptions) {
       setIsPopupVisible(false)
 
       requestAnimationFrame(() => {
@@ -47,12 +54,16 @@ const DrawingPropertiesToolbar = ({
       setIsPopupVisible(false)
       setPopupPosition('top')
     }
-  }, [showColorOptions, showThicknessOptions])
+  }, [showColorOptions, showThicknessOptions, showLineStyleOptions])
 
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (thicknessWrapperRef.current && !thicknessWrapperRef.current.contains(event.target)) {
         setShowThicknessOptions(false)
+      }
+
+      if (lineStyleWrapperRef.current && !lineStyleWrapperRef.current.contains(event.target)) {
+        setShowLineStyleOptions(false)
       }
 
       if (colorWrapperRef.current && !colorWrapperRef.current.contains(event.target)) {
@@ -66,16 +77,27 @@ const DrawingPropertiesToolbar = ({
   }, [])
 
   const thicknessOptions = [1, 2, 3, 4, 5]
+  const lineStyleOptions = ['solid', 'dashed', 'dotted']
 
   const handleThicknessChange = (newWidth) => {
     onUpdate({ ...drawingState, lineWidth: newWidth })
     setShowThicknessOptions(false)
   }
 
+  const handleLineStyleChange = (newStyle) => {
+    onUpdate({ ...drawingState, lineStyle: newStyle })
+    setShowLineStyleOptions(false)
+  }
+
   const handleColorChange = (newColor) => {
     console.log({ newColor })
     onUpdate({ ...drawingState, lineColor: newColor })
     // setShowColorOptions(false)
+  }
+
+  const formatStyleName = (style) => {
+    if (!style) return ''
+    return style.charAt(0).toUpperCase() + style.slice(1)
   }
 
   const toolbarClassName = `
@@ -151,7 +173,34 @@ const DrawingPropertiesToolbar = ({
           </div>
         )}
       </div>
-      <button title="Line Style">---</button>
+      <div className="toolbar-button-wrapper" ref={lineStyleWrapperRef}>
+        <button
+          className="toolbar-button line-style-button"
+          onClick={() => setShowLineStyleOptions((prev) => !prev)}
+          title="Line Style"
+        >
+          <div className={`line-style-preview ${lineStyle}`} style={{ width: '20px' }}></div>
+        </button>
+        {showLineStyleOptions && (
+          <div
+            className={`toolbar-popup line-style-popup position-${popupPosition} ${
+              isPopupVisible ? 'visible' : ''
+            }`}
+            ref={popupRef}
+          >
+            {lineStyleOptions.map((style) => (
+              <div
+                key={style}
+                className="line-style-option"
+                onClick={() => handleLineStyleChange(style)}
+              >
+                <div className={`line-style-preview ${style}`}></div>
+                <span className="line-style-label">{formatStyleName(style)} Line</span>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
       <button title="Settings">⚙️</button>
       <div className="toolbar-separator"></div>
       <button title="Delete" onClick={onDelete}>
@@ -169,6 +218,7 @@ DrawingPropertiesToolbar.propTypes = {
   drawingState: PropTypes.shape({
     lineColor: PropTypes.string,
     lineWidth: PropTypes.number,
+    lineStyle: PropTypes.string,
     textColor: PropTypes.string
   }),
   isDragging: PropTypes.bool,
