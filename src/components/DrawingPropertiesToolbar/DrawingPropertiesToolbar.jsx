@@ -14,6 +14,7 @@ const DrawingPropertiesToolbar = ({
   isDragging,
   onDelete,
   onDragStart,
+  onSettingsClick,
   onUpdate,
   toolbarRef
 }) => {
@@ -201,7 +202,9 @@ const DrawingPropertiesToolbar = ({
           </div>
         )}
       </div>
-      <button title="Settings">⚙️</button>
+      <button title="Settings" onClick={onSettingsClick}>
+        ⚙️
+      </button>
       <div className="toolbar-separator"></div>
       <button title="Delete" onClick={onDelete}>
         🗑️
@@ -224,6 +227,7 @@ DrawingPropertiesToolbar.propTypes = {
   isDragging: PropTypes.bool,
   onDelete: PropTypes.func.isRequired,
   onDragStart: PropTypes.func.isRequired,
+  onSettingsClick: PropTypes.func.isRequired,
   onUpdate: PropTypes.func.isRequired,
   toolbarRef: PropTypes.shape({ current: PropTypes.instanceOf(Element) })
 }

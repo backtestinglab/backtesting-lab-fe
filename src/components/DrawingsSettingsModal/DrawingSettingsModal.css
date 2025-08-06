@@ -1,0 +1,136 @@
+.dsm-panel {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  width: 300px;
+  background-color: rgba(45, 50, 70, 0.95);
+  border: 1px solid rgba(80, 85, 110, 1);
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+  color: #c0c8e0;
+  z-index: 100;
+  backdrop-filter: blur(3px);
+}
+
+.dsm-panel.is-dragging {
+  cursor: grabbing;
+  user-select: none;
+}
+
+.dsm-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background-color: rgba(80, 85, 110, 0.5);
+  border-bottom: 1px solid rgba(80, 85, 110, 1);
+  cursor: grab;
+}
+
+.dsm-header h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.dsm-close-button {
+  background: none;
+  border: none;
+  color: #c0c8e0;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0 4px;
+}
+
+.dsm-tabs {
+  display: flex;
+  border-bottom: 1px solid rgba(80, 85, 110, 1);
+}
+
+.dsm-tab-button {
+  flex: 1;
+  padding: 10px;
+  background: none;
+  border: none;
+  color: #9098b0;
+  cursor: pointer;
+  font-size: 0.9rem;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.dsm-tab-button:hover {
+  background-color: rgba(100, 110, 200, 0.1);
+}
+
+.dsm-tab-button.active {
+  color: #e0c8e0;
+  border-bottom-color: #2962ff;
+}
+
+.dsm-body {
+  padding: 16px;
+}
+
+.dsm-tab-content {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.dsm-control-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dsm-control-row label {
+  font-size: 0.9rem;
+}
+
+.dsm-control-row select,
+.dsm-control-row input {
+  background-color: rgba(30, 33, 48, 1);
+  border: 1px solid rgba(80, 85, 110, 1);
+  color: #c0c8e0;
+  border-radius: 4px;
+  padding: 4px 8px;
+  width: 120px;
+}
+
+.dsm-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 12px;
+  border-top: 1px solid rgba(80, 85, 110, 1);
+  background-color: rgba(80, 85, 110, 0.2);
+}
+
+.dsm-footer button {
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #c0c8e0;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+}
+
+.dsm-footer .dsm-button-cancel {
+  background-color: rgba(80, 85, 110, 0.8);
+  border: 1px solid rgba(100, 105, 130, 1);
+}
+
+.dsm-footer .dsm-button-cancel:hover {
+  background-color: rgba(100, 105, 130, 1);
+}
+
+.dsm-footer .dsm-button-save {
+  background-color: #2962ff;
+  border-color: #2962ff;
+  border: 1px solid #2962ff;
+}
+
+.dsm-footer .dsm-button-save:hover {
+  background-color: #4d7eff;
+}
