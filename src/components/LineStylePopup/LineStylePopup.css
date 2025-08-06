@@ -1,0 +1,30 @@
+.line-style-popup {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.line-style-option {
+  display: flex;
+  align-items: center;
+  padding: 6px 8px;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  column-gap: 20px;
+}
+
+.line-style-option:hover {
+  background-color: rgba(100, 110, 200, 0.3);
+}
+
+.line-style-option .line-style-preview {
+  width: 50px;
+}
+
+.line-style-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #c0c8e0;
+  text-wrap-mode: nowrap;
+}

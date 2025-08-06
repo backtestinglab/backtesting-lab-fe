@@ -2,6 +2,8 @@ import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 
 import ColorPickerPopup from '../ColorPickerPopup/ColorPickerPopup'
+import LineThicknessPopup from '../LineThicknessPopup/LineThicknessPopup'
+import LineStylePopup from '../LineStylePopup/LineStylePopup'
 
 import './DrawingPropertiesToolbar.css'
 
@@ -91,7 +93,6 @@ const DrawingPropertiesToolbar = ({
   }
 
   const handleColorChange = (newColor) => {
-    console.log({ newColor })
     onUpdate({ ...drawingState, lineColor: newColor })
     // setShowColorOptions(false)
   }
@@ -157,21 +158,13 @@ const DrawingPropertiesToolbar = ({
           <span className="thickness-label">{lineWidth}px</span>
         </button>
         {showThicknessOptions && (
-          <div
-            className={`toolbar-popup thickness-popup position-${popupPosition} ${isPopupVisible ? 'visible' : ''}`}
-            ref={popupRef}
-          >
-            {thicknessOptions.map((width) => (
-              <div
-                key={width}
-                className="thickness-option"
-                onClick={() => handleThicknessChange(width)}
-              >
-                <span className="thickness-label">{width}px</span>
-                <div className="thickness-preview" style={{ height: `${width}px` }}></div>
-              </div>
-            ))}
-          </div>
+          <LineThicknessPopup
+            options={thicknessOptions}
+            onSelect={handleThicknessChange}
+            popupRef={popupRef}
+            popupPosition={popupPosition}
+            popupVisibility={isPopupVisible ? 'visible' : ''}
+          />
         )}
       </div>
       <div className="toolbar-button-wrapper" ref={lineStyleWrapperRef}>
@@ -183,23 +176,13 @@ const DrawingPropertiesToolbar = ({
           <div className={`line-style-preview ${lineStyle}`} style={{ width: '20px' }}></div>
         </button>
         {showLineStyleOptions && (
-          <div
-            className={`toolbar-popup line-style-popup position-${popupPosition} ${
-              isPopupVisible ? 'visible' : ''
-            }`}
-            ref={popupRef}
-          >
-            {lineStyleOptions.map((style) => (
-              <div
-                key={style}
-                className="line-style-option"
-                onClick={() => handleLineStyleChange(style)}
-              >
-                <div className={`line-style-preview ${style}`}></div>
-                <span className="line-style-label">{formatStyleName(style)} Line</span>
-              </div>
-            ))}
-          </div>
+          <LineStylePopup
+            options={lineStyleOptions}
+            onSelect={handleLineStyleChange}
+            popupRef={popupRef}
+            popupPosition={popupPosition}
+            popupVisibility={isPopupVisible ? 'visible' : ''}
+          />
         )}
       </div>
       <button title="Settings" onClick={onSettingsClick}>
