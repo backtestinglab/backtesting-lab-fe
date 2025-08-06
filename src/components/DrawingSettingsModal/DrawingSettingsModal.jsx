@@ -30,44 +30,44 @@ const DrawingSettingsModal = ({
   if (!drawing) return null
 
   const modalClassName = `
-    dsm-panel
+    drawing-settings-panel
     ${isDragging ? 'is-dragging' : ''}
   `
 
   return (
     <div className={modalClassName} style={customStyles} ref={modalRef}>
-      <div className="dsm-header" onMouseDown={onDragStart}>
+      <div className="drawing-settings-header" onMouseDown={onDragStart}>
         <h3>Line Settings</h3>
-        <button className="dsm-close-button" onClick={onClose}>
+        <button className="drawing-settings-close-button" onClick={onClose}>
           &times;
         </button>
       </div>
 
-      <div className="dsm-tabs">
+      <div className="drawing-settings-tabs">
         <button
-          className={`dsm-tab-button ${activeTab === 'style' ? 'active' : ''}`}
+          className={`drawing-settings-tab-button ${activeTab === 'style' ? 'active' : ''}`}
           onClick={() => setActiveTab('style')}
         >
           Style
         </button>
         <button
-          className={`dsm-tab-button ${activeTab === 'text' ? 'active' : ''}`}
+          className={`drawing-settings-tab-button ${activeTab === 'text' ? 'active' : ''}`}
           onClick={() => setActiveTab('text')}
         >
           Text
         </button>
         <button
-          className={`dsm-tab-button ${activeTab === 'coords' ? 'active' : ''}`}
+          className={`drawing-settings-tab-button ${activeTab === 'coords' ? 'active' : ''}`}
           onClick={() => setActiveTab('coords')}
         >
           Coordinates
         </button>
       </div>
 
-      <div className="dsm-body">
+      <div className="drawing-settings-body">
         {activeTab === 'style' && (
-          <div className="dsm-tab-content">
-            <div className="dsm-control-row">
+          <div className="drawing-settings-tab-content">
+            <div className="drawing-settings-control-row">
               <label htmlFor="lineColor">Color</label>
               <input
                 type="color"
@@ -76,7 +76,7 @@ const DrawingSettingsModal = ({
                 onChange={(e) => handleInputChange('lineColor', e.target.value)}
               />
             </div>
-            <div className="dsm-control-row">
+            <div className="drawing-settings-control-row">
               <label htmlFor="lineWidth">Thickness</label>
               <select
                 id="lineWidth"
@@ -90,7 +90,7 @@ const DrawingSettingsModal = ({
                 <option value="5">5px</option>
               </select>
             </div>
-            <div className="dsm-control-row">
+            <div className="drawing-settings-control-row">
               <label htmlFor="lineStyle">Style</label>
               <select
                 id="lineStyle"
@@ -105,22 +105,22 @@ const DrawingSettingsModal = ({
           </div>
         )}
         {activeTab === 'text' && (
-          <div className="dsm-tab-content">
+          <div className="drawing-settings-tab-content">
             <p>Text settings will be implemented in a future task.</p>
           </div>
         )}
         {activeTab === 'coords' && (
-          <div className="dsm-tab-content">
+          <div className="drawing-settings-tab-content">
             <p>Coordinate settings will be implemented in a future task.</p>
           </div>
         )}
       </div>
 
-      <div className="dsm-footer">
-        <button className="dsm-button-cancel" onClick={onClose}>
+      <div className="drawing-settings-footer">
+        <button className="drawing-settings-button-cancel" onClick={onClose}>
           Cancel
         </button>
-        <button className="dsm-button-save" onClick={handleSave}>
+        <button className="drawing-settings-button-save" onClick={handleSave}>
           OK
         </button>
       </div>

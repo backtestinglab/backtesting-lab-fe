@@ -1,9 +1,9 @@
-.dsm-panel {
+.drawing-settings-panel {
   position: absolute;
   display: flex;
   flex-direction: column;
   width: 300px;
-  background-color: rgba(45, 50, 70, 0.95);
+  background-color: rgba(40, 45, 65, 0.98);
   border: 1px solid rgba(80, 85, 110, 1);
   border-radius: 8px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
@@ -12,28 +12,28 @@
   backdrop-filter: blur(3px);
 }
 
-.dsm-panel.is-dragging {
+.drawing-settings-panel.is-dragging {
   cursor: grabbing;
   user-select: none;
 }
 
-.dsm-header {
+.drawing-settings-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 8px 12px;
   background-color: rgba(80, 85, 110, 0.5);
-  border-bottom: 1px solid rgba(80, 85, 110, 1);
+  border-bottom: 1px solid rgba(80, 85, 110, 0.8);
   cursor: grab;
 }
 
-.dsm-header h3 {
+.drawing-settings-header h3 {
   margin: 0;
   font-size: 1rem;
   font-weight: 600;
 }
 
-.dsm-close-button {
+.drawing-settings-close-button {
   background: none;
   border: none;
   color: #c0c8e0;
@@ -42,12 +42,12 @@
   padding: 0 4px;
 }
 
-.dsm-tabs {
+.drawing-settings-tabs {
   display: flex;
-  border-bottom: 1px solid rgba(80, 85, 110, 1);
+  border-bottom: 1px solid rgba(80, 85, 110, 0.8);
 }
 
-.dsm-tab-button {
+.drawing-settings-tab-button {
   flex: 1;
   padding: 10px;
   background: none;
@@ -59,37 +59,37 @@
   transition: all 0.2s ease;
 }
 
-.dsm-tab-button:hover {
+.drawing-settings-tab-button:hover {
   background-color: rgba(100, 110, 200, 0.1);
 }
 
-.dsm-tab-button.active {
-  color: #e0c8e0;
+.drawing-settings-tab-button.active {
+  color: #e0c070;
   border-bottom-color: #2962ff;
 }
 
-.dsm-body {
+.drawing-settings-body {
   padding: 16px;
 }
 
-.dsm-tab-content {
+.drawing-settings-tab-content {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-.dsm-control-row {
+.drawing-settings-control-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.dsm-control-row label {
+.drawing-settings-control-row label {
   font-size: 0.9rem;
 }
 
-.dsm-control-row select,
-.dsm-control-row input {
+.drawing-settings-control-row select,
+.drawing-settings-control-row input {
   background-color: rgba(30, 33, 48, 1);
   border: 1px solid rgba(80, 85, 110, 1);
   color: #c0c8e0;
@@ -98,16 +98,16 @@
   width: 120px;
 }
 
-.dsm-footer {
+.drawing-settings-footer {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
   padding: 12px;
-  border-top: 1px solid rgba(80, 85, 110, 1);
+  border-top: 1px solid rgba(80, 85, 110, 0.8);
   background-color: rgba(80, 85, 110, 0.2);
 }
 
-.dsm-footer button {
+.drawing-settings-footer button {
   padding: 8px 16px;
   border-radius: 4px;
   cursor: pointer;
@@ -116,21 +116,20 @@
   transition: background-color 0.2s ease;
 }
 
-.dsm-footer .dsm-button-cancel {
+.drawing-settings-footer .drawing-settings-button-cancel {
   background-color: rgba(80, 85, 110, 0.8);
   border: 1px solid rgba(100, 105, 130, 1);
 }
 
-.dsm-footer .dsm-button-cancel:hover {
+.drawing-settings-footer .drawing-settings-button-cancel:hover {
   background-color: rgba(100, 105, 130, 1);
 }
 
-.dsm-footer .dsm-button-save {
+.drawing-settings-footer .drawing-settings-button-save {
   background-color: #2962ff;
-  border-color: #2962ff;
   border: 1px solid #2962ff;
 }
 
-.dsm-footer .dsm-button-save:hover {
+.drawing-settings-footer .drawing-settings-button-save:hover {
   background-color: #4d7eff;
 }
