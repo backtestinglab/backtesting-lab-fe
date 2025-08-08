@@ -54,9 +54,12 @@
   border: none;
   color: #9098b0;
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
+  font-weight: 700;
   border-bottom: 2px solid transparent;
   transition: all 0.2s ease;
+  border-radius: 0;
+  margin-bottom: -1px;
 }
 
 .drawing-settings-tab-button:hover {
@@ -65,7 +68,7 @@
 
 .drawing-settings-tab-button.active {
   color: #e0c070;
-  border-bottom-color: #2962ff;
+  border-bottom-color: #e0c070;
 }
 
 .drawing-settings-body {

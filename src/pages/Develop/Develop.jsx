@@ -284,6 +284,7 @@ const Develop = ({ modelConfig }) => {
 
   const handleDrawingSelect = (drawingId) => {
     setSelectedDrawingId((prevId) => (prevId === drawingId ? null : drawingId))
+    setIsSettingsModalOpen(false)
   }
 
   const handleDrawingUpdate = (updatedDrawing) => {
