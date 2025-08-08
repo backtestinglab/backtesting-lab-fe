@@ -26,7 +26,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  text-wrap-mode: nowrap; /* temporary until icons created */
+  white-space: nowrap; /* temporary until icons created */
   cursor: pointer;
   transition: background-color 0.2s ease;
   position: relative;

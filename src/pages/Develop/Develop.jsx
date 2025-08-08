@@ -2,6 +2,7 @@ import React, { useCallback, useContext, useEffect, useRef, useState } from 'rea
 
 import Chart from '../../components/Chart/Chart'
 import DrawingPropertiesToolbar from '../../components/DrawingPropertiesToolbar/DrawingPropertiesToolbar'
+import DrawingSettingsModal from '../../components/DrawingSettingsModal/DrawingSettingsModal'
 import DrawingToolbar from '../../components/DrawingToolbar/DrawingToolbar'
 
 import logo from '../../assets/logo.svg'
@@ -28,9 +29,16 @@ const Develop = ({ modelConfig }) => {
     left: '64%'
   })
   const [isToolbarDragging, setIsToolbarDragging] = useState(false)
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false)
+  const [isModalDragging, setIsModalDragging] = useState(false)
+  const [modalPosition, setModalPosition] = useState({
+    top: 150,
+    left: '50%'
+  })
   const dragDrawingToolbarRef = useRef(null)
   const chartAreaRef = useRef(null)
   const toolbarRef = useRef(null)
+  const modalRef = useRef(null)
 
   useEffect(() => {
     const handleResize = () => {
@@ -190,10 +198,84 @@ const Develop = ({ modelConfig }) => {
     window.addEventListener('mouseup', handleToolbarDragEnd)
   }, [])
 
+  const handleModalDragStart = useCallback((event) => {
+    event.preventDefault()
+
+    if (!chartAreaRef.current || !modalRef.current) return
+
+    setIsModalDragging(true)
+
+    const modalElement = modalRef.current
+    const chartPane = chartAreaRef.current.querySelector(
+      '.tv-lightweight-charts table tr:first-child td:nth-child(2) div:first-child'
+    )
+
+    if (!chartPane || !modalElement) {
+      console.error('Could not find chart pane element for bounding.')
+      return
+    }
+
+    const paneRect = chartPane.getBoundingClientRect()
+    const chartAreaRect = chartAreaRef.current.getBoundingClientRect()
+
+    const dragRef = {
+      chartAreaRect,
+      paneRect,
+      initialMouseX: event.clientX,
+      initialMouseY: event.clientY,
+      initialLeft: modalElement.offsetLeft,
+      initialTop: modalElement.offsetTop,
+      modalWidth: modalElement.offsetWidth,
+      modalHeight: modalElement.offsetHeight
+    }
+
+    const handleModalDragMove = (moveEvent) => {
+      const {
+        chartAreaRect,
+        initialMouseX,
+        initialMouseY,
+        initialLeft,
+        initialTop,
+        paneRect,
+        modalWidth,
+        modalHeight
+      } = dragRef
+
+      const dx = moveEvent.clientX - initialMouseX
+      const dy = moveEvent.clientY - initialMouseY
+
+      let newLeft = initialLeft + dx
+      let newTop = initialTop + dy
+
+      const minX = paneRect.left - chartAreaRect.left
+      const maxX = paneRect.right - chartAreaRect.left - modalWidth
+      const minY = paneRect.top - chartAreaRect.top
+      const maxY = paneRect.bottom - chartAreaRect.top - modalHeight
+
+      newLeft = Math.max(minX, Math.min(newLeft, maxX))
+      newTop = Math.max(minY, Math.min(newTop, maxY))
+
+      setModalPosition({ top: newTop, left: newLeft })
+    }
+
+    const handleModalDragEnd = () => {
+      window.removeEventListener('mousemove', handleModalDragMove)
+      window.removeEventListener('mouseup', handleModalDragEnd)
+      setIsModalDragging(false)
+    }
+
+    window.addEventListener('mousemove', handleModalDragMove)
+    window.addEventListener('mouseup', handleModalDragEnd)
+  }, [])
+
   const selectedTimeframes = modelConfig?.selectedTimeframes || []
 
   const handleToolSelect = (toolId) => {
     setActiveTool((prevTool) => (prevTool === toolId ? 'cursor' : toolId))
+  }
+
+  const handleOpenSettingsModal = () => {
+    setIsSettingsModalOpen(true)
   }
 
   const handleDrawingAdd = (newDrawing) => {
@@ -210,6 +292,7 @@ const Develop = ({ modelConfig }) => {
         prevDrawing.id === updatedDrawing.id ? updatedDrawing : prevDrawing
       )
     )
+    setIsSettingsModalOpen(false)
   }
 
   const handleDeleteDrawing = () => {
@@ -255,7 +338,7 @@ const Develop = ({ modelConfig }) => {
             <div className="placeholder-text">Loading Chart Data...</div>
           ) : (
             <>
-              {selectedDrawingId && (
+              {selectedDrawingId && !isSettingsModalOpen && (
                 <DrawingPropertiesToolbar
                   customStyles={{
                     top: `${toolbarPosition.top}px`,
@@ -270,6 +353,24 @@ const Develop = ({ modelConfig }) => {
                   onUpdate={handleDrawingUpdate}
                   onDragStart={handleToolbarDragStart}
                   toolbarRef={toolbarRef}
+                  onSettingsClick={handleOpenSettingsModal}
+                />
+              )}
+              {isSettingsModalOpen && selectedDrawing && (
+                <DrawingSettingsModal
+                  customStyles={{
+                    top: `${modalPosition.top}px`,
+                    left:
+                      typeof modalPosition.left === 'string'
+                        ? modalPosition.left
+                        : `${modalPosition.left}px`
+                  }}
+                  drawing={selectedDrawing}
+                  isDragging={isModalDragging}
+                  modalRef={modalRef}
+                  onUpdate={handleDrawingUpdate}
+                  onClose={() => setIsSettingsModalOpen(false)}
+                  onDragStart={handleModalDragStart}
                 />
               )}
               <DrawingToolbar activeTool={activeTool} onToolSelect={handleToolSelect} />

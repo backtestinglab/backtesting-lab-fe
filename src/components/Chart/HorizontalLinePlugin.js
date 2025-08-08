@@ -341,12 +341,15 @@ class HorizontalLineRenderer {
           // context.strokeStyle = isSelected ? '#2962FF' : line.lineColor
           context.strokeStyle = line.lineColor
           context.lineWidth = line.lineWidth * pixelRatio + (isSelected ? 1 : 0)
+          context.lineCap = 'butt' // Default line cap
           switch (line.lineStyle) {
             case 'dashed':
-              context.setLineDash([4 * context.lineWidth, 4 * context.lineWidth])
+              context.setLineDash([6 * line.lineWidth, 4 * line.lineWidth])
               break
             case 'dotted':
-              context.setLineDash([context.lineWidth, context.lineWidth])
+              // For a true dotted line, we use a zero-length dash and a round line cap
+              context.setLineDash([0, line.lineWidth * 3])
+              context.lineCap = 'round'
               break
             default: // solid
               context.setLineDash([])

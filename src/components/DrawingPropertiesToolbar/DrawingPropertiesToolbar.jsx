@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import ColorPickerPopup from '../ColorPickerPopup/ColorPickerPopup'
 import LineThicknessPopup from '../LineThicknessPopup/LineThicknessPopup'
 import LineStylePopup from '../LineStylePopup/LineStylePopup'
+import { THICKNESS_OPTIONS, LINE_STYLE_OPTIONS } from '../../config/drawingConstants'
 
 import './DrawingPropertiesToolbar.css'
 
@@ -78,9 +79,6 @@ const DrawingPropertiesToolbar = ({
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [])
-
-  const thicknessOptions = [1, 2, 3, 4, 5]
-  const lineStyleOptions = ['solid', 'dashed', 'dotted']
 
   const handleThicknessChange = (newWidth) => {
     onUpdate({ ...drawingState, lineWidth: newWidth })
@@ -159,7 +157,7 @@ const DrawingPropertiesToolbar = ({
         </button>
         {showThicknessOptions && (
           <LineThicknessPopup
-            options={thicknessOptions}
+            options={THICKNESS_OPTIONS}
             onSelect={handleThicknessChange}
             popupRef={popupRef}
             popupPosition={popupPosition}
@@ -177,7 +175,7 @@ const DrawingPropertiesToolbar = ({
         </button>
         {showLineStyleOptions && (
           <LineStylePopup
-            options={lineStyleOptions}
+            options={LINE_STYLE_OPTIONS}
             onSelect={handleLineStyleChange}
             popupRef={popupRef}
             popupPosition={popupPosition}

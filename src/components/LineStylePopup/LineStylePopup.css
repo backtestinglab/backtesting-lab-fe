@@ -26,5 +26,5 @@
   font-size: 0.8rem;
   font-weight: 600;
   color: #c0c8e0;
-  text-wrap-mode: nowrap;
+  white-space: nowrap;
 }
