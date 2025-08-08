@@ -260,6 +260,17 @@ export class HorizontalLinePlugin {
   // }
 }
 
+function toOpaqueColor(colorStr) {
+  if (typeof colorStr !== 'string') return '#000000'
+  if (colorStr.startsWith('rgba')) {
+    const parts = colorStr.match(/[\d.]+/g)
+    if (parts && parts.length === 4) {
+      return `rgb(${parts[0]}, ${parts[1]}, ${parts[2]})`
+    }
+  }
+  return colorStr
+}
+
 /**
  * @class HorizontalLineAxisView
  * @description Renders a label on the price axis for a horizontal line.
@@ -284,7 +295,7 @@ class HorizontalLineAxisView {
   }
 
   backColor() {
-    return this._state.lineColor
+    return toOpaqueColor(this._state.lineColor)
   }
   borderColor() {
     return this._state.lineColor
@@ -348,7 +359,7 @@ class HorizontalLineRenderer {
               break
             case 'dotted':
               // For a true dotted line, we use a zero-length dash and a round line cap
-              context.setLineDash([0, line.lineWidth * 3])
+              context.setLineDash([0, line.lineWidth * 4])
               context.lineCap = 'round'
               break
             default: // solid
@@ -361,6 +372,8 @@ class HorizontalLineRenderer {
 
           // --- Draw selection handles if selected ---
           if (isSelected) {
+            context.setLineDash([]) // Ensure handles are solid
+            context.lineCap = 'butt'
             const handleSize = line.lineWidth + 4
             context.fillStyle = '#FFFFFF'
             context.strokeStyle = '#2962FF'

@@ -292,7 +292,6 @@ const Develop = ({ modelConfig }) => {
         prevDrawing.id === updatedDrawing.id ? updatedDrawing : prevDrawing
       )
     )
-    setIsSettingsModalOpen(false)
   }
 
   const handleDeleteDrawing = () => {

@@ -58,15 +58,23 @@ const DrawingSettingsModal = ({
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (modalContentRef.current && !modalContentRef.current.contains(event.target)) {
-        setActivePopup(null)
+      if (activePopup) {
+        const wrappers = {
+          color: colorWrapperRef.current,
+          thickness: thicknessWrapperRef.current,
+          style: lineStyleWrapperRef.current
+        }
+        const activeWrapper = wrappers[activePopup]
+        if (activeWrapper && !activeWrapper.contains(event.target)) {
+          setActivePopup(null)
+        }
       }
     }
     document.addEventListener('mousedown', handleClickOutside)
     return () => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
-  }, [])
+  }, [activePopup])
 
   const handleInputChange = (key, value) => {
     const newSettings = { ...settings, [key]: value }
@@ -132,7 +140,7 @@ const DrawingSettingsModal = ({
                   {activePopup === 'color' && (
                     <ColorPickerPopup
                       initialColor={settings.lineColor}
-                      onColorChange={handleColorSelect}
+                      onColorChange={(color) => handleInputChange('lineColor', color)}
                       onColorSelect={handleColorSelect}
                       popupRef={popupRef}
                       popupPosition={popupPosition}
