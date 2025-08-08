@@ -1,39 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 
+import { parseColor } from '../../utils/colorUtils'
+
 import './ColorPickerPopup.css'
-
-/**
- * @function parseColor
- * @description Parses a hex or rgba color string into an {r, g, b, a} object.
- * @param {string} colorString - The color string (e.g., "#FF5252" or "rgba(255, 82, 82, 0.5)").
- * @returns {{r: number, g: number, b: number, a: number} | null}
- */
-const parseColor = (colorString) => {
-  // Handle RGBA strings
-  const rgbaMatch = colorString.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([\d.]+))?\)/)
-  if (rgbaMatch) {
-    return {
-      r: parseInt(rgbaMatch[1], 10),
-      g: parseInt(rgbaMatch[2], 10),
-      b: parseInt(rgbaMatch[3], 10),
-      a: rgbaMatch[4] !== undefined ? parseFloat(rgbaMatch[4]) : 1
-    }
-  }
-
-  // Handle HEX strings
-  const hexMatch = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(colorString)
-  if (hexMatch) {
-    return {
-      r: parseInt(hexMatch[1], 16),
-      g: parseInt(hexMatch[2], 16),
-      b: parseInt(hexMatch[3], 16),
-      a: 1
-    }
-  }
-
-  return null
-}
 
 const ColorPickerPopup = ({
   initialColor,

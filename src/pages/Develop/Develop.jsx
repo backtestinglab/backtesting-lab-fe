@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useLayoutEffect, useRef, useState } from 'react'
 
 import Chart from '../../components/Chart/Chart'
 import DrawingPropertiesToolbar from '../../components/DrawingPropertiesToolbar/DrawingPropertiesToolbar'
@@ -32,8 +32,8 @@ const Develop = ({ modelConfig }) => {
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false)
   const [isModalDragging, setIsModalDragging] = useState(false)
   const [modalPosition, setModalPosition] = useState({
-    top: 150,
-    left: '50%'
+    top: -9999,
+    left: -9999
   })
   const dragDrawingToolbarRef = useRef(null)
   const chartAreaRef = useRef(null)
@@ -74,6 +74,26 @@ const Develop = ({ modelConfig }) => {
     window.addEventListener('resize', handleResize)
     return () => window.removeEventListener('resize', handleResize)
   }, [toolbarPosition])
+
+  useLayoutEffect(() => {
+    if (isSettingsModalOpen && modalRef.current && chartAreaRef.current) {
+      const chartPane = chartAreaRef.current.querySelector(
+        '.tv-lightweight-charts table tr:first-child td:nth-child(2) div:first-child'
+      )
+      if (!chartPane) return
+
+      const paneRect = chartPane.getBoundingClientRect()
+      const chartAreaRect = chartAreaRef.current.getBoundingClientRect()
+      const modalWidth = modalRef.current.offsetWidth
+      const modalHeight = modalRef.current.offsetHeight
+
+      // Center the modal in the chart pane, relative to the chart area
+      const newLeft = paneRect.left - chartAreaRect.left + paneRect.width / 2 - modalWidth / 2
+      const newTop = paneRect.top - chartAreaRect.top + paneRect.height / 2 - modalHeight / 2
+
+      setModalPosition({ top: newTop, left: newLeft })
+    }
+  }, [isSettingsModalOpen])
 
   useEffect(() => {
     console.log('DevelopPage mounted with config:', modelConfig)

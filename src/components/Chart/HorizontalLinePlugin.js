@@ -1,3 +1,5 @@
+import { getContrastingTextColor, parseColor } from '../../utils/colorUtils'
+
 /**
  * @class HorizontalLinePlugin
  * @description The main plugin class that manages state and interaction.
@@ -261,14 +263,9 @@ export class HorizontalLinePlugin {
 }
 
 function toOpaqueColor(colorStr) {
-  if (typeof colorStr !== 'string') return '#000000'
-  if (colorStr.startsWith('rgba')) {
-    const parts = colorStr.match(/[\d.]+/g)
-    if (parts && parts.length === 4) {
-      return `rgb(${parts[0]}, ${parts[1]}, ${parts[2]})`
-    }
-  }
-  return colorStr
+  const rgb = parseColor(colorStr)
+  if (!rgb) return colorStr
+  return `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`
 }
 
 /**
@@ -291,7 +288,7 @@ class HorizontalLineAxisView {
   }
 
   textColor() {
-    return this._state.isSelected ? '#FFFFFF' : '#D1D4DC'
+    return getContrastingTextColor(this._state.lineColor)
   }
 
   backColor() {
