@@ -24,6 +24,7 @@ const DrawingPropertiesToolbar = ({
   const [showThicknessOptions, setShowThicknessOptions] = useState(false)
   const [showLineStyleOptions, setShowLineStyleOptions] = useState(false)
   const [showColorOptions, setShowColorOptions] = useState(false)
+  const [showTextColorOptions, setShowTextColorOptions] = useState(false)
   const [popupPosition, setPopupPosition] = useState('top')
   const [isPopupVisible, setIsPopupVisible] = useState(false)
   const popupRef = useRef(null)
@@ -31,6 +32,7 @@ const DrawingPropertiesToolbar = ({
   const lineStyleWrapperRef = useRef(null)
   const colorWrapperRef = useRef(null)
 
+  const textColorWrapperRef = useRef(null)
   const {
     lineColor = '#2962FF',
     lineWidth = 1,
@@ -39,7 +41,7 @@ const DrawingPropertiesToolbar = ({
   } = drawingState || {}
 
   useLayoutEffect(() => {
-    if (showThicknessOptions || showColorOptions || showLineStyleOptions) {
+    if (showThicknessOptions || showColorOptions || showLineStyleOptions || showTextColorOptions) {
       setIsPopupVisible(false)
 
       requestAnimationFrame(() => {
@@ -58,7 +60,7 @@ const DrawingPropertiesToolbar = ({
       setIsPopupVisible(false)
       setPopupPosition('top')
     }
-  }, [showColorOptions, showThicknessOptions, showLineStyleOptions])
+  }, [showColorOptions, showThicknessOptions, showLineStyleOptions, showTextColorOptions])
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -72,6 +74,10 @@ const DrawingPropertiesToolbar = ({
 
       if (colorWrapperRef.current && !colorWrapperRef.current.contains(event.target)) {
         setShowColorOptions(false)
+      }
+
+      if (textColorWrapperRef.current && !textColorWrapperRef.current.contains(event.target)) {
+        setShowTextColorOptions(false)
       }
     }
     document.addEventListener('mousedown', handleClickOutside)
@@ -95,10 +101,14 @@ const DrawingPropertiesToolbar = ({
     // setShowColorOptions(false)
   }
 
-  const formatStyleName = (style) => {
-    if (!style) return ''
-    return style.charAt(0).toUpperCase() + style.slice(1)
+  const handleTextColorChange = (newColor) => {
+    onUpdate({ ...drawingState, textColor: newColor })
   }
+
+  // const formatStyleName = (style) => {
+  //   if (!style) return ''
+  //   return style.charAt(0).toUpperCase() + style.slice(1)
+  // }
 
   const toolbarClassName = `
     drawing-properties-toolbar
@@ -136,10 +146,26 @@ const DrawingPropertiesToolbar = ({
           />
         )}
       </div>
-      <button className="toolbar-button color-button" title="Text Color">
-        <span className="text-icon">T</span>
-        <div className="color-indicator" style={{ backgroundColor: textColor }}></div>
-      </button>
+      <div className="toolbar-button-wrapper" ref={textColorWrapperRef}>
+        <button
+          className="toolbar-button color-button"
+          onClick={() => setShowTextColorOptions((prev) => !prev)}
+          title="Text Color"
+        >
+          <span className="text-icon">T</span>
+          <div className="color-indicator" style={{ backgroundColor: textColor }}></div>
+        </button>
+        {showTextColorOptions && (
+          <ColorPickerPopup
+            initialColor={textColor}
+            onColorChange={handleTextColorChange}
+            onColorSelect={() => setShowTextColorOptions(false)}
+            popupPosition={popupPosition}
+            popupRef={popupRef}
+            popupVisibility={isPopupVisible ? 'visible' : ''}
+          />
+        )}
+      </div>
       <div className="toolbar-button-wrapper" ref={thicknessWrapperRef}>
         <button
           className="toolbar-button thickness-button"

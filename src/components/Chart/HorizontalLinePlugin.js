@@ -109,10 +109,12 @@ export class HorizontalLinePlugin {
 
       if (price !== null && this.onAdd) {
         this.onAdd({
-          lineColor: 'rgba(200, 220, 255, 0.7)',
           id: Date.now(),
-          lineWidth: 1,
+          lineColor: 'rgba(200, 220, 255, 0.7)',
           lineStyle: 'solid',
+          lineWidth: 1,
+          text: '',
+          textColor: '#c0c8e0',
           type: 'horizontalLine',
           price
         })
@@ -233,15 +235,6 @@ export class HorizontalLinePlugin {
     }
     return 1
   }
-
-  // Remove a line by ID
-  // removeLine(id) {
-  //   const index = this._lines.findIndex((line) => line.id === id)
-  //   if (index !== -1) {
-  //     this._lines.splice(index, 1)
-  //     this._requestUpdate()
-  //   }
-  // }
 
   // Get all lines
   // getLines() {
@@ -366,6 +359,21 @@ class HorizontalLineRenderer {
           context.moveTo(0, scaledY)
           context.lineTo(bitmapSize.width, scaledY)
           context.stroke()
+
+          // --- Draw text if it exists ---
+          if (line.text) {
+            context.fillStyle = line.textColor
+            context.font =
+              '12px -apple-system, BlinkMacSystemFont, "Trebuchet MS", Roboto, Ubuntu, sans-serif'
+            context.textAlign = 'left'
+            context.textBaseline = 'bottom'
+
+            const textPadding = 5
+            const x = 10
+            const y = scaledY - textPadding
+
+            context.fillText(line.text, x, y)
+          }
 
           // --- Draw selection handles if selected ---
           if (isSelected) {

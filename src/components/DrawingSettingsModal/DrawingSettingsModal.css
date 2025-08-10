@@ -191,3 +191,24 @@
 .drawing-settings-footer .drawing-settings-button-save:hover {
   background-color: #4d7eff;
 }
+
+.drawing-settings-control-row.text-input-row {
+  display: block;
+}
+
+.drawing-settings-text-input {
+  width: 100%;
+  background-color: rgba(30, 33, 48, 1);
+  border: 1px solid rgba(80, 85, 110, 1);
+  border-radius: 4px;
+  color: #c0c8e0;
+  padding: 8px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.drawing-settings-text-input:focus {
+  outline: 1px solid #e0c070;
+}

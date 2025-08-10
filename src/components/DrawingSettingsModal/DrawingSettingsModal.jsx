@@ -195,7 +195,16 @@ const DrawingSettingsModal = ({
           )}
           {activeTab === 'text' && (
             <div className="drawing-settings-tab-content">
-              <p>Text settings will be implemented in a future task.</p>
+              <div className="drawing-settings-control-row text-input-row">
+                <textarea
+                  className="drawing-settings-text-input"
+                  placeholder="Enter text..."
+                  value={settings.text || ''}
+                  onChange={(e) => handleInputChange('text', e.target.value)}
+                  rows="3"
+                ></textarea>
+              </div>
+              {/* We will add more text controls here later, like font size and alignment */}
             </div>
           )}
           {activeTab === 'coords' && (
