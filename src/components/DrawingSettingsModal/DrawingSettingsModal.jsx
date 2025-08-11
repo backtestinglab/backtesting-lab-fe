@@ -93,6 +93,11 @@ const DrawingSettingsModal = ({
     if (key !== 'lineColor' && key !== 'textColor') setActivePopup(null)
   }
 
+  const handleBoldToggle = () => {
+    const newWeight = settings.fontWeight === 'bold' ? 'normal' : 'bold'
+    handleInputChange('fontWeight', newWeight)
+  }
+
   const handleColorSelect = (color) => {
     handleInputChange('lineColor', color)
     setActivePopup(null)
@@ -234,7 +239,7 @@ const DrawingSettingsModal = ({
                     onClick={() => setActivePopup(activePopup === 'fontSize' ? null : 'fontSize')}
                     title="Font Size"
                   >
-                    <span>{settings.fontSize || 12}</span>
+                    <span>{settings.fontSize || 24}</span>
                     <span
                       className={`chevron ${activePopup === 'fontSize' ? 'up' : 'down'}`}
                     ></span>
@@ -249,6 +254,15 @@ const DrawingSettingsModal = ({
                     />
                   )}
                 </div>
+                <button
+                  className={`control-button bold-button ${
+                    settings.fontWeight === 'bold' ? 'active' : ''
+                  }`}
+                  onClick={handleBoldToggle}
+                  title="Bold"
+                >
+                  B
+                </button>
               </div>
               <div className="drawing-settings-control-row text-input-row">
                 <textarea
@@ -285,6 +299,7 @@ DrawingSettingsModal.propTypes = {
   customStyles: PropTypes.object,
   drawing: PropTypes.shape({
     fontSize: PropTypes.number,
+    fontWeight: PropTypes.string,
     id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     lineColor: PropTypes.string,
     lineWidth: PropTypes.number,

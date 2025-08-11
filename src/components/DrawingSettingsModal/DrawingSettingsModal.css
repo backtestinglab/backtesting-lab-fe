@@ -78,7 +78,7 @@
 .drawing-settings-tab-content {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 6px;
 }
 
 .drawing-settings-control-row {
@@ -150,6 +150,19 @@
 
 .font-size-control-button .chevron.up {
   transform: rotate(-45deg);
+}
+
+.bold-button {
+  min-width: 32px;
+  height: 32px;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.bold-button.active {
+  background-color: #3c4057;
+  border-color: #e0c070;
+  color: #e0c070;
 }
 
 .control-color-swatch {

@@ -109,7 +109,7 @@ export class HorizontalLinePlugin {
 
       if (price !== null && this.onAdd) {
         this.onAdd({
-          fontSize: 12,
+          fontSize: 24,
           fontWeight: 'normal',
           id: Date.now(),
           lineColor: 'rgba(200, 220, 255, 0.7)',
@@ -364,7 +364,7 @@ class HorizontalLineRenderer {
 
           // --- Draw text if it exists ---
           if (line.text) {
-            const fontSize = line.fontSize || 12
+            const fontSize = line.fontSize || 24
             const fontWeight = line.fontWeight || 'normal'
             context.fillStyle = line.textColor || '#c0c8e0'
             context.font = `${fontWeight} ${fontSize}px -apple-system, BlinkMacSystemFont, "Trebuchet MS", Roboto, Ubuntu, sans-serif`
