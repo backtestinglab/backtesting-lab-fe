@@ -105,11 +105,6 @@ const DrawingPropertiesToolbar = ({
     onUpdate({ ...drawingState, textColor: newColor })
   }
 
-  // const formatStyleName = (style) => {
-  //   if (!style) return ''
-  //   return style.charAt(0).toUpperCase() + style.slice(1)
-  // }
-
   const toolbarClassName = `
     drawing-properties-toolbar
     ${isDragging ? 'is-dragging' : ''}

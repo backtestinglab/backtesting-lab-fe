@@ -118,6 +118,11 @@
   height: 32px;
 }
 
+.drawing-settings-top-controls .control-button.color-control-button {
+  width: 32px;
+  min-width: 32px;
+}
+
 .control-color-swatch {
   width: 100%;
   height: 100%;
@@ -211,4 +216,10 @@
 
 .drawing-settings-text-input:focus {
   outline: 1px solid #e0c070;
+}
+
+.drawing-settings-top-controls {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
 }

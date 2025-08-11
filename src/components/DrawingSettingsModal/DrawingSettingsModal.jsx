@@ -19,7 +19,7 @@ const DrawingSettingsModal = ({
 }) => {
   const [settings, setSettings] = useState(drawing)
   const [activeTab, setActiveTab] = useState('style')
-  const [activePopup, setActivePopup] = useState(null) // 'color', 'thickness', 'style'
+  const [activePopup, setActivePopup] = useState(null) // 'color', 'thickness', 'style', 'textColor'
 
   const [popupPosition, setPopupPosition] = useState('top')
   const [isPopupVisible, setIsPopupVisible] = useState(false)
@@ -27,6 +27,7 @@ const DrawingSettingsModal = ({
   const colorWrapperRef = useRef(null)
   const thicknessWrapperRef = useRef(null)
   const lineStyleWrapperRef = useRef(null)
+  const textColorWrapperRef = useRef(null)
   const modalContentRef = useRef(null)
 
   const tabs = [
@@ -62,7 +63,8 @@ const DrawingSettingsModal = ({
         const wrappers = {
           color: colorWrapperRef.current,
           thickness: thicknessWrapperRef.current,
-          style: lineStyleWrapperRef.current
+          style: lineStyleWrapperRef.current,
+          textColor: textColorWrapperRef.current
         }
         const activeWrapper = wrappers[activePopup]
         if (activeWrapper && !activeWrapper.contains(event.target)) {
@@ -80,7 +82,7 @@ const DrawingSettingsModal = ({
     const newSettings = { ...settings, [key]: value }
     setSettings(newSettings)
     onUpdate(newSettings)
-    if (key !== 'lineColor') setActivePopup(null)
+    if (key !== 'lineColor' && key !== 'textColor') setActivePopup(null)
   }
 
   const handleColorSelect = (color) => {
@@ -195,6 +197,30 @@ const DrawingSettingsModal = ({
           )}
           {activeTab === 'text' && (
             <div className="drawing-settings-tab-content">
+              <div className="drawing-settings-top-controls">
+                <div className="control-wrapper" ref={textColorWrapperRef}>
+                  <button
+                    className="control-button color-control-button"
+                    onClick={() => setActivePopup(activePopup === 'textColor' ? null : 'textColor')}
+                    title="Text Color"
+                  >
+                    <div
+                      className="control-color-swatch"
+                      style={{ backgroundColor: settings.textColor }}
+                    ></div>
+                  </button>
+                  {activePopup === 'textColor' && (
+                    <ColorPickerPopup
+                      initialColor={settings.textColor}
+                      onColorChange={(color) => handleInputChange('textColor', color)}
+                      onColorSelect={() => setActivePopup(null)}
+                      popupRef={popupRef}
+                      popupPosition={popupPosition}
+                      popupVisibility={isPopupVisible ? 'visible' : ''}
+                    />
+                  )}
+                </div>
+              </div>
               <div className="drawing-settings-control-row text-input-row">
                 <textarea
                   className="drawing-settings-text-input"
@@ -204,7 +230,6 @@ const DrawingSettingsModal = ({
                   rows="3"
                 ></textarea>
               </div>
-              {/* We will add more text controls here later, like font size and alignment */}
             </div>
           )}
           {activeTab === 'coords' && (
@@ -234,6 +259,7 @@ DrawingSettingsModal.propTypes = {
     lineColor: PropTypes.string,
     lineWidth: PropTypes.number,
     lineStyle: PropTypes.string,
+    text: PropTypes.string,
     textColor: PropTypes.string
   }),
   isDragging: PropTypes.bool,

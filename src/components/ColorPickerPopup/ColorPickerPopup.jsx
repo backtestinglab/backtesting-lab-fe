@@ -8,6 +8,7 @@ import './ColorPickerPopup.css'
 const ColorPickerPopup = ({
   initialColor,
   onColorChange,
+  onColorSelect,
   popupPosition,
   popupRef,
   popupVisibility
@@ -34,6 +35,7 @@ const ColorPickerPopup = ({
     if (rgb) {
       setSelectedRgb(rgb)
       onColorChange(`rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${opacity / 100})`)
+      if (onColorSelect) onColorSelect()
     }
   }
 
@@ -163,7 +165,7 @@ const ColorPickerPopup = ({
 ColorPickerPopup.propTypes = {
   initialColor: PropTypes.string.isRequired,
   onColorChange: PropTypes.func.isRequired,
-  onClose: PropTypes.func.isRequired,
+  onColorSelect: PropTypes.func,
   popupPosition: PropTypes.string.isRequired,
   popupRef: PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
   popupVisibility: PropTypes.string.isRequired
