@@ -1,10 +1,16 @@
 import React, { useState, useEffect, useLayoutEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 
-import { THICKNESS_OPTIONS, LINE_STYLE_OPTIONS } from '../../config/drawingConstants'
 import ColorPickerPopup from '../ColorPickerPopup/ColorPickerPopup'
+import FontSizePopup from '../FontSizePopup/FontSizePopup'
 import LineThicknessPopup from '../LineThicknessPopup/LineThicknessPopup'
 import LineStylePopup from '../LineStylePopup/LineStylePopup'
+
+import {
+  THICKNESS_OPTIONS,
+  LINE_STYLE_OPTIONS,
+  FONT_SIZE_OPTIONS
+} from '../../config/drawingConstants'
 
 import './DrawingSettingsModal.css'
 
@@ -19,7 +25,7 @@ const DrawingSettingsModal = ({
 }) => {
   const [settings, setSettings] = useState(drawing)
   const [activeTab, setActiveTab] = useState('style')
-  const [activePopup, setActivePopup] = useState(null) // 'color', 'thickness', 'style', 'textColor'
+  const [activePopup, setActivePopup] = useState(null) // 'color', 'thickness', 'style', 'textColor', 'fontSize'
 
   const [popupPosition, setPopupPosition] = useState('top')
   const [isPopupVisible, setIsPopupVisible] = useState(false)
@@ -28,6 +34,7 @@ const DrawingSettingsModal = ({
   const thicknessWrapperRef = useRef(null)
   const lineStyleWrapperRef = useRef(null)
   const textColorWrapperRef = useRef(null)
+  const fontSizeWrapperRef = useRef(null)
   const modalContentRef = useRef(null)
 
   const tabs = [
@@ -62,9 +69,10 @@ const DrawingSettingsModal = ({
       if (activePopup) {
         const wrappers = {
           color: colorWrapperRef.current,
-          thickness: thicknessWrapperRef.current,
+          fontSize: fontSizeWrapperRef.current,
           style: lineStyleWrapperRef.current,
-          textColor: textColorWrapperRef.current
+          textColor: textColorWrapperRef.current,
+          thickness: thicknessWrapperRef.current
         }
         const activeWrapper = wrappers[activePopup]
         if (activeWrapper && !activeWrapper.contains(event.target)) {
@@ -220,6 +228,27 @@ const DrawingSettingsModal = ({
                     />
                   )}
                 </div>
+                <div className="control-wrapper" ref={fontSizeWrapperRef}>
+                  <button
+                    className="control-button font-size-control-button"
+                    onClick={() => setActivePopup(activePopup === 'fontSize' ? null : 'fontSize')}
+                    title="Font Size"
+                  >
+                    <span>{settings.fontSize || 12}</span>
+                    <span
+                      className={`chevron ${activePopup === 'fontSize' ? 'up' : 'down'}`}
+                    ></span>
+                  </button>
+                  {activePopup === 'fontSize' && (
+                    <FontSizePopup
+                      options={FONT_SIZE_OPTIONS}
+                      onSelect={(size) => handleInputChange('fontSize', size)}
+                      popupRef={popupRef}
+                      popupPosition={popupPosition}
+                      popupVisibility={isPopupVisible ? 'visible' : ''}
+                    />
+                  )}
+                </div>
               </div>
               <div className="drawing-settings-control-row text-input-row">
                 <textarea
@@ -255,6 +284,7 @@ const DrawingSettingsModal = ({
 DrawingSettingsModal.propTypes = {
   customStyles: PropTypes.object,
   drawing: PropTypes.shape({
+    fontSize: PropTypes.number,
     id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     lineColor: PropTypes.string,
     lineWidth: PropTypes.number,
