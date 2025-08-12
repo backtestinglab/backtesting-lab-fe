@@ -116,7 +116,9 @@ export class HorizontalLinePlugin {
           lineStyle: 'solid',
           lineWidth: 1,
           text: '',
+          textAlign: 'right',
           textColor: '#c0c8e0',
+          textVerticalAlign: 'top',
           type: 'horizontalLine',
           price
         })
@@ -366,16 +368,42 @@ class HorizontalLineRenderer {
           if (line.text) {
             const fontSize = line.fontSize || 24
             const fontWeight = line.fontWeight || 'normal'
+            const textAlign = line.textAlign || 'right'
+            const textVerticalAlign = line.textVerticalAlign || 'top'
+
             context.fillStyle = line.textColor || '#c0c8e0'
             context.font = `${fontWeight} ${fontSize}px -apple-system, BlinkMacSystemFont, "Trebuchet MS", Roboto, Ubuntu, sans-serif`
-            context.textAlign = 'left'
-            context.textBaseline = 'bottom'
+            context.textAlign = textAlign
 
-            const textPadding = 5
-            const x = 10
-            const y = scaledY - textPadding
+            const textPadding = 10
+            let x
 
-            context.fillText(line.text, x, y)
+            // Horizontal alignment
+            if (textAlign === 'center') {
+              x = bitmapSize.width / 2
+            } else if (textAlign === 'right') {
+              x = bitmapSize.width - textPadding
+            } else {
+              // 'left'
+              x = textPadding
+            }
+
+            // Vertical alignment
+            const verticalPadding = 5
+            let y
+            if (textVerticalAlign === 'top') {
+              context.textBaseline = 'bottom'
+              y = scaledY - verticalPadding
+            } else if (textVerticalAlign === 'bottom') {
+              context.textBaseline = 'top'
+              y = scaledY + verticalPadding
+            } else {
+              // middle
+              context.textBaseline = 'middle'
+              y = scaledY
+            }
+            const text = line.text
+            context.fillText(text, x, y)
           }
 
           // --- Draw selection handles if selected ---

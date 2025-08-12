@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useLayoutEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 
+import AlignmentPopup from '../AlignmentPopup/AlignmentPopup'
 import ColorPickerPopup from '../ColorPickerPopup/ColorPickerPopup'
 import FontSizePopup from '../FontSizePopup/FontSizePopup'
 import LineThicknessPopup from '../LineThicknessPopup/LineThicknessPopup'
@@ -25,7 +26,7 @@ const DrawingSettingsModal = ({
 }) => {
   const [settings, setSettings] = useState(drawing)
   const [activeTab, setActiveTab] = useState('style')
-  const [activePopup, setActivePopup] = useState(null) // 'color', 'thickness', 'style', 'textColor', 'fontSize'
+  const [activePopup, setActivePopup] = useState(null) // 'color', 'thickness', 'style', 'textColor', 'fontSize', 'textAlign', 'textVerticalAlign'
 
   const [popupPosition, setPopupPosition] = useState('top')
   const [isPopupVisible, setIsPopupVisible] = useState(false)
@@ -35,6 +36,8 @@ const DrawingSettingsModal = ({
   const lineStyleWrapperRef = useRef(null)
   const textColorWrapperRef = useRef(null)
   const fontSizeWrapperRef = useRef(null)
+  const textAlignWrapperRef = useRef(null)
+  const textVerticalAlignWrapperRef = useRef(null)
   const modalContentRef = useRef(null)
 
   const tabs = [
@@ -72,6 +75,8 @@ const DrawingSettingsModal = ({
           fontSize: fontSizeWrapperRef.current,
           style: lineStyleWrapperRef.current,
           textColor: textColorWrapperRef.current,
+          textAlign: textAlignWrapperRef.current,
+          textVerticalAlign: textVerticalAlignWrapperRef.current,
           thickness: thicknessWrapperRef.current
         }
         const activeWrapper = wrappers[activePopup]
@@ -273,6 +278,67 @@ const DrawingSettingsModal = ({
                   rows="3"
                 ></textarea>
               </div>
+              <div className="drawing-settings-control-row">
+                <label>Text Align</label>
+                <div className="drawing-settings-control-group">
+                  {/* Horizontal Align Dropdown */}
+                  <div className="control-wrapper" ref={textAlignWrapperRef}>
+                    <button
+                      className="control-button alignment-control-button"
+                      onClick={() =>
+                        setActivePopup(activePopup === 'textAlign' ? null : 'textAlign')
+                      }
+                      title="Horizontal Alignment"
+                    >
+                      <span>
+                        {(settings.textAlign || 'right').charAt(0).toUpperCase() +
+                          (settings.textAlign || 'right').slice(1)}
+                      </span>
+                      <span
+                        className={`chevron ${activePopup === 'textAlign' ? 'up' : 'down'}`}
+                      ></span>
+                    </button>
+                    {activePopup === 'textAlign' && (
+                      <AlignmentPopup
+                        options={['left', 'center', 'right']}
+                        onSelect={(align) => handleInputChange('textAlign', align)}
+                        popupRef={popupRef}
+                        popupPosition={popupPosition}
+                        popupVisibility={isPopupVisible ? 'visible' : ''}
+                      />
+                    )}
+                  </div>
+                  {/* Vertical Align Dropdown */}
+                  <div className="control-wrapper" ref={textVerticalAlignWrapperRef}>
+                    <button
+                      className="control-button alignment-control-button"
+                      onClick={() =>
+                        setActivePopup(
+                          activePopup === 'textVerticalAlign' ? null : 'textVerticalAlign'
+                        )
+                      }
+                      title="Vertical Alignment"
+                    >
+                      <span>
+                        {(settings.textVerticalAlign || 'top').charAt(0).toUpperCase() +
+                          (settings.textVerticalAlign || 'top').slice(1)}
+                      </span>
+                      <span
+                        className={`chevron ${activePopup === 'textVerticalAlign' ? 'up' : 'down'}`}
+                      ></span>
+                    </button>
+                    {activePopup === 'textVerticalAlign' && (
+                      <AlignmentPopup
+                        options={['top', 'middle', 'bottom']}
+                        onSelect={(align) => handleInputChange('textVerticalAlign', align)}
+                        popupRef={popupRef}
+                        popupPosition={popupPosition}
+                        popupVisibility={isPopupVisible ? 'visible' : ''}
+                      />
+                    )}
+                  </div>
+                </div>
+              </div>
             </div>
           )}
           {activeTab === 'coords' && (
@@ -305,7 +371,9 @@ DrawingSettingsModal.propTypes = {
     lineWidth: PropTypes.number,
     lineStyle: PropTypes.string,
     text: PropTypes.string,
-    textColor: PropTypes.string
+    textAlign: PropTypes.string,
+    textColor: PropTypes.string,
+    textVerticalAlign: PropTypes.string
   }),
   isDragging: PropTypes.bool,
   modalRef: PropTypes.object,

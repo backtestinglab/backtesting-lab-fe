@@ -1,0 +1,23 @@
+.alignment-popup {
+  width: 85px;
+}
+
+.alignment-popup .alignment-options-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.alignment-option {
+  background: none;
+  border: none;
+  color: #c0c8e0;
+  padding: 6px 12px;
+  text-align: left;
+  cursor: pointer;
+  width: 100%;
+  font-size: 0.9rem;
+}
+
+.alignment-option:hover {
+  background-color: rgba(100, 110, 200, 0.2);
+}
