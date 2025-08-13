@@ -366,7 +366,7 @@ class HorizontalLineRenderer {
 
           // --- Draw text if it exists ---
           if (line.text) {
-            const fontSize = line.fontSize * pixelRatio || 14
+            const fontSize = (line.fontSize || 14) * pixelRatio
             const fontWeight = line.fontWeight || 'normal'
             const textAlign = line.textAlign || 'right'
             const textVerticalAlign = line.textVerticalAlign || 'top'
