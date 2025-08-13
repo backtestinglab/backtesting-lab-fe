@@ -109,7 +109,7 @@ export class HorizontalLinePlugin {
 
       if (price !== null && this.onAdd) {
         this.onAdd({
-          fontSize: 24,
+          fontSize: 14,
           fontWeight: 'normal',
           id: Date.now(),
           lineColor: 'rgba(200, 220, 255, 0.7)',
@@ -366,7 +366,7 @@ class HorizontalLineRenderer {
 
           // --- Draw text if it exists ---
           if (line.text) {
-            const fontSize = line.fontSize || 24
+            const fontSize = line.fontSize * pixelRatio || 14
             const fontWeight = line.fontWeight || 'normal'
             const textAlign = line.textAlign || 'right'
             const textVerticalAlign = line.textVerticalAlign || 'top'

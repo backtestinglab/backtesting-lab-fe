@@ -4,37 +4,39 @@ import PropTypes from 'prop-types'
 import './PriceInput.css'
 
 const PriceInput = ({ value, onChange, step = 0.01 }) => {
-  const [inputValue, setInputValue] = useState(value.toString())
+  const [inputValue, setInputValue] = useState(value.toFixed(2))
 
   useEffect(() => {
-    setInputValue(value.toString())
+    setInputValue(value.toFixed(2))
   }, [value])
 
-  const handleBlur = () => {
-    const numValue = parseFloat(inputValue)
+  const commitChange = (val) => {
+    let numValue = parseFloat(val)
     if (!isNaN(numValue)) {
-      onChange(numValue)
+      const finalValue = parseFloat(numValue.toFixed(2))
+      onChange(finalValue)
     } else {
-      setInputValue(value.toString())
+      setInputValue(value.toFixed(2))
     }
+  }
+
+  const handleBlur = () => {
+    commitChange(inputValue)
   }
 
   const handleKeyDown = ({ key, target }) => {
     if (key === 'Enter') {
-      handleBlur()
+      commitChange(inputValue)
       target.blur()
     } else if (key === 'Escape') {
-      setInputValue(value.toString())
+      setInputValue(value.toFixed(2))
       target.blur()
     }
   }
 
   const handleStep = (direction) => {
-    const currentValue = parseFloat(inputValue)
-    if (isNaN(currentValue)) return
-    const newValue = currentValue + direction * step
+    const newValue = value + direction * step
     const finalValue = parseFloat(newValue.toFixed(2))
-    setInputValue(finalValue.toString())
     onChange(finalValue)
   }
 
@@ -43,7 +45,7 @@ const PriceInput = ({ value, onChange, step = 0.01 }) => {
       <input
         type="text"
         className="price-input-field"
-        value={parseFloat(inputValue).toFixed(2).toString()}
+        value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
         onBlur={handleBlur}
         onKeyDown={handleKeyDown}
