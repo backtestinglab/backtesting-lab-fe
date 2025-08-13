@@ -6,6 +6,7 @@ import ColorPickerPopup from '../ColorPickerPopup/ColorPickerPopup'
 import FontSizePopup from '../FontSizePopup/FontSizePopup'
 import LineThicknessPopup from '../LineThicknessPopup/LineThicknessPopup'
 import LineStylePopup from '../LineStylePopup/LineStylePopup'
+import PriceInput from '../PriceInput/PriceInput'
 
 import {
   THICKNESS_OPTIONS,
@@ -343,7 +344,13 @@ const DrawingSettingsModal = ({
           )}
           {activeTab === 'coords' && (
             <div className="drawing-settings-tab-content">
-              <p>Coordinate settings will be implemented in a future task.</p>
+              <div className="drawing-settings-control-row">
+                <label>Price</label>
+                <PriceInput
+                  value={settings.price}
+                  onChange={(newPrice) => handleInputChange('price', newPrice)}
+                />
+              </div>
             </div>
           )}
         </div>
@@ -368,6 +375,7 @@ DrawingSettingsModal.propTypes = {
     fontWeight: PropTypes.string,
     id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
     lineColor: PropTypes.string,
+    price: PropTypes.number,
     lineWidth: PropTypes.number,
     lineStyle: PropTypes.string,
     text: PropTypes.string,

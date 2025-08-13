@@ -1,0 +1,48 @@
+.price-input-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 140px;
+}
+
+.price-input-field {
+  width: 100%;
+  background-color: rgba(30, 33, 48, 0.8);
+  border: 1px solid rgba(80, 85, 110, 1);
+  color: #c0c8e0;
+  border-radius: 4px;
+  padding: 6px 24px 6px 12px;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.price-input-field::-webkit-outer-spin-button,
+.price-input-field::-webkit-inner-spin-button {
+  margin: 0;
+}
+
+.price-input-stepper {
+  position: absolute;
+  right: 6px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 25px;
+  justify-content: center;
+}
+
+.stepper-button {
+  background: none;
+  border: none;
+  color: #9098b0;
+  cursor: pointer;
+  padding: 0 4px;
+  display: flex;
+  justify-content: center;
+  height: 50%;
+  width: 100%;
+}
+
+.stepper-button:hover .chevron {
+  border-color: #e0c070;
+}
