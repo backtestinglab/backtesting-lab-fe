@@ -267,12 +267,14 @@
 }
 
 .drawing-settings-footer .drawing-settings-button-save {
-  background-color: #2962ff;
-  border: 1px solid #2962ff;
+  background-color: #e0c070;
+  border: 1px solid #e0c070;
+  color: #1e2130;
 }
 
 .drawing-settings-footer .drawing-settings-button-save:hover {
-  background-color: #4d7eff;
+  background-color: #f0d080;
+  border-color: #f0d080;
 }
 
 .drawing-settings-control-row.text-input-row {
@@ -288,7 +290,7 @@
   padding: 8px;
   font-family: inherit;
   font-size: 0.9rem;
-  resize: vertical;
+  resize: none;
   box-sizing: border-box;
 }
 
