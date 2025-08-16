@@ -5,6 +5,7 @@ import HomeScreen from './pages/HomeScreen/HomeScreen'
 import Settings from './pages/Settings/Settings'
 
 import { AppViewContext } from './contexts/AppViewContext'
+import { DrawingTemplatesProvider } from './contexts/DrawingTemplatesContext'
 import { HomeScreenProvider } from './contexts/HomeScreenContext'
 
 import './styles/global.css'
@@ -40,7 +41,11 @@ const App = () => {
   } else if (currentView === 'settings') {
     viewToRender = <Settings />
   } else if (currentView === 'develop') {
-    viewToRender = <Develop modelConfig={modelConfigForDevelopPage} />
+    viewToRender = (
+      <DrawingTemplatesProvider>
+        <Develop modelConfig={modelConfigForDevelopPage} />
+      </DrawingTemplatesProvider>
+    )
   }
 
   return (
