@@ -1,0 +1,71 @@
+.templates-popup-panel {
+  position: absolute;
+  bottom: calc(100% + 4px);
+  left: 0;
+  width: 200px;
+  background-color: #282d41;
+  border: 1px solid rgba(80, 85, 110, 1);
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  z-index: 1002;
+  display: flex;
+  flex-direction: column;
+}
+
+.templates-popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px;
+  border-bottom: 1px solid rgba(80, 85, 110, 1);
+  background-color: rgba(30, 33, 48, 0.7);
+}
+
+.templates-popup-header-left,
+.templates-popup-header-right {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.templates-popup-content {
+  max-height: 200px;
+  overflow-y: auto;
+  padding: 4px;
+}
+
+.templates-popup-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.templates-popup-list li {
+  padding: 8px 12px;
+  cursor: default;
+  font-size: 0.9rem;
+  color: #c0c8e0;
+  border-radius: 3px;
+  transition: background-color 0.2s ease;
+  user-select: none;
+}
+
+.templates-popup-list li:hover {
+  background-color: rgba(80, 85, 110, 0.5);
+}
+
+.templates-popup-list li.selected {
+  background-color: #e0c070;
+  color: #1e2130;
+  font-weight: 600;
+}
+
+.templates-popup-list li.no-templates {
+  color: #707890;
+  font-style: italic;
+  cursor: default;
+}
+
+.templates-popup-list li.no-templates:hover {
+  background-color: transparent;
+}

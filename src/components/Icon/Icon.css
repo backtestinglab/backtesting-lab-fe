@@ -1,0 +1,31 @@
+.icon-button {
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.icon-button svg {
+  fill: #9098b0;
+  transition: fill 0.2s ease;
+}
+
+.icon-button:hover:not(:disabled) svg {
+  fill: #e0c070;
+}
+
+.icon-button:disabled {
+  cursor: default;
+}
+
+.icon-button:hover:disabled {
+  background-color: transparent;
+}
+
+.icon-button:disabled svg {
+  fill: #50556e;
+}

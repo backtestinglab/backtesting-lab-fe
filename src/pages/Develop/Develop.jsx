@@ -391,6 +391,7 @@ const Develop = ({ modelConfig }) => {
                   onUpdate={handleDrawingUpdate}
                   onClose={() => setIsSettingsModalOpen(false)}
                   onDragStart={handleModalDragStart}
+                  dragBoundsRef={chartAreaRef}
                 />
               )}
               <DrawingToolbar activeTool={activeTool} onToolSelect={handleToolSelect} />

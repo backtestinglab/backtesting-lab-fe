@@ -133,7 +133,8 @@
   padding: 6px 8px;
 }
 
-.control-button .chevron {
+.control-button .chevron,
+.drawing-settings-button-template .chevron {
   border-style: solid;
   border-width: 0.15em 0.15em 0 0;
   content: '';
@@ -144,11 +145,13 @@
   transition: transform 0.2s ease;
 }
 
-.control-button .chevron.down {
+.control-button .chevron.down,
+.drawing-settings-button-template .chevron.down {
   transform: rotate(135deg);
 }
 
-.control-button .chevron.up {
+.control-button .chevron.up,
+.drawing-settings-button-template .chevron.up {
   transform: rotate(-45deg);
 }
 
@@ -241,11 +244,37 @@
 
 .drawing-settings-footer {
   display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  padding: 12px;
-  border-top: 1px solid rgba(80, 85, 110, 0.8);
-  background-color: rgba(80, 85, 110, 0.2);
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border-top: 1px solid #3c4257;
+  gap: 12px;
+}
+
+.drawing-settings-footer-right {
+  display: flex;
+  gap: 12px;
+}
+
+.drawing-settings-button-template {
+  background-color: transparent;
+  color: #9098b0;
+  border: 1px solid #50556e;
+  padding: 6px 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.drawing-settings-button-template:hover {
+  background-color: #3c4257;
+  border-color: #6c728e;
+  color: #e0c070;
 }
 
 .drawing-settings-footer button {
@@ -302,4 +331,8 @@
   display: flex;
   gap: 8px;
   margin-bottom: 12px;
+}
+
+.templates-button-wrapper {
+  position: relative;
 }

@@ -1,0 +1,117 @@
+.save-drawing-template-modal-panel {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  width: 350px;
+  background-color: rgba(40, 45, 65, 0.98);
+  border: 1px solid rgba(80, 85, 110, 1);
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+  color: #c0c8e0;
+  z-index: 110;
+}
+
+.save-drawing-template-modal-panel.is-dragging {
+  cursor: grabbing;
+  user-select: none;
+}
+
+.save-drawing-template-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background-color: rgba(80, 85, 110, 0.5);
+  border-bottom: 1px solid rgba(80, 85, 110, 0.8);
+  cursor: grab;
+}
+
+.save-drawing-template-modal-header h3 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.save-drawing-template-modal-close-button {
+  background: none;
+  border: none;
+  color: #c0c8e0;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0 4px;
+}
+
+.save-drawing-template-modal-body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.save-drawing-template-modal-body p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #9098b0;
+  text-align: center;
+}
+
+.save-drawing-template-modal-input {
+  width: 100%;
+  background-color: rgba(30, 33, 48, 1);
+  border: 1px solid rgba(80, 85, 110, 1);
+  border-radius: 4px;
+  color: #c0c8e0;
+  padding: 10px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  box-sizing: border-box;
+}
+
+.save-drawing-template-modal-input:focus {
+  outline: 1px solid #e0c070;
+  border-color: #e0c070;
+}
+
+.save-drawing-template-modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding: 0 16px 16px;
+}
+
+.save-drawing-template-modal-button {
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  color: #c0c8e0;
+  font-weight: 600;
+  transition: background-color 0.2s ease;
+  border: 1px solid transparent;
+}
+
+.save-drawing-template-modal-button.cancel {
+  background-color: rgba(80, 85, 110, 0.8);
+  border-color: rgba(100, 105, 130, 1);
+}
+
+.save-drawing-template-modal-button.cancel:hover {
+  background-color: rgba(100, 105, 130, 1);
+}
+
+.save-drawing-template-modal-button.save {
+  background-color: #e0c070;
+  border-color: #e0c070;
+  color: #1e2130;
+}
+
+.save-drawing-template-modal-button.save:hover {
+  background-color: #f0d080;
+  border-color: #f0d080;
+}
+
+.save-drawing-template-modal-button.save:disabled {
+  background-color: rgba(224, 192, 112, 0.5);
+  border-color: rgba(224, 192, 112, 0.5);
+  color: rgba(30, 33, 48, 0.7);
+  cursor: default;
+}

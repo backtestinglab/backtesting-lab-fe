@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import PropTypes from 'prop-types'
 
 import { parseColor } from '../../utils/colorUtils'
@@ -13,16 +13,22 @@ const ColorPickerPopup = ({
   popupRef,
   popupVisibility
 }) => {
-  const { r, g, b, a } = parseColor(initialColor)
-  const [selectedRgb, setSelectedRgb] = useState({ r, g, b })
-  const [opacity, setOpacity] = useState(Math.round(a * 100))
+  // Memoize the parsed color to avoid re-parsing on every render.
+  // It will only re-run when initialColor changes.
+  const parsedColor = useMemo(() => {
+    return parseColor(initialColor) || parseColor('#9E9E9E')
+  }, [initialColor])
+
+  const [selectedRgb, setSelectedRgb] = useState(parsedColor)
+  const [opacity, setOpacity] = useState(Math.round(parsedColor.a * 100))
 
   useEffect(() => {
-    if (r && g && b && a) {
+    if (parsedColor) {
+      const { r, g, b, a } = parsedColor
       setSelectedRgb({ r, g, b })
       setOpacity(Math.round(a * 100))
     }
-  }, [initialColor])
+  }, [parsedColor])
 
   const handleOpacityChange = (event) => {
     const newOpacity = parseInt(event.target.value, 10)
@@ -36,13 +42,6 @@ const ColorPickerPopup = ({
       setSelectedRgb(rgb)
       onColorChange(`rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${opacity / 100})`)
       if (onColorSelect) onColorSelect()
-    }
-  }
-
-  const hexToRgba = (hexColor) => {
-    const rgb = parseColor(hexColor)
-    if (rgb) {
-      return `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${opacity / 100})`
     }
   }
 
@@ -123,6 +122,7 @@ const ColorPickerPopup = ({
     const swatchRgb = parseColor(hexColor)
     return (
       swatchRgb &&
+      selectedRgb &&
       swatchRgb.r === selectedRgb.r &&
       swatchRgb.g === selectedRgb.g &&
       swatchRgb.b === selectedRgb.b
