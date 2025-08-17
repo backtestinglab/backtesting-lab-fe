@@ -190,6 +190,20 @@ const DrawingSettingsModal = ({
     setIsTemplatesPopupOpen(false)
   }
 
+  const handleDeleteTemplate = async (templateId) => {
+    try {
+      const result = await window.api.deleteDrawingTemplate(templateId)
+      if (result.success) {
+        removeTemplate(templateId)
+      } else {
+        throw new Error(result.message)
+      }
+    } catch (error) {
+      console.error('Failed to delete template:', error)
+      // TODO: Show an error notification to the user
+    }
+  }
+
   const handleSaveModalDragStart = useCallback(
     (event) => {
       event.preventDefault()
@@ -532,6 +546,7 @@ const DrawingSettingsModal = ({
                     )}
                     onApply={handleApplyTemplate}
                     onSave={openSaveNewTemplateModal}
+                    onDelete={handleDeleteTemplate}
                   />
                 )}
               </div>

@@ -5,7 +5,7 @@ import Icon from '../Icon/Icon'
 
 import './TemplatesPopup.css'
 
-const TemplatesPopup = ({ popupRef, templates, onApply, onSave }) => {
+const TemplatesPopup = ({ popupRef, templates, onApply, onSave, onDelete }) => {
   const [selectedTemplateId, setSelectedTemplateId] = useState(null)
 
   const handleReset = () => {
@@ -14,9 +14,9 @@ const TemplatesPopup = ({ popupRef, templates, onApply, onSave }) => {
   }
 
   const handleDelete = () => {
-    // This will be implemented in a future task
     if (selectedTemplateId) {
-      console.log('Delete clicked for template ID:', selectedTemplateId)
+      onDelete(selectedTemplateId)
+      setSelectedTemplateId(null)
     }
   }
 
@@ -62,6 +62,7 @@ TemplatesPopup.propTypes = {
   ]).isRequired,
   templates: PropTypes.array.isRequired,
   onApply: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired
 }
 

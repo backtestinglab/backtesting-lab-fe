@@ -43,12 +43,16 @@ export const DrawingTemplatesProvider = ({ children }) => {
 
   const updateTemplate = (updatedTemplate) => {
     setTemplates((prevTemplates) =>
-      prevTemplates.map((t) => (t.id === updatedTemplate.id ? updatedTemplate : t))
+      prevTemplates.map((previousTemplate) =>
+        previousTemplate.id === updatedTemplate.id ? updatedTemplate : previousTemplate
+      )
     )
   }
 
   const removeTemplate = (templateId) => {
-    setTemplates((prevTemplates) => prevTemplates.filter((t) => t.id !== templateId))
+    setTemplates((prevTemplates) =>
+      prevTemplates.filter((previousTemplate) => previousTemplate.id !== templateId)
+    )
   }
 
   const value = { templates, loading, error, addTemplate, updateTemplate, removeTemplate }
