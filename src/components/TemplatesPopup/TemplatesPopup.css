@@ -21,17 +21,9 @@
   background-color: rgba(30, 33, 48, 0.7);
 }
 
-.templates-popup-header-left,
-.templates-popup-header-right {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
 .templates-popup-content {
   max-height: 200px;
   overflow-y: auto;
-  padding: 4px;
 }
 
 .templates-popup-list {
@@ -41,23 +33,38 @@
 }
 
 .templates-popup-list li {
-  padding: 8px 12px;
-  cursor: default;
+  padding: 3px;
+  padding-left: 9px;
+  cursor: pointer;
   font-size: 0.9rem;
   color: #c0c8e0;
   border-radius: 3px;
   transition: background-color 0.2s ease;
   user-select: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .templates-popup-list li:hover {
   background-color: rgba(80, 85, 110, 0.5);
 }
 
-.templates-popup-list li.selected {
-  background-color: #e0c070;
-  color: #1e2130;
-  font-weight: 600;
+.template-name {
+  flex-grow: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 8px;
+}
+
+.delete-icon-wrapper {
+  visibility: hidden;
+  flex-shrink: 0;
+}
+
+.templates-popup-list li:hover .delete-icon-wrapper {
+  visibility: visible;
 }
 
 .templates-popup-list li.no-templates {
@@ -68,4 +75,8 @@
 
 .templates-popup-list li.no-templates:hover {
   background-color: transparent;
+}
+
+.delete-icon-wrapper .icon-button:hover svg {
+  fill: #f07178;
 }

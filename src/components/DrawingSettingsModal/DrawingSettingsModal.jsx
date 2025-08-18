@@ -150,6 +150,7 @@ const DrawingSettingsModal = ({
       lineColor: settings.lineColor,
       lineWidth: settings.lineWidth,
       lineStyle: settings.lineStyle,
+      text: settings.text,
       textColor: settings.textColor,
       fontSize: settings.fontSize,
       fontWeight: settings.fontWeight,
@@ -167,7 +168,7 @@ const DrawingSettingsModal = ({
       const result = await window.api.saveDrawingTemplate(templateData)
       if (result.success) {
         const savedTemplate = result.data
-        const existingTemplate = templates.find((t) => t.id === savedTemplate.id)
+        const existingTemplate = templates.find((template) => template.id === savedTemplate.id)
         if (existingTemplate) {
           updateTemplate(savedTemplate)
         } else {
