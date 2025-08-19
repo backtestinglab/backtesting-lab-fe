@@ -1,4 +1,5 @@
 import { getContrastingTextColor, parseColor } from '../../utils/colorUtils'
+import { HORIZONTAL_LINE_DEFAULTS } from '../../config/drawingDefaults'
 
 /**
  * @class HorizontalLinePlugin
@@ -109,16 +110,8 @@ export class HorizontalLinePlugin {
 
       if (price !== null && this.onAdd) {
         this.onAdd({
-          fontSize: 14,
-          fontWeight: 'normal',
+          ...HORIZONTAL_LINE_DEFAULTS,
           id: Date.now(),
-          lineColor: 'rgba(200, 220, 255, 0.7)',
-          lineStyle: 'solid',
-          lineWidth: 1,
-          text: '',
-          textAlign: 'right',
-          textColor: '#c0c8e0',
-          textVerticalAlign: 'top',
           type: 'horizontalLine',
           price
         })

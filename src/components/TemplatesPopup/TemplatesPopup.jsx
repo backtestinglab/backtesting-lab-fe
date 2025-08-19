@@ -5,12 +5,7 @@ import Icon from '../Icon/Icon'
 
 import './TemplatesPopup.css'
 
-const TemplatesPopup = ({ popupRef, templates, onApply, onSave, onDelete }) => {
-  const handleReset = () => {
-    // This will be implemented in a future task
-    console.log('Reset to original clicked')
-  }
-
+const TemplatesPopup = ({ onApply, onDelete, onReset, onSave, popupRef, templates }) => {
   const handleDeleteClick = (event, templateId) => {
     event.stopPropagation()
     onDelete(templateId)
@@ -20,7 +15,7 @@ const TemplatesPopup = ({ popupRef, templates, onApply, onSave, onDelete }) => {
     <div className="templates-popup-panel" ref={popupRef}>
       <div className="templates-popup-header">
         <Icon icon="save" onClick={onSave} title="Save As New Template" />
-        <Icon icon="reset" onClick={handleReset} title="Reset to Original" />
+        <Icon icon="reset" onClick={onReset} title="Reset to Defaults" />
       </div>
       <div className="templates-popup-content">
         <ul className="templates-popup-list">
@@ -43,14 +38,15 @@ const TemplatesPopup = ({ popupRef, templates, onApply, onSave, onDelete }) => {
 }
 
 TemplatesPopup.propTypes = {
+  onApply: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
+  onReset: PropTypes.func.isRequired,
+  onSave: PropTypes.func.isRequired,
   popupRef: PropTypes.oneOfType([
     PropTypes.func,
     PropTypes.shape({ current: PropTypes.instanceOf(Element) })
   ]).isRequired,
-  templates: PropTypes.array.isRequired,
-  onApply: PropTypes.func.isRequired,
-  onDelete: PropTypes.func.isRequired,
-  onSave: PropTypes.func.isRequired
+  templates: PropTypes.array.isRequired
 }
 
 export default TemplatesPopup

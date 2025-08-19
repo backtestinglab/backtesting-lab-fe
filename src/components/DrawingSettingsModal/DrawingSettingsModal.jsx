@@ -17,6 +17,7 @@ import {
   LINE_STYLE_OPTIONS,
   FONT_SIZE_OPTIONS
 } from '../../config/drawingConstants'
+import { HORIZONTAL_LINE_DEFAULTS } from '../../config/drawingDefaults'
 
 import './DrawingSettingsModal.css'
 
@@ -62,10 +63,6 @@ const DrawingSettingsModal = ({
     { id: 'text', label: 'Text' },
     { id: 'coords', label: 'Coordinates' }
   ]
-
-  useEffect(() => {
-    setSettings(drawing)
-  }, [drawing])
 
   useLayoutEffect(() => {
     if (activePopup) {
@@ -186,6 +183,15 @@ const DrawingSettingsModal = ({
 
   const handleApplyTemplate = (template) => {
     const newSettings = { ...settings, ...template.settings }
+    setSettings(newSettings)
+    onUpdate(newSettings)
+    setIsTemplatesPopupOpen(false)
+  }
+
+  const handleResetToDefaults = () => {
+    // Resets the drawing to its factory default settings.
+    const defaultSettings = HORIZONTAL_LINE_DEFAULTS
+    const newSettings = { ...settings, ...defaultSettings }
     setSettings(newSettings)
     onUpdate(newSettings)
     setIsTemplatesPopupOpen(false)
@@ -547,6 +553,7 @@ const DrawingSettingsModal = ({
                     )}
                     onApply={handleApplyTemplate}
                     onSave={openSaveNewTemplateModal}
+                    onReset={handleResetToDefaults}
                     onDelete={handleDeleteTemplate}
                   />
                 )}
