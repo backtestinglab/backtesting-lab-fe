@@ -2,6 +2,7 @@ import React, { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 
 import ColorPickerPopup from '../ColorPickerPopup/ColorPickerPopup'
+import Icon from '../Icon/Icon'
 import LineThicknessPopup from '../LineThicknessPopup/LineThicknessPopup'
 import LineStylePopup from '../LineStylePopup/LineStylePopup'
 import { THICKNESS_OPTIONS, LINE_STYLE_OPTIONS } from '../../config/drawingConstants'
@@ -204,9 +205,7 @@ const DrawingPropertiesToolbar = ({
           />
         )}
       </div>
-      <button title="Settings" onClick={onSettingsClick}>
-        ⚙️
-      </button>
+      <Icon icon="settings" onClick={onSettingsClick} title="Settings" />
       <div className="toolbar-separator"></div>
       <button title="Delete" onClick={onDelete}>
         🗑️
