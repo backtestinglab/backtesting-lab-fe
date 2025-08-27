@@ -58,12 +58,16 @@
   padding-right: 8px;
 }
 
-.delete-icon-wrapper {
+.delete-icon-button {
   visibility: hidden;
   flex-shrink: 0;
 }
 
-.templates-popup-list li:hover .delete-icon-wrapper {
+.templates-popup-icon-button.delete-icon-button:hover svg {
+  fill: #f07178;
+}
+
+.templates-popup-list li:hover .delete-icon-button {
   visibility: visible;
 }
 
@@ -77,6 +81,22 @@
   background-color: transparent;
 }
 
-.delete-icon-wrapper .icon-button:hover svg {
-  fill: #f07178;
+.templates-popup-icon-button {
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.templates-popup-icon-button svg {
+  fill: #9098b0;
+  transition: fill 0.2s ease;
+}
+
+.templates-popup-icon-button:hover svg {
+  fill: #e0c070;
 }

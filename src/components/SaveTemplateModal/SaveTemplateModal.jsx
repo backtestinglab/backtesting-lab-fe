@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 
 import './SaveTemplateModal.css'
 
-const SaveDrawingTemplateModal = ({
+const SaveTemplateModal = ({
   onSave,
   onClose,
   customStyles,
@@ -78,7 +78,7 @@ const SaveDrawingTemplateModal = ({
   )
 }
 
-SaveDrawingTemplateModal.propTypes = {
+SaveTemplateModal.propTypes = {
   onSave: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
   customStyles: PropTypes.object,
@@ -87,4 +87,4 @@ SaveDrawingTemplateModal.propTypes = {
   isDragging: PropTypes.bool
 }
 
-export default SaveDrawingTemplateModal
+export default SaveTemplateModal

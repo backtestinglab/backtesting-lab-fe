@@ -21,7 +21,7 @@
   background-color: transparent;
   border: none;
   border-radius: 4px;
-  color: #c0c8e0;
+  color: #9098b0;
   font-size: 1rem;
   display: flex;
   align-items: center;
@@ -35,11 +35,12 @@
 
 .drawing-properties-toolbar button:hover {
   background-color: rgba(100, 110, 200, 0.3);
+  color: #c0c8e0;
 }
 
 .drawing-properties-toolbar.is-dragging button:hover {
   background-color: transparent;
-  color: #c0c8e0;
+  color: #9098b0;
   cursor: grabbing;
 }
 
@@ -163,4 +164,37 @@
 
 .line-style-preview.dotted {
   border-bottom-style: dotted;
+}
+
+.toolbar-icon-button {
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  width: 36px;
+}
+
+.toolbar-icon-button svg {
+  fill: #9098b0;
+  transition: fill 0.2s ease;
+}
+
+.toolbar-icon-button:hover:not(:disabled) svg {
+  fill: #c0c8e0;
+}
+
+.toolbar-icon-button:hover {
+  background-color: rgba(100, 110, 200, 0.3);
+}
+
+.drawing-properties-toolbar.is-dragging .toolbar-icon-button:hover {
+  background-color: transparent;
+}
+
+.drawing-properties-toolbar.is-dragging .toolbar-icon-button:hover svg {
+  fill: #9098b0;
 }

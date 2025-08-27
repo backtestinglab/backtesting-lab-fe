@@ -5,47 +5,20 @@ import iconMap from './iconMap'
 
 import './Icon.css'
 
-const Icon = React.forwardRef(
-  ({ className = '', disabled = false, icon, onClick, title = '' }, ref) => {
-    const IconComponent = iconMap[icon]
+const Icon = ({ className = '', icon }) => {
+  const IconComponent = iconMap[icon]
 
-    if (!IconComponent) {
-      console.error(`Icon not found: ${icon}`)
-      return null
-    }
-
-    const handleClick = (event) => {
-      if (disabled) {
-        event.stopPropagation()
-        return
-      }
-      if (onClick) {
-        onClick(event)
-      }
-    }
-
-    return (
-      <button
-        ref={ref}
-        className={`icon-button ${className}`}
-        disabled={disabled}
-        onClick={handleClick}
-        title={title}
-      >
-        <IconComponent className="icon-svg" />
-      </button>
-    )
+  if (!IconComponent) {
+    console.error(`Icon not found: ${icon}`)
+    return null
   }
-)
 
-Icon.displayName = 'Icon'
+  return <IconComponent className={`icon-svg ${className}`} />
+}
 
 Icon.propTypes = {
   className: PropTypes.string,
-  disabled: PropTypes.bool,
-  icon: PropTypes.oneOf(Object.keys(iconMap)).isRequired,
-  onClick: PropTypes.func,
-  title: PropTypes.string
+  icon: PropTypes.oneOf(Object.keys(iconMap)).isRequired
 }
 
 export default Icon

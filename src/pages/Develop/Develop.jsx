@@ -298,6 +298,10 @@ const Develop = ({ modelConfig }) => {
     setIsSettingsModalOpen(true)
   }
 
+  const handleTemplatesClick = () => {
+    console.log('Templates button clicked - functionality to be implemented in next task')
+  }
+
   const handleDrawingAdd = (newDrawing) => {
     setDrawings((prevDrawings) => [...prevDrawings, newDrawing])
   }
@@ -374,6 +378,7 @@ const Develop = ({ modelConfig }) => {
                   onDragStart={handleToolbarDragStart}
                   toolbarRef={toolbarRef}
                   onSettingsClick={handleOpenSettingsModal}
+                  onTemplatesClick={handleTemplatesClick}
                 />
               )}
               {isSettingsModalOpen && selectedDrawing && (

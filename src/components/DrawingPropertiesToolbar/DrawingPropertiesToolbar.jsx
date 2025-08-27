@@ -19,6 +19,7 @@ const DrawingPropertiesToolbar = ({
   onDelete,
   onDragStart,
   onSettingsClick,
+  onTemplatesClick,
   onUpdate,
   toolbarRef
 }) => {
@@ -123,13 +124,16 @@ const DrawingPropertiesToolbar = ({
         <span className="dot"></span>
         <span className="dot"></span>
       </div>
+      <button className="toolbar-icon-button" onClick={onTemplatesClick} title="Templates">
+        <Icon icon="templates" />
+      </button>
       <div className="toolbar-button-wrapper" ref={colorWrapperRef}>
         <button
           className="toolbar-button color-button"
           onClick={() => setShowColorOptions((prev) => !prev)}
           title="Line Color"
         >
-          🎨
+          <Icon icon="colorPicker" />
           <div className="color-indicator" style={{ backgroundColor: lineColor }}></div>
         </button>
         {showColorOptions && (
@@ -205,10 +209,12 @@ const DrawingPropertiesToolbar = ({
           />
         )}
       </div>
-      <Icon icon="settings" onClick={onSettingsClick} title="Settings" />
+      <button className="toolbar-icon-button" onClick={onSettingsClick} title="Settings">
+        <Icon icon="settings" />
+      </button>
       <div className="toolbar-separator"></div>
-      <button title="Delete" onClick={onDelete}>
-        🗑️
+      <button className="toolbar-icon-button" onClick={onDelete} title="Delete">
+        <Icon icon="delete" />
       </button>
     </div>
   )
@@ -229,6 +235,7 @@ DrawingPropertiesToolbar.propTypes = {
   onDelete: PropTypes.func.isRequired,
   onDragStart: PropTypes.func.isRequired,
   onSettingsClick: PropTypes.func.isRequired,
+  onTemplatesClick: PropTypes.func.isRequired,
   onUpdate: PropTypes.func.isRequired,
   toolbarRef: PropTypes.shape({ current: PropTypes.instanceOf(Element) })
 }

@@ -7,7 +7,7 @@ import FontSizePopup from '../FontSizePopup/FontSizePopup'
 import LineThicknessPopup from '../LineThicknessPopup/LineThicknessPopup'
 import LineStylePopup from '../LineStylePopup/LineStylePopup'
 import PriceInput from '../PriceInput/PriceInput'
-import SaveDrawingTemplateModal from '../SaveTemplateModal/SaveTemplateModal'
+import SaveTemplateModal from '../SaveTemplateModal/SaveTemplateModal'
 import TemplatesPopup from '../TemplatesPopup/TemplatesPopup'
 
 import { useDrawingTemplates } from '../../contexts/DrawingTemplatesContext'
@@ -571,7 +571,7 @@ const DrawingSettingsModal = ({
         </div>
       </div>
       {isSaveTemplateModalOpen && (
-        <SaveDrawingTemplateModal
+        <SaveTemplateModal
           onSave={handleSaveTemplate}
           onClose={() => setIsSaveTemplateModalOpen(false)}
           modalRef={saveModalRef}
