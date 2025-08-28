@@ -12,6 +12,33 @@
   flex-direction: column;
 }
 
+/* Override positioning when used as toolbar popup */
+.templates-popup-panel.toolbar-popup {
+  /* Inherit positioning from .toolbar-popup base class */
+  bottom: 122%;
+  left: 50%;
+  transform: translateX(-50%);
+  /* Override background and border to match toolbar style */
+  background-color: rgba(55, 60, 80, 1);
+  border: 1px solid rgba(90, 95, 120, 1);
+  /* Inherit visibility and transition from .toolbar-popup */
+  visibility: hidden;
+  opacity: 0;
+  transition:
+    opacity 0.15s ease-in-out,
+    visibility 0.15s ease-in-out;
+}
+
+.templates-popup-panel.toolbar-popup.position-bottom {
+  bottom: auto;
+  top: 122%;
+}
+
+.templates-popup-panel.toolbar-popup.visible {
+  visibility: visible;
+  opacity: 1;
+}
+
 .templates-popup-header {
   display: flex;
   justify-content: space-between;

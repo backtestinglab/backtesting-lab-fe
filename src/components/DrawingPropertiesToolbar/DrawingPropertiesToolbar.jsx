@@ -5,6 +5,8 @@ import ColorPickerPopup from '../ColorPickerPopup/ColorPickerPopup'
 import Icon from '../Icon/Icon'
 import LineThicknessPopup from '../LineThicknessPopup/LineThicknessPopup'
 import LineStylePopup from '../LineStylePopup/LineStylePopup'
+import TemplatesPopup from '../TemplatesPopup/TemplatesPopup'
+
 import { THICKNESS_OPTIONS, LINE_STYLE_OPTIONS } from '../../config/drawingConstants'
 
 import './DrawingPropertiesToolbar.css'
@@ -19,22 +21,30 @@ const DrawingPropertiesToolbar = ({
   onDelete,
   onDragStart,
   onSettingsClick,
-  onTemplatesClick,
   onUpdate,
-  toolbarRef
+  toolbarRef,
+  // Templates props
+  onApplyTemplate,
+  onDeleteTemplate,
+  onResetToDefaults,
+  onSaveTemplate,
+  templates
 }) => {
-  const [showThicknessOptions, setShowThicknessOptions] = useState(false)
-  const [showLineStyleOptions, setShowLineStyleOptions] = useState(false)
-  const [showColorOptions, setShowColorOptions] = useState(false)
-  const [showTextColorOptions, setShowTextColorOptions] = useState(false)
-  const [popupPosition, setPopupPosition] = useState('top')
   const [isPopupVisible, setIsPopupVisible] = useState(false)
-  const popupRef = useRef(null)
-  const thicknessWrapperRef = useRef(null)
-  const lineStyleWrapperRef = useRef(null)
-  const colorWrapperRef = useRef(null)
+  const [popupPosition, setPopupPosition] = useState('top')
+  const [showColorOptions, setShowColorOptions] = useState(false)
+  const [showLineStyleOptions, setShowLineStyleOptions] = useState(false)
+  const [showTemplateOptions, setShowTemplateOptions] = useState(false)
+  const [showTextColorOptions, setShowTextColorOptions] = useState(false)
+  const [showThicknessOptions, setShowThicknessOptions] = useState(false)
 
+  const colorWrapperRef = useRef(null)
+  const lineStyleWrapperRef = useRef(null)
+  const popupRef = useRef(null)
+  const templatesWrapperRef = useRef(null)
   const textColorWrapperRef = useRef(null)
+  const thicknessWrapperRef = useRef(null)
+
   const {
     lineColor = '#2962FF',
     lineWidth = 1,
@@ -43,7 +53,13 @@ const DrawingPropertiesToolbar = ({
   } = drawingState || {}
 
   useLayoutEffect(() => {
-    if (showThicknessOptions || showColorOptions || showLineStyleOptions || showTextColorOptions) {
+    if (
+      showColorOptions ||
+      showLineStyleOptions ||
+      showTemplateOptions ||
+      showTextColorOptions ||
+      showThicknessOptions
+    ) {
       setIsPopupVisible(false)
 
       requestAnimationFrame(() => {
@@ -62,7 +78,13 @@ const DrawingPropertiesToolbar = ({
       setIsPopupVisible(false)
       setPopupPosition('top')
     }
-  }, [showColorOptions, showThicknessOptions, showLineStyleOptions, showTextColorOptions])
+  }, [
+    showColorOptions,
+    showLineStyleOptions,
+    showTemplateOptions,
+    showTextColorOptions,
+    showThicknessOptions
+  ])
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -80,6 +102,10 @@ const DrawingPropertiesToolbar = ({
 
       if (textColorWrapperRef.current && !textColorWrapperRef.current.contains(event.target)) {
         setShowTextColorOptions(false)
+      }
+
+      if (templatesWrapperRef.current && !templatesWrapperRef.current.contains(event.target)) {
+        setShowTemplateOptions(false)
       }
     }
     document.addEventListener('mousedown', handleClickOutside)
@@ -124,9 +150,37 @@ const DrawingPropertiesToolbar = ({
         <span className="dot"></span>
         <span className="dot"></span>
       </div>
-      <button className="toolbar-icon-button" onClick={onTemplatesClick} title="Templates">
-        <Icon icon="templates" />
-      </button>
+      <div className="toolbar-button-wrapper" ref={templatesWrapperRef}>
+        <button
+          className="toolbar-button toolbar-icon-button"
+          onClick={() => setShowTemplateOptions((prev) => !prev)}
+          title="Templates"
+        >
+          <Icon icon="templates" />
+        </button>
+        {showTemplateOptions && (
+          <TemplatesPopup
+            isFromToolbar
+            onApply={(template) => {
+              onApplyTemplate(template)
+              setShowTemplateOptions(false)
+            }}
+            onDelete={onDeleteTemplate}
+            onReset={() => {
+              onResetToDefaults()
+              setShowTemplateOptions(false)
+            }}
+            onSave={() => {
+              onSaveTemplate()
+              setShowTemplateOptions(false)
+            }}
+            popupPosition={popupPosition}
+            popupRef={popupRef}
+            popupVisibility={isPopupVisible ? 'visible' : ''}
+            templates={templates}
+          />
+        )}
+      </div>
       <div className="toolbar-button-wrapper" ref={colorWrapperRef}>
         <button
           className="toolbar-button color-button"
@@ -235,9 +289,14 @@ DrawingPropertiesToolbar.propTypes = {
   onDelete: PropTypes.func.isRequired,
   onDragStart: PropTypes.func.isRequired,
   onSettingsClick: PropTypes.func.isRequired,
-  onTemplatesClick: PropTypes.func.isRequired,
   onUpdate: PropTypes.func.isRequired,
-  toolbarRef: PropTypes.shape({ current: PropTypes.instanceOf(Element) })
+  toolbarRef: PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
+  // Templates props
+  onApplyTemplate: PropTypes.func,
+  onDeleteTemplate: PropTypes.func,
+  onResetToDefaults: PropTypes.func,
+  onSaveTemplate: PropTypes.func,
+  templates: PropTypes.array
 }
 
 export default DrawingPropertiesToolbar

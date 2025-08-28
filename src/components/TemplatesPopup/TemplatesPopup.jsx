@@ -5,16 +5,35 @@ import Icon from '../Icon/Icon'
 
 import './TemplatesPopup.css'
 
-const TemplatesPopup = ({ onApply, onDelete, onReset, onSave, popupRef, templates }) => {
+const TemplatesPopup = ({
+  onApply,
+  onDelete,
+  onReset,
+  onSave,
+  popupRef,
+  templates,
+  isFromToolbar,
+  popupPosition,
+  popupVisibility
+}) => {
   const handleDeleteClick = (event, templateId) => {
     event.stopPropagation()
     onDelete(templateId)
   }
 
+  const popupClassName = `
+    templates-popup-panel
+    ${isFromToolbar ? `toolbar-popup position-${popupPosition} ${popupVisibility}` : ''}
+  `.trim()
+
   return (
-    <div className="templates-popup-panel" ref={popupRef}>
+    <div className={popupClassName} ref={popupRef}>
       <div className="templates-popup-header">
-        <button className="templates-popup-icon-button" onClick={onSave} title="Save As New Template">
+        <button
+          className="templates-popup-icon-button"
+          onClick={onSave}
+          title="Save As New Template"
+        >
           <Icon icon="save" />
         </button>
         <button className="templates-popup-icon-button" onClick={onReset} title="Reset to Defaults">
@@ -51,7 +70,10 @@ TemplatesPopup.propTypes = {
     PropTypes.func,
     PropTypes.shape({ current: PropTypes.instanceOf(Element) })
   ]).isRequired,
-  templates: PropTypes.array.isRequired
+  templates: PropTypes.array.isRequired,
+  isFromToolbar: PropTypes.bool,
+  popupPosition: PropTypes.oneOf(['top', 'bottom']),
+  popupVisibility: PropTypes.string
 }
 
 export default TemplatesPopup

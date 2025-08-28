@@ -4,9 +4,12 @@ import Chart from '../../components/Chart/Chart'
 import DrawingPropertiesToolbar from '../../components/DrawingPropertiesToolbar/DrawingPropertiesToolbar'
 import DrawingSettingsModal from '../../components/DrawingSettingsModal/DrawingSettingsModal'
 import DrawingToolbar from '../../components/DrawingToolbar/DrawingToolbar'
+import SaveTemplateModal from '../../components/SaveTemplateModal/SaveTemplateModal'
 
 import logo from '../../assets/logo.svg'
 import { AppViewContext } from '../../contexts/AppViewContext'
+import { useDrawingTemplates } from '../../contexts/DrawingTemplatesContext'
+import { HORIZONTAL_LINE_DEFAULTS } from '../../config/drawingDefaults'
 
 import './Develop.css'
 
@@ -15,30 +18,40 @@ import './Develop.css'
  */
 const Develop = ({ modelConfig }) => {
   const { navigateTo } = useContext(AppViewContext)
-  const [chartData, setChartData] = useState([])
-  const [isLoading, setIsLoading] = useState(true)
+
   const [activeTimeframe, setActiveTimeframe] = useState(
     modelConfig?.selectedTimeframes?.[0] || null
   )
-  const [isVolumeVisible, setIsVolumeVisible] = useState(false)
   const [activeTool, setActiveTool] = useState('cursor')
+  const [chartData, setChartData] = useState([])
   const [drawings, setDrawings] = useState([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [isModalDragging, setIsModalDragging] = useState(false)
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false)
+  const [isToolbarDragging, setIsToolbarDragging] = useState(false)
+  const [isVolumeVisible, setIsVolumeVisible] = useState(false)
+  const [modalPosition, setModalPosition] = useState({
+    top: -9999,
+    left: -9999
+  })
   const [selectedDrawingId, setSelectedDrawingId] = useState(null)
   const [toolbarPosition, setToolbarPosition] = useState({
     top: 15,
     left: '64%'
   })
-  const [isToolbarDragging, setIsToolbarDragging] = useState(false)
-  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false)
-  const [isModalDragging, setIsModalDragging] = useState(false)
-  const [modalPosition, setModalPosition] = useState({
-    top: -9999,
-    left: -9999
-  })
-  const dragDrawingToolbarRef = useRef(null)
+
+  // Templates state & refs
+  const [isDraggingSaveModal, setIsDraggingSaveModal] = useState(false)
+  const [isSaveTemplateModalOpen, setIsSaveTemplateModalOpen] = useState(false)
+  const [saveModalPosition, setSaveModalPosition] = useState({ x: 0, y: 0 })
+  const saveTemplateModalRef = useRef(null)
+
   const chartAreaRef = useRef(null)
-  const toolbarRef = useRef(null)
+  const dragDrawingToolbarRef = useRef(null)
   const modalRef = useRef(null)
+  const toolbarRef = useRef(null)
+
+  const { templates, addTemplate, updateTemplate, removeTemplate } = useDrawingTemplates()
 
   useEffect(() => {
     const handleResize = () => {
@@ -298,9 +311,159 @@ const Develop = ({ modelConfig }) => {
     setIsSettingsModalOpen(true)
   }
 
-  const handleTemplatesClick = () => {
-    console.log('Templates button clicked - functionality to be implemented in next task')
+  const openSaveNewTemplateModal = () => {
+    if (toolbarRef.current) {
+      const toolbarRect = toolbarRef.current.getBoundingClientRect()
+      const initialX = toolbarRect.left + toolbarRect.width / 2 - 175 // 350 is modal width
+      const initialY = toolbarRect.top + 50
+      setSaveModalPosition({ x: initialX, y: initialY })
+    }
+    setIsSaveTemplateModalOpen(true)
   }
+
+  const handleSaveTemplate = async (templateName) => {
+    const selectedDrawing = drawings.find((drawing) => drawing.id === selectedDrawingId)
+    if (!selectedDrawing) return
+
+    const styleSettings = {
+      lineColor: selectedDrawing.lineColor,
+      lineWidth: selectedDrawing.lineWidth,
+      lineStyle: selectedDrawing.lineStyle,
+      text: selectedDrawing.text,
+      textColor: selectedDrawing.textColor,
+      fontSize: selectedDrawing.fontSize,
+      fontWeight: selectedDrawing.fontWeight,
+      textAlign: selectedDrawing.textAlign,
+      textVerticalAlign: selectedDrawing.textVerticalAlign
+    }
+
+    const templateData = {
+      name: templateName,
+      drawing_type: selectedDrawing.type,
+      settings: styleSettings
+    }
+
+    try {
+      const result = await window.api.saveDrawingTemplate(templateData)
+      if (result.success) {
+        const savedTemplate = result.data
+        const existingTemplate = templates.find((template) => template.id === savedTemplate.id)
+        if (existingTemplate) {
+          updateTemplate(savedTemplate)
+        } else {
+          addTemplate(savedTemplate)
+        }
+        setIsSaveTemplateModalOpen(false)
+      } else {
+        throw new Error(result.message)
+      }
+    } catch (error) {
+      console.error('Failed to save template:', error)
+      // TODO: Show an error notification to the user
+    }
+  }
+
+  const handleApplyTemplate = (template) => {
+    const selectedDrawing = drawings.find((drawing) => drawing.id === selectedDrawingId)
+    if (!selectedDrawing) return
+
+    const newSettings = { ...selectedDrawing, ...template.settings }
+    handleDrawingUpdate(newSettings)
+  }
+
+  const handleResetToDefaults = () => {
+    const selectedDrawing = drawings.find((drawing) => drawing.id === selectedDrawingId)
+    if (!selectedDrawing) return
+
+    // Resets the drawing to its factory default settings.
+    const defaultSettings = HORIZONTAL_LINE_DEFAULTS
+    const newSettings = { ...selectedDrawing, ...defaultSettings }
+    handleDrawingUpdate(newSettings)
+  }
+
+  const handleDeleteTemplate = async (templateId) => {
+    try {
+      const result = await window.api.deleteDrawingTemplate(templateId)
+      if (result.success) {
+        removeTemplate(templateId)
+      } else {
+        throw new Error(result.message)
+      }
+    } catch (error) {
+      console.error('Failed to delete template:', error)
+      // TODO: Show an error notification to the user
+    }
+  }
+
+  const handleSaveModalDragStart = useCallback((event) => {
+    event.preventDefault()
+
+    if (!chartAreaRef.current || !saveTemplateModalRef.current) return
+
+    setIsDraggingSaveModal(true)
+
+    const modalElement = saveTemplateModalRef.current
+    const chartPane = chartAreaRef.current.querySelector(
+      '.tv-lightweight-charts table tr:first-child td:nth-child(2) div:first-child'
+    )
+
+    if (!chartPane || !modalElement) {
+      console.error('Could not find chart pane element for bounding.')
+      return
+    }
+
+    const paneRect = chartPane.getBoundingClientRect()
+    const chartAreaRect = chartAreaRef.current.getBoundingClientRect()
+
+    const dragRef = {
+      chartAreaRect,
+      paneRect,
+      initialMouseX: event.clientX,
+      initialMouseY: event.clientY,
+      initialLeft: modalElement.offsetLeft,
+      initialTop: modalElement.offsetTop,
+      modalWidth: modalElement.offsetWidth,
+      modalHeight: modalElement.offsetHeight
+    }
+
+    const handleModalDragMove = (moveEvent) => {
+      const {
+        chartAreaRect,
+        initialMouseX,
+        initialMouseY,
+        initialLeft,
+        initialTop,
+        paneRect,
+        modalWidth,
+        modalHeight
+      } = dragRef
+
+      const dx = moveEvent.clientX - initialMouseX
+      const dy = moveEvent.clientY - initialMouseY
+
+      let newLeft = initialLeft + dx
+      let newTop = initialTop + dy
+
+      const minX = paneRect.left - chartAreaRect.left
+      const maxX = paneRect.right - chartAreaRect.left - modalWidth
+      const minY = paneRect.top - chartAreaRect.top
+      const maxY = paneRect.bottom - chartAreaRect.top - modalHeight
+
+      newLeft = Math.max(minX, Math.min(newLeft, maxX))
+      newTop = Math.max(minY, Math.min(newTop, maxY))
+
+      setSaveModalPosition({ x: newLeft, y: newTop })
+    }
+
+    const handleModalDragEnd = () => {
+      window.removeEventListener('mousemove', handleModalDragMove)
+      window.removeEventListener('mouseup', handleModalDragEnd)
+      setIsDraggingSaveModal(false)
+    }
+
+    window.addEventListener('mousemove', handleModalDragMove)
+    window.addEventListener('mouseup', handleModalDragEnd)
+  }, [])
 
   const handleDrawingAdd = (newDrawing) => {
     setDrawings((prevDrawings) => [...prevDrawings, newDrawing])
@@ -374,11 +537,18 @@ const Develop = ({ modelConfig }) => {
                   drawingState={selectedDrawing}
                   isDragging={isToolbarDragging}
                   onDelete={handleDeleteDrawing}
-                  onUpdate={handleDrawingUpdate}
                   onDragStart={handleToolbarDragStart}
-                  toolbarRef={toolbarRef}
                   onSettingsClick={handleOpenSettingsModal}
-                  onTemplatesClick={handleTemplatesClick}
+                  onUpdate={handleDrawingUpdate}
+                  toolbarRef={toolbarRef}
+                  // Templates props
+                  onApplyTemplate={handleApplyTemplate}
+                  onDeleteTemplate={handleDeleteTemplate}
+                  onResetToDefaults={handleResetToDefaults}
+                  onSaveTemplate={openSaveNewTemplateModal}
+                  templates={templates.filter(
+                    (template) => template.drawing_type === selectedDrawing?.type
+                  )}
                 />
               )}
               {isSettingsModalOpen && selectedDrawing && (
@@ -460,10 +630,23 @@ const Develop = ({ modelConfig }) => {
           <div className="placeholder-text">Results Table</div>
         </section>
       </main>
+      {isSaveTemplateModalOpen && (
+        <SaveTemplateModal
+          customStyles={{
+            left: `${saveModalPosition.x}px`,
+            top: `${saveModalPosition.y}px`
+          }}
+          isDragging={isDraggingSaveModal}
+          modalRef={saveTemplateModalRef}
+          onClose={() => setIsSaveTemplateModalOpen(false)}
+          onDragStart={handleSaveModalDragStart}
+          onSave={handleSaveTemplate}
+        />
+      )}
     </div>
   )
 }
 
-// Add PropTypes later when props are finalized
+// TODO: T021.4.7.15 - Add PropTypes later when props are finalized
 
 export default Develop
