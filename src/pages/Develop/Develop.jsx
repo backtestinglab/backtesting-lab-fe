@@ -1,4 +1,5 @@
 import React, { useCallback, useContext, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import PropTypes from 'prop-types'
 
 import Chart from '../../components/Chart/Chart'
 import DrawingPropertiesToolbar from '../../components/DrawingPropertiesToolbar/DrawingPropertiesToolbar'
@@ -370,7 +371,7 @@ const Develop = ({ modelConfig }) => {
       }
     } catch (error) {
       console.error('Failed to save template:', error)
-      // TODO: T021.4.7.15 - Show an error notification to the user
+      alert('Failed to save template!')
     }
   }
 
@@ -402,7 +403,7 @@ const Develop = ({ modelConfig }) => {
       }
     } catch (error) {
       console.error('Failed to delete template:', error)
-      // TODO: T021.4.7.15 - Show an error notification to the user
+      alert(`Failed to delete template!`)
     }
   }
 
@@ -666,6 +667,13 @@ const Develop = ({ modelConfig }) => {
   )
 }
 
-// TODO: T021.4.7.15 - Add PropTypes
+Develop.propTypes = {
+  modelConfig: PropTypes.shape({
+    dataset: PropTypes.shape({
+      name: PropTypes.string
+    }),
+    type: PropTypes.string
+  })
+}
 
 export default Develop

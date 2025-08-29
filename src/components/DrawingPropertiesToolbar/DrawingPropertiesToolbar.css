@@ -16,7 +16,8 @@
   transform-origin: center;
 }
 
-.drawing-properties-toolbar button {
+.drawing-properties-toolbar .toolbar-button,
+.drawing-properties-toolbar .toolbar-icon-button {
   width: 36px;
   background-color: transparent;
   border: none;
