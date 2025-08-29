@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "The frontend UI for BacktestingLab | An automated & manual backtesting software for daytraders",
   "main": "dist/index.js",
-  "author": "https://davidpnowak.com",
-  "homepage": "https://davidpnowak.com",
+  "author": "David Nowak",
+  "homepage": "https://thebacktestinglab.com",
   "packageManager": "yarn@4.9.2",
   "scripts": {
     "format": "prettier --write .",
@@ -14,16 +14,16 @@
     "preview": "vite preview"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^4.3.4",
-    "eslint": "^9.24.0",
+    "@vitejs/plugin-react": "^4.7.0",
+    "eslint": "^9.34.0",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
-    "eslint-plugin-react-refresh": "^0.4.19",
-    "prettier": "^3.5.3",
+    "eslint-plugin-react-refresh": "^0.4.20",
+    "prettier": "^3.6.2",
     "prop-types": "^15.8.1",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "vite": "^6.2.6"
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "vite": "^6.3.5"
   },
   "dependencies": {
     "lightweight-charts": "^5.0.8"
