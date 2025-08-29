@@ -26,8 +26,8 @@ const DrawingPropertiesToolbar = ({
   // Templates props
   onApplyTemplate,
   onDeleteTemplate,
+  onOpenSaveTemplateModal,
   onResetToDefaults,
-  onSaveTemplate,
   templates
 }) => {
   const [isPopupVisible, setIsPopupVisible] = useState(false)
@@ -166,12 +166,12 @@ const DrawingPropertiesToolbar = ({
               setShowTemplateOptions(false)
             }}
             onDelete={onDeleteTemplate}
-            onReset={() => {
-              onResetToDefaults()
+            onOpenSaveModal={() => {
+              onOpenSaveTemplateModal()
               setShowTemplateOptions(false)
             }}
-            onSave={() => {
-              onSaveTemplate()
+            onReset={() => {
+              onResetToDefaults()
               setShowTemplateOptions(false)
             }}
             popupPosition={popupPosition}
@@ -294,8 +294,8 @@ DrawingPropertiesToolbar.propTypes = {
   // Templates props
   onApplyTemplate: PropTypes.func,
   onDeleteTemplate: PropTypes.func,
+  onOpenSaveTemplateModal: PropTypes.func,
   onResetToDefaults: PropTypes.func,
-  onSaveTemplate: PropTypes.func,
   templates: PropTypes.array
 }
 

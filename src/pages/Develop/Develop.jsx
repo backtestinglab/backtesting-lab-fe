@@ -312,10 +312,21 @@ const Develop = ({ modelConfig }) => {
   }
 
   const openSaveNewTemplateModal = () => {
+    if (!chartAreaRef.current) return
+
+    const chartAreaRect = chartAreaRef.current.getBoundingClientRect()
+
     if (toolbarRef.current) {
       const toolbarRect = toolbarRef.current.getBoundingClientRect()
-      const initialX = toolbarRect.left + toolbarRect.width / 2 - 175 // 350 is modal width
-      const initialY = toolbarRect.top + 50
+      const initialX = toolbarRect.left - chartAreaRect.left + toolbarRect.width / 2 - 175 // 350 is modal width
+      const initialY = toolbarRect.top - chartAreaRect.top + 50
+      setSaveModalPosition({ x: initialX, y: initialY })
+    }
+
+    if (modalRef.current) {
+      const modalRect = modalRef.current.getBoundingClientRect()
+      const initialX = modalRect.left - chartAreaRect.left + modalRect.width / 2 - 175 // 350 is modal width
+      const initialY = modalRect.top - chartAreaRect.top + 50
       setSaveModalPosition({ x: initialX, y: initialY })
     }
     setIsSaveTemplateModalOpen(true)
@@ -359,7 +370,7 @@ const Develop = ({ modelConfig }) => {
       }
     } catch (error) {
       console.error('Failed to save template:', error)
-      // TODO: Show an error notification to the user
+      // TODO: T021.4.7.15 - Show an error notification to the user
     }
   }
 
@@ -391,7 +402,7 @@ const Develop = ({ modelConfig }) => {
       }
     } catch (error) {
       console.error('Failed to delete template:', error)
-      // TODO: Show an error notification to the user
+      // TODO: T021.4.7.15 - Show an error notification to the user
     }
   }
 
@@ -498,6 +509,10 @@ const Develop = ({ modelConfig }) => {
     ? modelConfig.type.charAt(0).toUpperCase() + modelConfig.type.slice(1)
     : ''
 
+  const filteredTemplates = templates.filter(
+    (template) => template.drawing_type === selectedDrawing?.type
+  )
+
   return (
     <div className="develop-page">
       <header className="develop-page-header">
@@ -545,10 +560,8 @@ const Develop = ({ modelConfig }) => {
                   onApplyTemplate={handleApplyTemplate}
                   onDeleteTemplate={handleDeleteTemplate}
                   onResetToDefaults={handleResetToDefaults}
-                  onSaveTemplate={openSaveNewTemplateModal}
-                  templates={templates.filter(
-                    (template) => template.drawing_type === selectedDrawing?.type
-                  )}
+                  onOpenSaveTemplateModal={openSaveNewTemplateModal}
+                  templates={filteredTemplates}
                 />
               )}
               {isSettingsModalOpen && selectedDrawing && (
@@ -567,6 +580,25 @@ const Develop = ({ modelConfig }) => {
                   onClose={() => setIsSettingsModalOpen(false)}
                   onDragStart={handleModalDragStart}
                   dragBoundsRef={chartAreaRef}
+                  // Templates props
+                  templates={filteredTemplates}
+                  onApplyTemplate={handleApplyTemplate}
+                  onOpenSaveTemplateModal={openSaveNewTemplateModal}
+                  onResetToDefaults={handleResetToDefaults}
+                  onDeleteTemplate={handleDeleteTemplate}
+                />
+              )}
+              {isSaveTemplateModalOpen && (
+                <SaveTemplateModal
+                  customStyles={{
+                    left: `${saveModalPosition.x}px`,
+                    top: `${saveModalPosition.y}px`
+                  }}
+                  isDragging={isDraggingSaveModal}
+                  modalRef={saveTemplateModalRef}
+                  onClose={() => setIsSaveTemplateModalOpen(false)}
+                  onDragStart={handleSaveModalDragStart}
+                  onSave={handleSaveTemplate}
                 />
               )}
               <DrawingToolbar activeTool={activeTool} onToolSelect={handleToolSelect} />
@@ -630,23 +662,10 @@ const Develop = ({ modelConfig }) => {
           <div className="placeholder-text">Results Table</div>
         </section>
       </main>
-      {isSaveTemplateModalOpen && (
-        <SaveTemplateModal
-          customStyles={{
-            left: `${saveModalPosition.x}px`,
-            top: `${saveModalPosition.y}px`
-          }}
-          isDragging={isDraggingSaveModal}
-          modalRef={saveTemplateModalRef}
-          onClose={() => setIsSaveTemplateModalOpen(false)}
-          onDragStart={handleSaveModalDragStart}
-          onSave={handleSaveTemplate}
-        />
-      )}
     </div>
   )
 }
 
-// TODO: T021.4.7.15 - Add PropTypes later when props are finalized
+// TODO: T021.4.7.15 - Add PropTypes
 
 export default Develop

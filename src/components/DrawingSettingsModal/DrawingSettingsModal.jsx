@@ -29,7 +29,13 @@ const DrawingSettingsModal = ({
   isDragging,
   onDragStart,
   modalRef,
-  dragBoundsRef
+  dragBoundsRef,
+  // Templates props
+  templates,
+  onApplyTemplate,
+  onOpenSaveTemplateModal,
+  onResetToDefaults,
+  onDeleteTemplate
 }) => {
   const [settings, setSettings] = useState(drawing)
   const [activeTab, setActiveTab] = useState('style')
@@ -56,7 +62,12 @@ const DrawingSettingsModal = ({
   const textVerticalAlignWrapperRef = useRef(null)
   const modalContentRef = useRef(null)
 
-  const { templates, addTemplate, updateTemplate, removeTemplate } = useDrawingTemplates()
+  const {
+    templates: templatesOLD,
+    addTemplate: addTemplateOLD,
+    updateTemplate: updateTemplateOLD,
+    removeTemplate: removeTemplateOLD
+  } = useDrawingTemplates()
 
   const tabs = [
     { id: 'style', label: 'Style' },
@@ -131,7 +142,7 @@ const DrawingSettingsModal = ({
     onClose()
   }
 
-  const openSaveNewTemplateModal = () => {
+  const openSaveNewTemplateModalOLD = () => {
     if (modalRef.current) {
       const parentRect = modalRef.current.getBoundingClientRect()
       const initialX = parentRect.left + parentRect.width / 2 - 175 // 350 is modal width
@@ -142,7 +153,7 @@ const DrawingSettingsModal = ({
     setIsTemplatesPopupOpen(false)
   }
 
-  const handleSaveTemplate = async (templateName) => {
+  const handleSaveTemplateOLD = async (templateName) => {
     const styleSettings = {
       lineColor: settings.lineColor,
       lineWidth: settings.lineWidth,
@@ -165,11 +176,11 @@ const DrawingSettingsModal = ({
       const result = await window.api.saveDrawingTemplate(templateData)
       if (result.success) {
         const savedTemplate = result.data
-        const existingTemplate = templates.find((template) => template.id === savedTemplate.id)
+        const existingTemplate = templatesOLD.find((template) => template.id === savedTemplate.id)
         if (existingTemplate) {
-          updateTemplate(savedTemplate)
+          updateTemplateOLD(savedTemplate)
         } else {
-          addTemplate(savedTemplate)
+          addTemplateOLD(savedTemplate)
         }
         setIsSaveTemplateModalOpen(false)
       } else {
@@ -181,14 +192,20 @@ const DrawingSettingsModal = ({
     }
   }
 
-  const handleApplyTemplate = (template) => {
+  const handleApplyTemplateOLD = (template) => {
     const newSettings = { ...settings, ...template.settings }
     setSettings(newSettings)
     onUpdate(newSettings)
     setIsTemplatesPopupOpen(false)
   }
 
-  const handleResetToDefaults = () => {
+  const handleApplyTemplate = (template) => {
+    // Use parent handler + local UI state management
+    onApplyTemplate(template)
+    setIsTemplatesPopupOpen(false)
+  }
+
+  const handleResetToDefaultsOLD = () => {
     // Resets the drawing to its factory default settings.
     const defaultSettings = HORIZONTAL_LINE_DEFAULTS
     const newSettings = { ...settings, ...defaultSettings }
@@ -197,11 +214,16 @@ const DrawingSettingsModal = ({
     setIsTemplatesPopupOpen(false)
   }
 
-  const handleDeleteTemplate = async (templateId) => {
+  const handleResetToDefaults = () => {
+    onResetToDefaults()
+    setIsTemplatesPopupOpen(false)
+  }
+
+  const handleDeleteTemplateOLD = async (templateId) => {
     try {
       const result = await window.api.deleteDrawingTemplate(templateId)
       if (result.success) {
-        removeTemplate(templateId)
+        removeTemplateOLD(templateId)
       } else {
         throw new Error(result.message)
       }
@@ -232,13 +254,15 @@ const DrawingSettingsModal = ({
       const paneRect = chartPane.getBoundingClientRect()
       const chartAreaRect = dragBoundsRef.current.getBoundingClientRect()
 
+      const modalRect = modalElement.getBoundingClientRect()
+
       const dragRef = {
         chartAreaRect,
         paneRect,
         initialMouseX: event.clientX,
         initialMouseY: event.clientY,
-        initialLeft: modalElement.offsetLeft,
-        initialTop: modalElement.offsetTop,
+        initialLeft: modalRect.left - chartAreaRect.left,
+        initialTop: modalRect.top - chartAreaRect.top,
         modalWidth: modalElement.offsetWidth,
         modalHeight: modalElement.offsetHeight
       }
@@ -547,14 +571,15 @@ const DrawingSettingsModal = ({
                 </button>
                 {isTemplatesPopupOpen && (
                   <TemplatesPopup
-                    popupRef={templatesPopupRef}
-                    templates={templates.filter(
-                      (template) => template.drawing_type === drawing.type
-                    )}
                     onApply={handleApplyTemplate}
-                    onSave={openSaveNewTemplateModal}
+                    onDelete={(templateId) => onDeleteTemplate(templateId)}
+                    onOpenSaveModal={() => {
+                      onOpenSaveTemplateModal()
+                      setIsTemplatesPopupOpen(false)
+                    }}
                     onReset={handleResetToDefaults}
-                    onDelete={handleDeleteTemplate}
+                    popupRef={templatesPopupRef}
+                    templates={templates}
                   />
                 )}
               </div>
@@ -570,9 +595,10 @@ const DrawingSettingsModal = ({
           </div>
         </div>
       </div>
+      {/* OLD code below. Do not use */}
       {isSaveTemplateModalOpen && (
         <SaveTemplateModal
-          onSave={handleSaveTemplate}
+          onSave={handleSaveTemplateOLD}
           onClose={() => setIsSaveTemplateModalOpen(false)}
           modalRef={saveModalRef}
           customStyles={{
@@ -606,9 +632,15 @@ DrawingSettingsModal.propTypes = {
   }),
   isDragging: PropTypes.bool,
   modalRef: PropTypes.object,
-  onUpdate: PropTypes.func.isRequired,
   onClose: PropTypes.func.isRequired,
-  onDragStart: PropTypes.func.isRequired
+  onDragStart: PropTypes.func.isRequired,
+  onUpdate: PropTypes.func.isRequired,
+  // Templates props
+  onApplyTemplate: PropTypes.func,
+  onDeleteTemplate: PropTypes.func,
+  onResetToDefaults: PropTypes.func,
+  onOpenSaveTemplateModal: PropTypes.func,
+  templates: PropTypes.array
 }
 
 export default DrawingSettingsModal

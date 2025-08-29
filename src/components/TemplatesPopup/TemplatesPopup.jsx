@@ -6,15 +6,15 @@ import Icon from '../Icon/Icon'
 import './TemplatesPopup.css'
 
 const TemplatesPopup = ({
+  isFromToolbar,
   onApply,
   onDelete,
+  onOpenSaveModal,
   onReset,
-  onSave,
-  popupRef,
-  templates,
-  isFromToolbar,
   popupPosition,
-  popupVisibility
+  popupRef,
+  popupVisibility,
+  templates
 }) => {
   const handleDeleteClick = (event, templateId) => {
     event.stopPropagation()
@@ -31,8 +31,8 @@ const TemplatesPopup = ({
       <div className="templates-popup-header">
         <button
           className="templates-popup-icon-button"
-          onClick={onSave}
-          title="Save As New Template"
+          onClick={onOpenSaveModal}
+          title="Open To Save A New Template Modal"
         >
           <Icon icon="save" />
         </button>
@@ -65,7 +65,7 @@ TemplatesPopup.propTypes = {
   onApply: PropTypes.func.isRequired,
   onDelete: PropTypes.func.isRequired,
   onReset: PropTypes.func.isRequired,
-  onSave: PropTypes.func.isRequired,
+  onOpenSaveModal: PropTypes.func.isRequired,
   popupRef: PropTypes.oneOfType([
     PropTypes.func,
     PropTypes.shape({ current: PropTypes.instanceOf(Element) })
