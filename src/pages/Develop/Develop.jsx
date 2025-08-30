@@ -20,6 +20,10 @@ import './Develop.css'
 const Develop = ({ modelConfig }) => {
   const { navigateTo } = useContext(AppViewContext)
 
+  const modelType = modelConfig?.type || 'trading'
+  const isBiasModel = modelType === 'bias'
+  // const isTradingModel = modelType === 'trading' // currently not used anywhere
+
   const [activeTimeframe, setActiveTimeframe] = useState(
     modelConfig?.selectedTimeframes?.[0] || null
   )
@@ -505,10 +509,7 @@ const Develop = ({ modelConfig }) => {
   }
 
   const selectedDrawing = drawings.find((drawing) => drawing.id === selectedDrawingId)
-
-  const modelTypeDisplay = modelConfig?.type
-    ? modelConfig.type.charAt(0).toUpperCase() + modelConfig.type.slice(1)
-    : ''
+  const modelTypeDisplay = isBiasModel ? 'Bias Model' : 'Trading Model'
 
   const filteredTemplates = templates.filter(
     (template) => template.drawing_type === selectedDrawing?.type
@@ -669,11 +670,19 @@ const Develop = ({ modelConfig }) => {
 
 Develop.propTypes = {
   modelConfig: PropTypes.shape({
+    type: PropTypes.oneOf(['trading', 'bias']).isRequired,
     dataset: PropTypes.shape({
-      name: PropTypes.string
-    }),
-    type: PropTypes.string
-  })
+      id: PropTypes.number.isRequired,
+      name: PropTypes.string.isRequired,
+      symbol: PropTypes.string,
+      baseTimeframe: PropTypes.string,
+      dateRange: PropTypes.string,
+      importDate: PropTypes.string,
+      availableTimeframes: PropTypes.string,
+      baseParquetPath: PropTypes.string
+    }).isRequired,
+    selectedTimeframes: PropTypes.arrayOf(PropTypes.string).isRequired
+  }).isRequired
 }
 
 export default Develop
