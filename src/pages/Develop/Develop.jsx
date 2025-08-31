@@ -24,6 +24,14 @@ const Develop = ({ modelConfig }) => {
   const isBiasModel = modelType === 'bias'
   // const isTradingModel = modelType === 'trading' // currently not used anywhere
 
+  const [currentView, setCurrentView] = useState('condition-editor')
+
+  // View state helpers
+  const isFullScreenMode = currentView !== 'normal'
+  const isConditionEditorFullScreen = currentView === 'condition-editor'
+  const isChartFullScreen = currentView === 'chart'
+  const isResultsFullScreen = currentView === 'results'
+
   const [activeTimeframe, setActiveTimeframe] = useState(
     modelConfig?.selectedTimeframes?.[0] || null
   )
@@ -508,6 +516,22 @@ const Develop = ({ modelConfig }) => {
     setSelectedDrawingId(null)
   }
 
+  const togglePanelFullScreen = (panelType) => {
+    if (currentView === panelType) {
+      setCurrentView('normal')
+    } else {
+      setCurrentView(panelType)
+    }
+  }
+
+  const getWorkspaceClassName = () => {
+    const baseClass = 'develop-workspace'
+    if (isFullScreenMode) {
+      return `${baseClass} full-screen-mode ${currentView}-full-screen`
+    }
+    return `${baseClass} normal-view`
+  }
+
   const selectedDrawing = drawings.find((drawing) => drawing.id === selectedDrawingId)
   const modelTypeDisplay = isBiasModel ? 'Bias Model' : 'Trading Model'
 
@@ -536,133 +560,155 @@ const Develop = ({ modelConfig }) => {
           </button>
         </div>
       </header>
-      <main className="develop-workspace">
-        <section className="chart-area" ref={chartAreaRef}>
-          {isLoading ? (
-            <div className="placeholder-text">Loading Chart Data...</div>
-          ) : (
-            <>
-              {selectedDrawingId && !isSettingsModalOpen && (
-                <DrawingPropertiesToolbar
-                  customStyles={{
-                    top: `${toolbarPosition.top}px`,
-                    left:
-                      typeof toolbarPosition.left === 'string'
-                        ? toolbarPosition.left
-                        : `${toolbarPosition.left}px`
-                  }}
-                  drawingState={selectedDrawing}
-                  isDragging={isToolbarDragging}
-                  onDelete={handleDeleteDrawing}
-                  onDragStart={handleToolbarDragStart}
-                  onSettingsClick={handleOpenSettingsModal}
-                  onUpdate={handleDrawingUpdate}
-                  toolbarRef={toolbarRef}
-                  // Templates props
-                  onApplyTemplate={handleApplyTemplate}
-                  onDeleteTemplate={handleDeleteTemplate}
-                  onResetToDefaults={handleResetToDefaults}
-                  onOpenSaveTemplateModal={openSaveNewTemplateModal}
-                  templates={filteredTemplates}
-                />
-              )}
-              {isSettingsModalOpen && selectedDrawing && (
-                <DrawingSettingsModal
-                  customStyles={{
-                    top: `${modalPosition.top}px`,
-                    left:
-                      typeof modalPosition.left === 'string'
-                        ? modalPosition.left
-                        : `${modalPosition.left}px`
-                  }}
-                  drawing={selectedDrawing}
-                  isDragging={isModalDragging}
-                  modalRef={modalRef}
-                  onUpdate={handleDrawingUpdate}
-                  onClose={() => setIsSettingsModalOpen(false)}
-                  onDragStart={handleModalDragStart}
-                  dragBoundsRef={chartAreaRef}
-                  // Templates props
-                  templates={filteredTemplates}
-                  onApplyTemplate={handleApplyTemplate}
-                  onOpenSaveTemplateModal={openSaveNewTemplateModal}
-                  onResetToDefaults={handleResetToDefaults}
-                  onDeleteTemplate={handleDeleteTemplate}
-                />
-              )}
-              {isSaveTemplateModalOpen && (
-                <SaveTemplateModal
-                  customStyles={{
-                    left: `${saveModalPosition.x}px`,
-                    top: `${saveModalPosition.y}px`
-                  }}
-                  isDragging={isDraggingSaveModal}
-                  modalRef={saveTemplateModalRef}
-                  onClose={() => setIsSaveTemplateModalOpen(false)}
-                  onDragStart={handleSaveModalDragStart}
-                  onSave={handleSaveTemplate}
-                />
-              )}
-              <DrawingToolbar activeTool={activeTool} onToolSelect={handleToolSelect} />
-              <div className="timeframe-switcher">
-                {selectedTimeframes.map((tf) => (
-                  <button
-                    key={tf}
-                    className={`timeframe-button ${activeTimeframe === tf ? 'active' : ''}`}
-                    onClick={() => setActiveTimeframe(tf)}
-                  >
-                    {tf}
-                  </button>
-                ))}
-              </div>
-              <div className="chart-indicators-display">
-                <div className="indicator-item">
-                  <span className="indicator-name">Volume</span>
-                  <button
-                    className="indicator-toggle-visibility"
-                    onClick={() => setIsVolumeVisible(!isVolumeVisible)}
-                    title={isVolumeVisible ? 'Hide Volume' : 'Show Volume'}
-                  >
-                    {isVolumeVisible ? '👁️' : '👁️‍🗨️'}
-                  </button>
+      <main className={getWorkspaceClassName()}>
+        {(currentView === 'normal' || currentView === 'chart') && (
+          <section
+            className={`chart-area ${isChartFullScreen ? 'full-screen' : 'normal'}`}
+            ref={chartAreaRef}
+          >
+            {isLoading ? (
+              <div className="placeholder-text">Loading Chart Data...</div>
+            ) : (
+              <>
+                {selectedDrawingId && !isSettingsModalOpen && (
+                  <DrawingPropertiesToolbar
+                    customStyles={{
+                      top: `${toolbarPosition.top}px`,
+                      left:
+                        typeof toolbarPosition.left === 'string'
+                          ? toolbarPosition.left
+                          : `${toolbarPosition.left}px`
+                    }}
+                    drawingState={selectedDrawing}
+                    isDragging={isToolbarDragging}
+                    onDelete={handleDeleteDrawing}
+                    onDragStart={handleToolbarDragStart}
+                    onSettingsClick={handleOpenSettingsModal}
+                    onUpdate={handleDrawingUpdate}
+                    toolbarRef={toolbarRef}
+                    // Templates props
+                    onApplyTemplate={handleApplyTemplate}
+                    onDeleteTemplate={handleDeleteTemplate}
+                    onResetToDefaults={handleResetToDefaults}
+                    onOpenSaveTemplateModal={openSaveNewTemplateModal}
+                    templates={filteredTemplates}
+                  />
+                )}
+                {isSettingsModalOpen && selectedDrawing && (
+                  <DrawingSettingsModal
+                    customStyles={{
+                      top: `${modalPosition.top}px`,
+                      left:
+                        typeof modalPosition.left === 'string'
+                          ? modalPosition.left
+                          : `${modalPosition.left}px`
+                    }}
+                    drawing={selectedDrawing}
+                    isDragging={isModalDragging}
+                    modalRef={modalRef}
+                    onUpdate={handleDrawingUpdate}
+                    onClose={() => setIsSettingsModalOpen(false)}
+                    onDragStart={handleModalDragStart}
+                    dragBoundsRef={chartAreaRef}
+                    // Templates props
+                    templates={filteredTemplates}
+                    onApplyTemplate={handleApplyTemplate}
+                    onOpenSaveTemplateModal={openSaveNewTemplateModal}
+                    onResetToDefaults={handleResetToDefaults}
+                    onDeleteTemplate={handleDeleteTemplate}
+                  />
+                )}
+                {isSaveTemplateModalOpen && (
+                  <SaveTemplateModal
+                    customStyles={{
+                      left: `${saveModalPosition.x}px`,
+                      top: `${saveModalPosition.y}px`
+                    }}
+                    isDragging={isDraggingSaveModal}
+                    modalRef={saveTemplateModalRef}
+                    onClose={() => setIsSaveTemplateModalOpen(false)}
+                    onDragStart={handleSaveModalDragStart}
+                    onSave={handleSaveTemplate}
+                  />
+                )}
+                <DrawingToolbar activeTool={activeTool} onToolSelect={handleToolSelect} />
+                <div className="timeframe-switcher">
+                  {selectedTimeframes.map((tf) => (
+                    <button
+                      key={tf}
+                      className={`timeframe-button ${activeTimeframe === tf ? 'active' : ''}`}
+                      onClick={() => setActiveTimeframe(tf)}
+                    >
+                      {tf}
+                    </button>
+                  ))}
                 </div>
-              </div>
-              <Chart
-                activeTool={activeTool}
-                data={chartData}
-                drawings={drawings}
-                isVolumeVisible={isVolumeVisible}
-                onDrawingAdd={handleDrawingAdd}
-                onDrawingSelect={handleDrawingSelect}
-                onDrawingUpdate={handleDrawingUpdate}
-                selectedDrawingId={selectedDrawingId}
-              />
-            </>
-          )}
-        </section>
+                <div className="chart-indicators-display">
+                  <div className="indicator-item">
+                    <span className="indicator-name">Volume</span>
+                    <button
+                      className="indicator-toggle-visibility"
+                      onClick={() => setIsVolumeVisible(!isVolumeVisible)}
+                      title={isVolumeVisible ? 'Hide Volume' : 'Show Volume'}
+                    >
+                      {isVolumeVisible ? '👁️' : '👁️‍🗨️'}
+                    </button>
+                  </div>
+                </div>
+                <Chart
+                  activeTool={activeTool}
+                  data={chartData}
+                  drawings={drawings}
+                  isVolumeVisible={isVolumeVisible}
+                  onDrawingAdd={handleDrawingAdd}
+                  onDrawingSelect={handleDrawingSelect}
+                  onDrawingUpdate={handleDrawingUpdate}
+                  selectedDrawingId={selectedDrawingId}
+                />
+              </>
+            )}
+            <button onClick={() => togglePanelFullScreen('chart')}>
+              {isChartFullScreen ? 'Minimize' : 'Maximize'}
+            </button>
+          </section>
+        )}
 
-        <section className="condition-editor-area">
-          <div className="panel-header">
-            <h3>Base Condition</h3>
-            {/* Add buttons for GUI/JS mode, minimize, etc. later */}
-          </div>
-          <div className="placeholder-text">Condition Editor</div>
-        </section>
-
-        <section className="results-area">
-          <div className="panel-header">
-            <h3>Occurrences (0)</h3>
-            <div className="results-controls">
-              <button title="Previous Occurrence" className="up-arrow">
-                ▲
-              </button>
-              <button title="Next Occurrence" className="down-arrow">
-                ▲
-              </button>
+        {(currentView === 'normal' || currentView === 'condition-editor') && (
+          <section
+            className={`condition-editor-area ${isConditionEditorFullScreen ? 'full-screen' : 'normal'}`}
+          >
+            <div className="panel-header">
+              <h3>Base Condition</h3>
+              {/* Add buttons for GUI/JS mode, etc. later */}
             </div>
-          </div>
-          <div className="placeholder-text">Results Table</div>
-        </section>
+            <div className="placeholder-text">
+              Condition Editor (ModelWorkspace will replace this in next task)
+            </div>
+            <button onClick={() => togglePanelFullScreen('condition-editor')}>
+              {isConditionEditorFullScreen ? 'Minimize' : 'Maximize'}
+            </button>
+          </section>
+        )}
+
+        {(currentView === 'normal' || currentView === 'results') && (
+          <section className={`results-area ${isResultsFullScreen ? 'full-screen' : 'normal'}`}>
+            <div className="panel-header">
+              <h3>Occurrences (0)</h3>
+              <div className="results-controls">
+                <button title="Previous Occurrence" className="up-arrow">
+                  ▲
+                </button>
+                <button title="Next Occurrence" className="down-arrow">
+                  ▲
+                </button>
+              </div>
+            </div>
+            <div className="placeholder-text">Results Table (Placeholder)</div>
+            <button onClick={() => togglePanelFullScreen('results')}>
+              {isResultsFullScreen ? 'Minimize' : 'Maximize'}
+            </button>
+          </section>
+        )}
       </main>
     </div>
   )

@@ -8,6 +8,7 @@
   width: 100%;
   height: 100%;
   cursor: crosshair;
+  max-height: 0;
 }
 
 .ohlcv-overlay {

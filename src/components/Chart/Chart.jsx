@@ -99,7 +99,11 @@ const Chart = ({
     candleSeries.attachPrimitive(horizontalLinePlugin)
 
     // --- Event Subscription ---
-    const handleResize = () => chart.applyOptions({ width: chartContainerRef.current.clientWidth })
+    const handleResize = () =>
+      chart.applyOptions({
+        width: chartContainerRef.current.clientWidth,
+        height: chartContainerRef.current.clientHeight
+      })
 
     const crosshairMoveHandler = (param) => {
       if (param.seriesData.has(candleSeriesRef.current)) {
@@ -138,6 +142,27 @@ const Chart = ({
       window.removeEventListener('mouseup', onMouseUp)
       chart.remove()
     }
+  }, [])
+
+  // --- ResizeObserver watching parent chart-area ---
+  useEffect(() => {
+    if (!chartContainerRef.current || !chartRef.current) return
+
+    const chartArea = chartContainerRef.current.parentElement
+    if (!chartArea) return
+
+    const resizeObserver = new ResizeObserver(() => {
+      if (chartRef.current) {
+        chartRef.current.applyOptions({
+          width: chartArea.clientWidth,
+          height: chartArea.clientHeight
+        })
+      }
+    })
+
+    resizeObserver.observe(chartArea)
+
+    return () => resizeObserver.disconnect()
   }, [])
 
   // --- For DATA updates ---
