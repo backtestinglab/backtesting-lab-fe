@@ -2,6 +2,7 @@ import React, { useCallback, useContext, useEffect, useLayoutEffect, useRef, use
 import PropTypes from 'prop-types'
 
 import Chart from '../../components/Chart/Chart'
+import ConditionEditorWorkspace from '../../components/ConditionEditorWorkspace/ConditionEditorWorkspace'
 import DrawingPropertiesToolbar from '../../components/DrawingPropertiesToolbar/DrawingPropertiesToolbar'
 import DrawingSettingsModal from '../../components/DrawingSettingsModal/DrawingSettingsModal'
 import DrawingToolbar from '../../components/DrawingToolbar/DrawingToolbar'
@@ -677,16 +678,12 @@ const Develop = ({ modelConfig }) => {
           <section
             className={`condition-editor-area ${isConditionEditorFullScreen ? 'full-screen' : 'normal'}`}
           >
-            <div className="panel-header">
-              <h3>Base Condition</h3>
-              {/* Add buttons for GUI/JS mode, etc. later */}
-            </div>
-            <div className="placeholder-text">
-              Condition Editor (ModelWorkspace will replace this in next task)
-            </div>
-            <button onClick={() => togglePanelFullScreen('condition-editor')}>
-              {isConditionEditorFullScreen ? 'Minimize' : 'Maximize'}
-            </button>
+            <ConditionEditorWorkspace
+              modelType={modelType}
+              currentView={currentView}
+              onConditionChange={() => {}} // Placeholder for now
+              onToggleFullScreen={() => togglePanelFullScreen('condition-editor')}
+            />
           </section>
         )}
 
