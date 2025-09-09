@@ -1,0 +1,145 @@
+.condition-bias-section {
+  background-color: rgba(20, 22, 30, 0.6);
+  border: 1px solid rgba(60, 65, 85, 0.5);
+  border-radius: 4px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+}
+
+.condition-bias-section h4 {
+  margin: 0 0 12px 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #d0d8f0;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.condition-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.condition-header h4 {
+  margin: 0;
+}
+
+.neutral-checkbox {
+  font-size: 0.8rem;
+}
+
+.neutral-checkbox label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #a0a8c0;
+  cursor: pointer;
+}
+
+.section-content-centered {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.condition-builder-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  min-height: 150px;
+}
+
+.formula-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  font-size: 0.85rem;
+  color: #c0c8e0;
+}
+
+.bias-type-select {
+  background-color: rgba(224, 192, 112, 0.1);
+  border: 1px solid #e0c070;
+  color: #e0c070;
+  padding: 4px 8px;
+  border-radius: 3px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-right: 8px;
+}
+
+.timeframe-select,
+.indicator-select,
+.operator-select {
+  padding: 4px 8px;
+  background-color: rgba(20, 22, 30, 0.8);
+  border: 1px solid #505570;
+  color: #c0c8e0;
+  border-radius: 3px;
+  font-size: 0.8rem;
+}
+
+.finish-formula-button {
+  background-color: #e0c070;
+  border: 1px solid #e0c070;
+  color: #121218;
+  padding: 4px 16px;
+  font-size: 0.8rem;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 600;
+  margin-left: 8px;
+}
+
+.finish-formula-button:hover:not(:disabled) {
+  background-color: #f0d080;
+  border-color: #f0d080;
+}
+
+.finish-formula-button:disabled {
+  background-color: #506050;
+  border-color: #506050;
+  color: #808080;
+  cursor: not-allowed;
+}
+
+.add-variable-section {
+  display: flex;
+  justify-content: center;
+  margin-top: auto;
+  padding-top: 24px;
+}
+
+.add-variable-button {
+  background: none;
+  border: 1px solid #505570;
+  color: #a0a8c0;
+  padding: 4px 12px;
+  font-size: 0.8rem;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.add-variable-button:hover {
+  background-color: rgba(80, 85, 110, 0.4);
+  color: #fff;
+  border-color: #6070a0;
+}
+
+.bias-type-select option:first-child,
+.timeframe-select option:first-child,
+.indicator-select option:first-child,
+.operator-select option:first-child {
+  color: #8085a0;
+  font-style: italic;
+}

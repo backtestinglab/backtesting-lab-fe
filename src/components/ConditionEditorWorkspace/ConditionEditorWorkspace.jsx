@@ -1,92 +1,86 @@
-import React, { useState } from 'react'
+import React, { useState, useMemo } from 'react'
 import PropTypes from 'prop-types'
+
+import CodeModeEditor from './components/CodeModeEditor/CodeModeEditor'
+import ConditionBuilderSection from './components/ConditionBuilderSection/ConditionBuilderSection'
+import NorthStarSection from './components/NorthStarSection/NorthStarSection'
+import PreviewSection from './components/PreviewSection/PreviewSection'
+
+import useDisplayControls from './hooks/useDisplayControls'
+import useFormulaManager from './hooks/useFormulaManager'
+import usePreviewGenerator from './hooks/usePreviewGenerator'
 
 import './ConditionEditorWorkspace.css'
 
 const ConditionEditorWorkspace = ({ currentView, modelType, onToggleFullScreen }) => {
+  const [biasDefinition, setBiasDefinition] = useState('')
   const [currentMode, setCurrentMode] = useState('GUI')
+  const [isNeutralFormulaIncluded, setIsNeutralFormulaIncluded] = useState(true)
 
-  const isFullScreen = currentView === 'condition-editor'
-  const headerTitle = modelType === 'bias' ? 'Bias Condition Builder' : 'Trading Strategy Builder'
+  const { displayState, handleDisplayToggle } = useDisplayControls()
+
+  const { formulaState, hasFormulaChanges, handleCurrentFormulaChange, handleFinishFormula } =
+    useFormulaManager(isNeutralFormulaIncluded, (biasType) => {
+      // When a formula is completed, ensure it's displayed
+      if (!displayState.displayFormulas[biasType]) {
+        handleDisplayToggle(biasType)
+      }
+    })
+
+  const { previewRows, statusMessage } = usePreviewGenerator(
+    formulaState,
+    displayState,
+    isNeutralFormulaIncluded,
+    hasFormulaChanges
+  )
+
+  const isFullScreen = useMemo(() => currentView === 'condition-editor', [currentView])
+  const headerTitle = useMemo(
+    () => (modelType === 'bias' ? 'Bias Condition Builder' : 'Trading Strategy Builder'),
+    [modelType]
+  )
+
+  const handleBiasDefinitionChange = (event) => {
+    setBiasDefinition(event.target.value)
+  }
 
   const renderFullScreenContent = () => {
     if (currentMode === 'Code') {
       return (
         <div className="workspace-content full-screen">
-          <div className="code-mode-placeholder">
-            [Code Mode would show Monaco Editor with placeholder JavaScript condition code]
+          <div className="main-content-area">
+            <CodeModeEditor />
           </div>
+
+          <NorthStarSection value={biasDefinition} onChange={handleBiasDefinitionChange} />
         </div>
       )
     }
 
     return (
       <div className="workspace-content full-screen">
-        <div className="preview-section">
-          <h4>Preview</h4>
-          <div className="section-content-centered">
-            <div className="condition-summary">
-              "When 1H SMA(20) {'>'} 1H SMA(50) → Bullish Bias" 📈
-            </div>
-          </div>
-          <div className="preview-actions">
-            <button className="test-sample-button">▶️ Test Sample</button>
-            <button className="run-scan-button" disabled>🔍 Run Scan</button>
-          </div>
+        <div className="main-content-area">
+          <PreviewSection
+            displayState={displayState}
+            handleDisplayToggle={handleDisplayToggle}
+            isNeutralFormulaIncluded={isNeutralFormulaIncluded}
+            previewRows={previewRows}
+            statusMessage={statusMessage}
+          />
+
+          <ConditionBuilderSection
+            formulaState={formulaState}
+            hasFormulaChanges={hasFormulaChanges}
+            handleCurrentFormulaChange={handleCurrentFormulaChange}
+            handleFinishFormula={handleFinishFormula}
+            isNeutralFormulaIncluded={isNeutralFormulaIncluded}
+            setIsNeutralFormulaIncluded={setIsNeutralFormulaIncluded}
+            displayState={displayState}
+            handleDisplayToggle={handleDisplayToggle}
+          />
         </div>
 
-        <div className="condition-bias-section">
-          <h4>Condition & Bias Builder</h4>
-          <div className="section-content-centered">
-            <div className="formula-row">
-              <span>Formula 1:</span>
-              <select className="timeframe-select">
-                <option>1H</option>
-              </select>
-              <select className="indicator-select">
-                <option>SMA(20)</option>
-              </select>
-              <select className="operator-select">
-                <option>{'>'}</option>
-              </select>
-              <select className="indicator-select">
-                <option>SMA(50)</option>
-              </select>
-              <span>──── Results in →</span>
-              <select className="bias-result-select">
-                <option>Bullish</option>
-              </select>
-              <span>Bias</span>
-            </div>
-
-            <div className="formula-options">
-              <label>
-                <input type="checkbox" />
-                Add Formula 2 (for Bearish bias)
-              </label>
-              <label>
-                <input type="checkbox" />
-                Add Formula 3 (for Neutral bias)
-              </label>
-            </div>
-
-            <div className="active-bias-levels">
-              <span>Active Bias Levels:</span>
-              <label>
-                <input type="checkbox" checked readOnly />
-                Bullish
-              </label>
-              <label>
-                <input type="checkbox" />
-                Neutral
-              </label>
-              <label>
-                <input type="checkbox" />
-                Bearish
-              </label>
-            </div>
-          </div>
-        </div>
+        <NorthStarSection value={biasDefinition} onChange={handleBiasDefinitionChange} />
       </div>
     )
   }

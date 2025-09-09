@@ -534,7 +534,7 @@ const Develop = ({ modelConfig }) => {
   }
 
   const selectedDrawing = drawings.find((drawing) => drawing.id === selectedDrawingId)
-  const modelTypeDisplay = isBiasModel ? 'Bias Model' : 'Trading Model'
+  const modelTypeDisplay = isBiasModel ? 'Bias' : 'Trading'
 
   const filteredTemplates = templates.filter(
     (template) => template.drawing_type === selectedDrawing?.type
