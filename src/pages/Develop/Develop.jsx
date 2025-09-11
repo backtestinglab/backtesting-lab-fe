@@ -681,7 +681,6 @@ const Develop = ({ modelConfig }) => {
             <ConditionEditorWorkspace
               modelType={modelType}
               currentView={currentView}
-              onConditionChange={() => {}} // Placeholder for now
               onToggleFullScreen={() => togglePanelFullScreen('condition-editor')}
             />
           </section>

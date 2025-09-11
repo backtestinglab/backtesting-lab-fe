@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 
+import { shouldShowFinishButton, getFinishButtonText } from '../../utils/formulaUtils'
 import './PreviewSection.css'
 
 const PreviewSection = ({
@@ -8,8 +9,118 @@ const PreviewSection = ({
   handleDisplayToggle,
   isNeutralFormulaIncluded,
   previewRows,
-  statusMessage
+  statusMessage,
+  isMinimized = false,
+  showNorthStar = false,
+  onToggleNorthStar,
+  biasDefinition = '',
+  onBiasDefinitionChange,
+  formulaState,
+  hasFormulaChanges,
+  handleFinishFormula
 }) => {
+  const getMinimizedPreviewData = () => {
+    if (previewRows.length === 0) {
+      return {
+        rows: [],
+        isEmpty: true
+      }
+    }
+
+    return {
+      rows: previewRows.map((row) => ({
+        text: row.text + ' ' + row.emoji,
+        isCompleted: row.completed,
+        type: row.type
+      })),
+      isEmpty: false
+    }
+  }
+
+  const previewData = getMinimizedPreviewData()
+
+  // Finish button state for minimized view
+  const finishButtonState = useMemo(() => {
+    if (!formulaState || !hasFormulaChanges) return { showButton: false, buttonText: '' }
+
+    const hasChanges = hasFormulaChanges()
+    const showButton = shouldShowFinishButton(
+      formulaState.currentFormula,
+      formulaState.completedFormulas,
+      hasChanges
+    )
+    const buttonText = getFinishButtonText(hasChanges)
+
+    return { showButton, buttonText }
+  }, [formulaState, hasFormulaChanges])
+
+  // Render minimized layout - single return with conditional content
+  if (isMinimized) {
+    return (
+      <div className="mini-section mini-preview-section">
+        <div className="section-header">
+          {showNorthStar ? 'Preview > North Star' : 'Preview'}
+          <button
+            className={`north-star-toggle ${showNorthStar ? 'active' : ''}`}
+            onClick={onToggleNorthStar}
+            title="Define your bias in plain English"
+          >
+            ⭐
+          </button>
+        </div>
+        <div className={`mini-section-content ${showNorthStar ? 'north-star-expanded' : ''}`}>
+          {showNorthStar ? (
+            <textarea
+              className="bias-definition-textarea-mini"
+              placeholder="Describe what makes you think the market will move in this direction..."
+              value={biasDefinition}
+              onChange={onBiasDefinitionChange}
+            />
+          ) : (
+            <>
+              <div className="mini-preview-content">
+                {previewData.isEmpty ? (
+                  <span className="mini-preview-text incomplete">
+                    Build your condition to see preview...
+                  </span>
+                ) : (
+                  <div className="mini-preview-rows">
+                    {previewData.rows.map((row, index) => (
+                      <div key={`${row.type}-${index}`} className="mini-preview-row">
+                        <span
+                          className={`mini-preview-text ${row.isCompleted ? 'completed' : 'incomplete'}`}
+                        >
+                          {row.text}
+                        </span>
+                        {index === previewData.rows.length - 1 &&
+                          !row.isCompleted &&
+                          finishButtonState.showButton && (
+                            <button className="mini-finish-button" onClick={handleFinishFormula}>
+                              {finishButtonState.buttonText}
+                            </button>
+                          )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+              <div className="mini-preview-bottom">
+                <div className="mini-preview-actions">
+                  <button className="mini-test-button">Test</button>
+                  <button className="mini-scan-button" disabled={statusMessage !== 'Ready to test'}>
+                    Scan
+                  </button>
+                </div>
+                <div className="mini-status-message">{statusMessage}</div>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+    )
+  }
+
+  // Render full-screen layout
   return (
     <div className="preview-section">
       <div className="preview-header">
@@ -94,7 +205,15 @@ PreviewSection.propTypes = {
       completed: PropTypes.bool.isRequired
     })
   ).isRequired,
-  statusMessage: PropTypes.string.isRequired
+  statusMessage: PropTypes.string.isRequired,
+  isMinimized: PropTypes.bool,
+  showNorthStar: PropTypes.bool,
+  onToggleNorthStar: PropTypes.func,
+  biasDefinition: PropTypes.string,
+  onBiasDefinitionChange: PropTypes.func,
+  formulaState: PropTypes.object,
+  hasFormulaChanges: PropTypes.func,
+  handleFinishFormula: PropTypes.func
 }
 
 export default PreviewSection

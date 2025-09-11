@@ -108,20 +108,31 @@
   padding: 8px;
 }
 
-.accordion-sections {
+.mini-sections {
   display: flex;
   gap: 8px;
   height: 100%;
 }
 
-.accordion-section {
-  flex: 1;
+.mini-section {
   background-color: rgba(20, 22, 30, 0.6);
   border: 1px solid rgba(60, 65, 85, 0.5);
   border-radius: 4px;
   display: flex;
   flex-direction: column;
   min-width: 0;
+}
+
+.mini-section.bias-section {
+  flex: 1;
+}
+
+.mini-section.condition-section {
+  flex: 3;
+}
+
+.mini-section.mini-preview-section {
+  flex: 6;
 }
 
 .section-header {
@@ -171,160 +182,6 @@
 }
 
 .condition-actions button:hover {
-  background-color: rgba(80, 85, 110, 0.4);
-  color: #fff;
-}
-
-.bias-arrows {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  align-items: center;
-}
-
-.bias-option {
-  font-size: 1.2rem;
-  cursor: pointer;
-  padding: 2px;
-  border-radius: 2px;
-  transition: all 0.2s ease;
-}
-
-.bias-option:hover {
-  background-color: rgba(80, 85, 110, 0.4);
-  color: #fff;
-}
-
-.status {
-  margin-bottom: 8px;
-  font-size: 0.7rem;
-}
-
-.preview-actions button {
-  padding: 4px 9px;
-  font-size: 0.8rem;
-  background: none;
-  border: 1px solid #505570;
-  color: #a0a8c0;
-  border-radius: 2px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.preview-actions button:hover {
-  background-color: rgba(80, 85, 110, 0.4);
-  color: #fff;
-}
-
-/* New Minimized Layout Styles */
-.formula-builder {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.mini-timeframe-select,
-.mini-indicator-select,
-.mini-operator-select,
-.mini-value-select {
-  width: 100%;
-  padding: 4px 6px;
-  background-color: rgba(20, 22, 30, 0.6);
-  border: 1px solid rgba(60, 65, 85, 0.5);
-  color: #c0c8e0;
-  border-radius: 3px;
-  font-size: 0.7rem;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.mini-timeframe-select:hover,
-.mini-indicator-select:hover,
-.mini-operator-select:hover,
-.mini-value-select:hover {
-  border-color: #e0c070;
-  background-color: rgba(20, 22, 30, 0.8);
-}
-
-.mini-timeframe-select:focus,
-.mini-indicator-select:focus,
-.mini-operator-select:focus,
-.mini-value-select:focus {
-  outline: none;
-  border-color: #e0c070;
-  background-color: rgba(20, 22, 30, 0.9);
-}
-
-.add-formula-hover {
-  position: absolute;
-  bottom: 8px;
-  right: 8px;
-  min-width: 18px;
-  max-height: 18px;
-  border-radius: 50%;
-  background-color: #e0c070;
-  color: #121218;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 0.8rem;
-  font-weight: bold;
-  cursor: pointer;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-}
-
-.condition-section:hover .add-formula-hover {
-  opacity: 1;
-}
-
-.bias-option.active {
-  background-color: rgba(224, 192, 112, 0.2);
-  color: #e0c070;
-  border: 1px solid #e0c070;
-}
-
-.mini-preview-text {
-  font-size: 0.65rem;
-  color: #c0c8e0;
-  margin-top: 12px;
-  line-height: 1.2;
-  font-style: italic;
-}
-
-.mini-preview-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  width: 100%;
-}
-
-.mini-test-button,
-.mini-scan-button {
-  padding: 3px 8px;
-  font-size: 0.6rem;
-  background: none;
-  border: 1px solid #505570;
-  color: #a0a8c0;
-  border-radius: 3px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  width: 100%;
-}
-
-.mini-test-button:hover {
-  background-color: rgba(80, 85, 110, 0.4);
-  color: #fff;
-}
-
-.mini-scan-button:disabled {
-  opacity: 0.5;
-  cursor: default;
-  background: none;
-}
-
-.mini-scan-button:not(:disabled):hover {
   background-color: rgba(80, 85, 110, 0.4);
   color: #fff;
 }

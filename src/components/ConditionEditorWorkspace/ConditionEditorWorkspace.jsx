@@ -16,6 +16,7 @@ const ConditionEditorWorkspace = ({ currentView, modelType, onToggleFullScreen }
   const [biasDefinition, setBiasDefinition] = useState('')
   const [currentMode, setCurrentMode] = useState('GUI')
   const [isNeutralFormulaIncluded, setIsNeutralFormulaIncluded] = useState(true)
+  const [showNorthStar, setShowNorthStar] = useState(false)
 
   const { displayState, handleDisplayToggle } = useDisplayControls()
 
@@ -40,34 +41,47 @@ const ConditionEditorWorkspace = ({ currentView, modelType, onToggleFullScreen }
     [modelType]
   )
 
-  const handleBiasDefinitionChange = (event) => {
-    setBiasDefinition(event.target.value)
-  }
+  const renderFullScreenContent = () => (
+    <div className="workspace-content full-screen">
+      <div className="main-content-area">
+        {currentMode === 'Code' ? (
+          <CodeModeEditor />
+        ) : (
+          <>
+            <PreviewSection
+              displayState={displayState}
+              handleDisplayToggle={handleDisplayToggle}
+              isNeutralFormulaIncluded={isNeutralFormulaIncluded}
+              previewRows={previewRows}
+              statusMessage={statusMessage}
+            />
 
-  const renderFullScreenContent = () => {
-    if (currentMode === 'Code') {
-      return (
-        <div className="workspace-content full-screen">
-          <div className="main-content-area">
-            <CodeModeEditor />
-          </div>
+            <ConditionBuilderSection
+              formulaState={formulaState}
+              hasFormulaChanges={hasFormulaChanges}
+              handleCurrentFormulaChange={handleCurrentFormulaChange}
+              handleFinishFormula={handleFinishFormula}
+              isNeutralFormulaIncluded={isNeutralFormulaIncluded}
+              setIsNeutralFormulaIncluded={setIsNeutralFormulaIncluded}
+              displayState={displayState}
+              handleDisplayToggle={handleDisplayToggle}
+            />
+          </>
+        )}
+      </div>
+      <NorthStarSection
+        value={biasDefinition}
+        onChange={(event) => setBiasDefinition(event.target.value)}
+      />
+    </div>
+  )
 
-          <NorthStarSection value={biasDefinition} onChange={handleBiasDefinitionChange} />
-        </div>
-      )
-    }
-
-    return (
-      <div className="workspace-content full-screen">
-        <div className="main-content-area">
-          <PreviewSection
-            displayState={displayState}
-            handleDisplayToggle={handleDisplayToggle}
-            isNeutralFormulaIncluded={isNeutralFormulaIncluded}
-            previewRows={previewRows}
-            statusMessage={statusMessage}
-          />
-
+  const renderMinimizedContent = () => (
+    <div className="workspace-content minimized">
+      {currentMode === 'Code' ? (
+        <div className="code-mode-placeholder-mini">[Code Mode - Monaco Editor]</div>
+      ) : (
+        <div className="mini-sections">
           <ConditionBuilderSection
             formulaState={formulaState}
             hasFormulaChanges={hasFormulaChanges}
@@ -77,82 +91,27 @@ const ConditionEditorWorkspace = ({ currentView, modelType, onToggleFullScreen }
             setIsNeutralFormulaIncluded={setIsNeutralFormulaIncluded}
             displayState={displayState}
             handleDisplayToggle={handleDisplayToggle}
+            isMinimized={true}
+          />
+          <PreviewSection
+            displayState={displayState}
+            handleDisplayToggle={handleDisplayToggle}
+            isNeutralFormulaIncluded={isNeutralFormulaIncluded}
+            previewRows={previewRows}
+            statusMessage={statusMessage}
+            isMinimized={true}
+            showNorthStar={showNorthStar}
+            onToggleNorthStar={() => setShowNorthStar(!showNorthStar)}
+            biasDefinition={biasDefinition}
+            onBiasDefinitionChange={(e) => setBiasDefinition(e.target.value)}
+            formulaState={formulaState}
+            hasFormulaChanges={hasFormulaChanges}
+            handleFinishFormula={handleFinishFormula}
           />
         </div>
-
-        <NorthStarSection value={biasDefinition} onChange={handleBiasDefinitionChange} />
-      </div>
-    )
-  }
-
-  const renderMinimizedContent = () => {
-    if (currentMode === 'Code') {
-      return (
-        <div className="workspace-content minimized">
-          <div className="code-mode-placeholder-mini">[Code Mode - Monaco Editor]</div>
-        </div>
-      )
-    }
-
-    return (
-      <div className="workspace-content minimized">
-        <div className="accordion-sections">
-          <div className="accordion-section condition-section">
-            <div className="section-header">Base Condition</div>
-            <div className="mini-section-content">
-              <div className="formula-builder">
-                <select className="mini-timeframe-select">
-                  <option>1H</option>
-                  <option>4H</option>
-                  <option>1D</option>
-                </select>
-                <select className="mini-indicator-select">
-                  <option>SMA(20)</option>
-                  <option>EMA(20)</option>
-                  <option>RSI</option>
-                </select>
-                <select className="mini-operator-select">
-                  <option>{'>'}</option>
-                  <option>{'<'}</option>
-                  <option>=</option>
-                </select>
-                <select className="mini-value-select">
-                  <option>SMA(50)</option>
-                  <option>EMA(50)</option>
-                  <option>Value</option>
-                </select>
-              </div>
-              <div className="add-formula-hover">+</div>
-            </div>
-          </div>
-
-          <div className="accordion-section bias-section">
-            <div className="section-header">Bias</div>
-            <div className="mini-section-content">
-              <div className="bias-arrows">
-                <div className="bias-option active">↗</div>
-                <div className="bias-option">→</div>
-                <div className="bias-option">↘</div>
-              </div>
-            </div>
-          </div>
-
-          <div className="accordion-section mini-preview-section">
-            <div className="section-header">Preview</div>
-            <div className="mini-section-content">
-              <div className="mini-preview-text">"1H SMA(20) {'>'} SMA(50) → Bullish" 📈</div>
-              <div className="mini-preview-actions">
-                <button className="mini-test-button">Test</button>
-                <button className="mini-scan-button" disabled>
-                  Scan
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
+      )}
+    </div>
+  )
 
   return (
     <div className="condition-editor-workspace">

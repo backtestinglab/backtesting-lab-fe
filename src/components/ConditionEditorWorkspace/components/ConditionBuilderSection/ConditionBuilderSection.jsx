@@ -13,7 +13,8 @@ const ConditionBuilderSection = ({
   isNeutralFormulaIncluded,
   setIsNeutralFormulaIncluded,
   displayState,
-  handleDisplayToggle
+  handleDisplayToggle,
+  isMinimized = false
 }) => {
   const finishButtonState = useMemo(() => {
     const hasChanges = hasFormulaChanges()
@@ -35,6 +36,133 @@ const ConditionBuilderSection = ({
       handleDisplayToggle('neutral')
     }
   }
+
+  const handleBiasArrowClick = (biasType) => {
+    handleCurrentFormulaChange('biasType', biasType)
+  }
+
+  const getBiasArrowClass = (biasType) => {
+    const isSelected = formulaState.currentFormula.biasType === biasType
+    return `bias-option ${isSelected ? 'active' : ''}`
+  }
+
+  // Helper to render dropdown options (shared between mini and full)
+  const renderDropdownOptions = (placeholder, options, value, onChange, className) => (
+    <select className={className} value={value} onChange={onChange}>
+      <option value="">{placeholder}</option>
+      {options.map((option) => (
+        <option key={option.value} value={option.value}>
+          {option.label}
+        </option>
+      ))}
+    </select>
+  )
+
+  const biasOptions = [
+    { value: 'bullish', label: 'Bullish' },
+    ...(isNeutralFormulaIncluded ? [{ value: 'neutral', label: 'Neutral' }] : []),
+    { value: 'bearish', label: 'Bearish' }
+  ]
+
+  const timeframeOptions = [
+    { value: '1H', label: '1H' },
+    { value: '4H', label: '4H' },
+    { value: '1D', label: '1D' }
+  ]
+
+  const indicatorOptions = [
+    { value: 'SMA(20)', label: 'SMA(20)' },
+    { value: 'EMA(20)', label: 'EMA(20)' },
+    { value: 'RSI', label: 'RSI' }
+  ]
+
+  const operatorOptions = [
+    { value: '>', label: 'Greater than' },
+    { value: '<', label: 'Less than' },
+    { value: '=', label: 'Equals' }
+  ]
+
+  const valueOptions = [
+    { value: 'SMA(50)', label: 'SMA(50)' },
+    { value: 'EMA(50)', label: 'EMA(50)' },
+    { value: 'Value', label: 'Custom' }
+  ]
+
+  // Render minimized split layout: BIAS arrows + CONDITION dropdowns
+  if (isMinimized) {
+    return (
+      <>
+        {/* BIAS Section */}
+        <div className="mini-section bias-section">
+          <div className="section-header">Bias</div>
+          <div className="mini-section-content">
+            <div className="bias-arrows">
+              <div
+                className={getBiasArrowClass('bullish')}
+                onClick={() => handleBiasArrowClick('bullish')}
+              >
+                ↗
+              </div>
+              {isNeutralFormulaIncluded && (
+                <div
+                  className={getBiasArrowClass('neutral')}
+                  onClick={() => handleBiasArrowClick('neutral')}
+                >
+                  →
+                </div>
+              )}
+              <div
+                className={getBiasArrowClass('bearish')}
+                onClick={() => handleBiasArrowClick('bearish')}
+              >
+                ↘
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* CONDITION BUILDER Section */}
+        <div className="mini-section condition-section">
+          <div className="section-header">Condition Builder</div>
+          <div className="mini-section-content">
+            <div className="formula-builder">
+              {renderDropdownOptions(
+                'Timeframe',
+                timeframeOptions,
+                formulaState.currentFormula.timeframe,
+                (e) => handleCurrentFormulaChange('timeframe', e.target.value),
+                'mini-timeframe-select'
+              )}
+              {renderDropdownOptions(
+                'Indicator',
+                indicatorOptions,
+                formulaState.currentFormula.indicator1,
+                (e) => handleCurrentFormulaChange('indicator1', e.target.value),
+                'mini-indicator-select'
+              )}
+              {renderDropdownOptions(
+                'Operation',
+                operatorOptions,
+                formulaState.currentFormula.operator,
+                (e) => handleCurrentFormulaChange('operator', e.target.value),
+                'mini-operator-select'
+              )}
+              {renderDropdownOptions(
+                'Value',
+                valueOptions,
+                formulaState.currentFormula.indicator2,
+                (e) => handleCurrentFormulaChange('indicator2', e.target.value),
+                'mini-value-select'
+              )}
+            </div>
+            <div className="add-formula-hover">+</div>
+          </div>
+        </div>
+      </>
+    )
+  }
+
+  // Render full-screen single section layout
   return (
     <div className="condition-bias-section">
       <div className="condition-header">
@@ -52,56 +180,41 @@ const ConditionBuilderSection = ({
       </div>
       <div className="section-content-centered condition-builder-content">
         <div className="formula-row">
-          <select
-            className="bias-type-select"
-            value={formulaState.currentFormula.biasType}
-            onChange={(event) => handleCurrentFormulaChange('biasType', event.target.value)}
-          >
-            <option value="">Select Bias</option>
-            <option value="bullish">Bullish</option>
-            {isNeutralFormulaIncluded && <option value="neutral">Neutral</option>}
-            <option value="bearish">Bearish</option>
-          </select>
-          <select
-            className="timeframe-select"
-            value={formulaState.currentFormula.timeframe}
-            onChange={(event) => handleCurrentFormulaChange('timeframe', event.target.value)}
-          >
-            <option value="">Timeframe</option>
-            <option value="1H">1H</option>
-            <option value="4H">4H</option>
-            <option value="1D">1D</option>
-          </select>
-          <select
-            className="indicator-select"
-            value={formulaState.currentFormula.indicator1}
-            onChange={(event) => handleCurrentFormulaChange('indicator1', event.target.value)}
-          >
-            <option value="">Indicator</option>
-            <option value="SMA(20)">SMA(20)</option>
-            <option value="EMA(20)">EMA(20)</option>
-            <option value="RSI">RSI</option>
-          </select>
-          <select
-            className="operator-select"
-            value={formulaState.currentFormula.operator}
-            onChange={(event) => handleCurrentFormulaChange('operator', event.target.value)}
-          >
-            <option value="">Operation</option>
-            <option value=">">Greater then</option>
-            <option value="<">Less then</option>
-            <option value="=">Equals</option>
-          </select>
-          <select
-            className="indicator-select"
-            value={formulaState.currentFormula.indicator2}
-            onChange={(event) => handleCurrentFormulaChange('indicator2', event.target.value)}
-          >
-            <option value="">Value</option>
-            <option value="SMA(50)">SMA(50)</option>
-            <option value="EMA(50)">EMA(50)</option>
-            <option value="Value">Custom</option>
-          </select>
+          {renderDropdownOptions(
+            'Select Bias',
+            biasOptions,
+            formulaState.currentFormula.biasType,
+            (e) => handleCurrentFormulaChange('biasType', e.target.value),
+            'bias-type-select'
+          )}
+          {renderDropdownOptions(
+            'Timeframe',
+            timeframeOptions,
+            formulaState.currentFormula.timeframe,
+            (e) => handleCurrentFormulaChange('timeframe', e.target.value),
+            'timeframe-select'
+          )}
+          {renderDropdownOptions(
+            'Indicator',
+            indicatorOptions,
+            formulaState.currentFormula.indicator1,
+            (e) => handleCurrentFormulaChange('indicator1', e.target.value),
+            'indicator-select'
+          )}
+          {renderDropdownOptions(
+            'Operation',
+            operatorOptions,
+            formulaState.currentFormula.operator,
+            (e) => handleCurrentFormulaChange('operator', e.target.value),
+            'operator-select'
+          )}
+          {renderDropdownOptions(
+            'Value',
+            valueOptions,
+            formulaState.currentFormula.indicator2,
+            (e) => handleCurrentFormulaChange('indicator2', e.target.value),
+            'indicator-select'
+          )}
           {finishButtonState.showButton && (
             <button className="finish-formula-button" onClick={handleFinishFormula}>
               {finishButtonState.buttonText}
@@ -141,7 +254,8 @@ ConditionBuilderSection.propTypes = {
       neutral: PropTypes.bool.isRequired
     }).isRequired
   }).isRequired,
-  handleDisplayToggle: PropTypes.func.isRequired
+  handleDisplayToggle: PropTypes.func.isRequired,
+  isMinimized: PropTypes.bool
 }
 
 export default ConditionBuilderSection
