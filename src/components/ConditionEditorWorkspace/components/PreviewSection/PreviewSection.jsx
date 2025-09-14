@@ -2,6 +2,7 @@ import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 
 import { shouldShowFinishButton, getFinishButtonText } from '../../utils/formulaUtils'
+import { isRowVisible } from '../../utils/previewUtils'
 import './PreviewSection.css'
 
 const PreviewSection = ({
@@ -10,6 +11,8 @@ const PreviewSection = ({
   isNeutralFormulaIncluded,
   previewRows,
   statusMessage,
+  formulaVisibility,
+  onFormulaVisibilityToggle,
   isMinimized = false,
   showNorthStar = false,
   onToggleNorthStar,
@@ -33,7 +36,7 @@ const PreviewSection = ({
         isCompleted: row.completed,
         type: row.type
       })),
-      isEmpty: false
+      isEmpty: previewRows.length === 0
     }
   }
 
@@ -85,22 +88,47 @@ const PreviewSection = ({
                   </span>
                 ) : (
                   <div className="mini-preview-rows">
-                    {previewData.rows.map((row, index) => (
-                      <div key={`${row.type}-${index}`} className="mini-preview-row">
-                        <span
-                          className={`mini-preview-text ${row.isCompleted ? 'completed' : 'incomplete'}`}
-                        >
-                          {row.text}
-                        </span>
-                        {index === previewData.rows.length - 1 &&
-                          !row.isCompleted &&
-                          finishButtonState.showButton && (
-                            <button className="mini-finish-button" onClick={handleFinishFormula}>
-                              {finishButtonState.buttonText}
-                            </button>
-                          )}
-                      </div>
-                    ))}
+                    {previewData.rows.map((row, index) => {
+                      const isVisible = isRowVisible(row, formulaVisibility)
+                      return (
+                        <div key={`${row.type}-${index}`} className="mini-preview-row">
+                          <div className="mini-preview-content">
+                            {isVisible && (
+                              <span
+                                className={`mini-preview-text ${row.isCompleted ? 'completed' : 'incomplete'}`}
+                              >
+                                {row.text}
+                              </span>
+                            )}
+                            {index === previewData.rows.length - 1 &&
+                              !row.isCompleted &&
+                              finishButtonState.showButton && (
+                                <button
+                                  className="mini-finish-button"
+                                  onClick={handleFinishFormula}
+                                >
+                                  {finishButtonState.buttonText}
+                                </button>
+                              )}
+                          </div>
+                          <div className="mini-preview-controls">
+                            {row.isCompleted && onFormulaVisibilityToggle && (
+                              <button
+                                className="formula-visibility-toggle"
+                                onClick={() => onFormulaVisibilityToggle(row.type)}
+                                title={
+                                  isVisible
+                                    ? 'Hide this completed formula'
+                                    : 'Show this completed formula'
+                                }
+                              >
+                                👁️
+                              </button>
+                            )}
+                          </div>
+                        </div>
+                      )
+                    })}
                   </div>
                 )}
               </div>
@@ -161,15 +189,20 @@ const PreviewSection = ({
         <div className="condition-summary">
           {previewRows.length > 0 ? (
             <div className="preview-rows">
-              {previewRows.map((row) => (
-                <div
-                  key={row.type}
-                  className={`preview-row ${row.type} ${row.completed ? 'completed' : 'incomplete'}`}
-                >
-                  <span className="preview-text">{row.text}</span>
-                  <span className="preview-emoji">{row.emoji}</span>
-                </div>
-              ))}
+              {previewRows
+                .filter((row) => {
+                  if (!row.completed) return true
+                  return formulaVisibility && formulaVisibility[row.type] !== false
+                })
+                .map((row) => (
+                  <div
+                    key={row.type}
+                    className={`preview-row ${row.type} ${row.completed ? 'completed' : 'incomplete'}`}
+                  >
+                    <span className="preview-text">{row.text}</span>
+                    <span className="preview-emoji">{row.emoji}</span>
+                  </div>
+                ))}
             </div>
           ) : (
             <span className="empty-preview">Build your condition to see preview...</span>
@@ -206,6 +239,12 @@ PreviewSection.propTypes = {
     })
   ).isRequired,
   statusMessage: PropTypes.string.isRequired,
+  formulaVisibility: PropTypes.shape({
+    bullish: PropTypes.bool,
+    neutral: PropTypes.bool,
+    bearish: PropTypes.bool
+  }),
+  onFormulaVisibilityToggle: PropTypes.func,
   isMinimized: PropTypes.bool,
   showNorthStar: PropTypes.bool,
   onToggleNorthStar: PropTypes.func,

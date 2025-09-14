@@ -69,6 +69,41 @@
   color: #c0c8e0;
 }
 
+.indicator-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.param-input {
+  width: 50px;
+  padding: 4px 6px;
+  background-color: rgba(20, 22, 30, 0.8);
+  border: 1px solid #505570;
+  color: #c0c8e0;
+  border-radius: 3px;
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+.param-input::-webkit-outer-spin-button,
+.param-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.param-input:focus {
+  outline: none;
+  border-color: #e0c070;
+  background-color: rgba(20, 22, 30, 0.9);
+}
+
+.param-input.invalid,
+.mini-param-input.invalid {
+  border-color: #ff6b6b;
+  background-color: rgba(255, 107, 107, 0.1);
+}
+
 .bias-type-select {
   background-color: rgba(224, 192, 112, 0.1);
   border: 1px solid #e0c070;
@@ -185,6 +220,47 @@
   gap: 3px;
 }
 
+.mini-indicator-group {
+  width: 100%;
+  display: flex;
+  gap: 3px;
+}
+
+.mini-indicator-group .mini-indicator-select,
+.mini-indicator-group .mini-value-select {
+  flex: 1;
+}
+
+.mini-param-input {
+  width: 42px;
+  padding: 4px 4px;
+  background-color: rgba(20, 22, 30, 0.6);
+  border: 1px solid rgba(60, 65, 85, 0.5);
+  color: #c0c8e0;
+  border-radius: 3px;
+  font-size: 0.7rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mini-param-input::-webkit-outer-spin-button,
+.mini-param-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.mini-param-input:hover {
+  border-color: #e0c070;
+  background-color: rgba(20, 22, 30, 0.8);
+}
+
+.mini-param-input:focus {
+  outline: none;
+  border-color: #e0c070;
+  background-color: rgba(20, 22, 30, 0.9);
+}
+
 .mini-timeframe-select,
 .mini-indicator-select,
 .mini-operator-select,
@@ -219,8 +295,8 @@
 
 .add-formula-hover {
   position: absolute;
-  bottom: 8px;
-  right: 8px;
+  bottom: -6px;
+  right: calc(50% - 8px);
   min-width: 18px;
   max-height: 18px;
   border-radius: 50%;

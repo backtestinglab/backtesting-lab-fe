@@ -3,8 +3,10 @@ export const createEmptyFormula = (biasType = '') => {
     biasType,
     timeframe: '',
     indicator1: '',
+    indicator1Param: null,
     operator: '',
-    indicator2: ''
+    indicator2: '',
+    indicator2Param: null
   }
 }
 
@@ -35,8 +37,10 @@ export const createFlippedFormula = (sourceFormula, targetBiasType) => {
     biasType: targetBiasType,
     timeframe: sourceFormula.timeframe,
     indicator1: sourceFormula.indicator1,
+    indicator1Param: sourceFormula.indicator1Param,
     operator: flipOperator(sourceFormula.operator),
-    indicator2: sourceFormula.indicator2
+    indicator2: sourceFormula.indicator2,
+    indicator2Param: sourceFormula.indicator2Param
   }
 }
 

@@ -3,13 +3,19 @@ import { useMemo } from 'react'
 import { generatePreviewRows } from '../utils/previewUtils'
 import { generateStatusMessage } from '../utils/formulaUtils'
 
-const usePreviewGenerator = (formulaState, displayState, isNeutralFormulaIncluded, hasFormulaChanges) => {
-  // Generate dynamic preview rows
+const usePreviewGenerator = (
+  formulaState,
+  displayState,
+  isNeutralFormulaIncluded,
+  hasFormulaChanges,
+  viewMode = 'full'
+) => {
+  // Generate dynamic preview rows based on view mode
   const previewRows = useMemo(() => {
-    return generatePreviewRows(formulaState, displayState, hasFormulaChanges)
-  }, [formulaState, displayState, hasFormulaChanges])
+    const includeAllCompleted = viewMode === 'minimized'
+    return generatePreviewRows(formulaState, displayState, hasFormulaChanges, includeAllCompleted)
+  }, [formulaState, displayState, hasFormulaChanges, viewMode])
 
-  // Generate status message
   const statusMessage = useMemo(() => {
     return generateStatusMessage(formulaState, isNeutralFormulaIncluded)
   }, [formulaState, isNeutralFormulaIncluded])

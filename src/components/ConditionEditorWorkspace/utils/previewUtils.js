@@ -11,18 +11,43 @@ export const getBiasEmoji = (biasType) => {
   }
 }
 
+export const isRowVisible = (row, formulaVisibility) => {
+  // Always show work-in-progress (incomplete) formulas
+  // Handle both 'completed' and 'isCompleted' properties for flexibility
+  const isCompleted = row.completed || row.isCompleted
+  if (!isCompleted) return true
+  
+  // For completed formulas, check visibility setting
+  return formulaVisibility && formulaVisibility[row.type] !== false
+}
+
 export const formatBiasText = (biasType) => {
   return biasType.charAt(0).toUpperCase() + biasType.slice(1)
 }
 
+const formatIndicatorWithParam = (indicatorType, param) => {
+  if (!indicatorType) return ''
+  
+  if (param === null || param === undefined) {
+    return indicatorType
+  }
+  
+  return `${indicatorType}(${param})`
+}
+
 export const formatFormulaText = (formula) => {
-  const { timeframe, indicator1, operator, indicator2 } = formula
+  const { timeframe, indicator1, indicator1Param, operator, indicator2, indicator2Param } = formula
   const parts = []
   
   if (timeframe) parts.push(timeframe)
-  if (indicator1) parts.push(indicator1)
+  
+  const formattedIndicator1 = formatIndicatorWithParam(indicator1, indicator1Param)
+  if (formattedIndicator1) parts.push(formattedIndicator1)
+  
   if (operator) parts.push(operator)
-  if (indicator2) parts.push(indicator2)
+  
+  const formattedIndicator2 = formatIndicatorWithParam(indicator2, indicator2Param)
+  if (formattedIndicator2) parts.push(formattedIndicator2)
 
   return parts.join(' ')
 }
@@ -60,7 +85,7 @@ export const createCurrentPreviewRow = (currentFormula, isCompleted, hasChanges)
   }
 }
 
-export const generatePreviewRows = (formulaState, displayState, hasFormulaChanges) => {
+export const generatePreviewRows = (formulaState, displayState, hasFormulaChanges, includeAllCompleted = false) => {
   const rows = []
   const currentlyEditingBias = formulaState.currentFormula.biasType
 
@@ -72,14 +97,15 @@ export const generatePreviewRows = (formulaState, displayState, hasFormulaChange
     const shouldDisplay = displayState.displayFormulas[biasType]
     const isCurrentlyEditing = currentlyEditingBias === biasType
 
-    if (completedFormula && shouldDisplay && !isCurrentlyEditing) {
+    // For minimized view, always include completed formulas regardless of display state
+    if (completedFormula && !isCurrentlyEditing && (includeAllCompleted || shouldDisplay)) {
       rows.push(createCompletedPreviewRow(completedFormula, biasType))
     }
   })
 
   // Current formula in progress - show when bias type selected OR when editing
   const currentBias = formulaState.currentFormula.biasType
-  if (currentBias && displayState.displayFormulas[currentBias]) {
+  if (currentBias && (includeAllCompleted || displayState.displayFormulas[currentBias])) {
     const isCompleted = formulaState.completedFormulas[currentBias] !== null
     const hasChanges = hasFormulaChanges()
 

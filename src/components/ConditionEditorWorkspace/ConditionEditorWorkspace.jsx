@@ -12,7 +12,12 @@ import usePreviewGenerator from './hooks/usePreviewGenerator'
 
 import './ConditionEditorWorkspace.css'
 
-const ConditionEditorWorkspace = ({ currentView, modelType, onToggleFullScreen }) => {
+const ConditionEditorWorkspace = ({
+  currentView,
+  modelType,
+  onToggleFullScreen,
+  selectedTimeframes
+}) => {
   const [biasDefinition, setBiasDefinition] = useState('')
   const [currentMode, setCurrentMode] = useState('GUI')
   const [isNeutralFormulaIncluded, setIsNeutralFormulaIncluded] = useState(true)
@@ -28,12 +33,23 @@ const ConditionEditorWorkspace = ({ currentView, modelType, onToggleFullScreen }
       }
     })
 
-  const { previewRows, statusMessage } = usePreviewGenerator(
+  const { previewRows: fullScreenPreviewRows, statusMessage } = usePreviewGenerator(
     formulaState,
     displayState,
     isNeutralFormulaIncluded,
-    hasFormulaChanges
+    hasFormulaChanges,
+    'full'
   )
+
+  // Generate preview data for minimized view (always include completed formulas)
+  const { previewRows: minimizedPreviewRows } = usePreviewGenerator(
+    formulaState,
+    displayState,
+    isNeutralFormulaIncluded,
+    hasFormulaChanges,
+    'minimized'
+  )
+
 
   const isFullScreen = useMemo(() => currentView === 'condition-editor', [currentView])
   const headerTitle = useMemo(
@@ -52,8 +68,10 @@ const ConditionEditorWorkspace = ({ currentView, modelType, onToggleFullScreen }
               displayState={displayState}
               handleDisplayToggle={handleDisplayToggle}
               isNeutralFormulaIncluded={isNeutralFormulaIncluded}
-              previewRows={previewRows}
+              previewRows={fullScreenPreviewRows}
               statusMessage={statusMessage}
+              formulaVisibility={displayState.displayFormulas}
+              onFormulaVisibilityToggle={handleDisplayToggle}
             />
 
             <ConditionBuilderSection
@@ -65,6 +83,7 @@ const ConditionEditorWorkspace = ({ currentView, modelType, onToggleFullScreen }
               setIsNeutralFormulaIncluded={setIsNeutralFormulaIncluded}
               displayState={displayState}
               handleDisplayToggle={handleDisplayToggle}
+              selectedTimeframes={selectedTimeframes}
             />
           </>
         )}
@@ -79,7 +98,33 @@ const ConditionEditorWorkspace = ({ currentView, modelType, onToggleFullScreen }
   const renderMinimizedContent = () => (
     <div className="workspace-content minimized">
       {currentMode === 'Code' ? (
-        <div className="code-mode-placeholder-mini">[Code Mode - Monaco Editor]</div>
+        <div className="code-mode-minimized">
+          <div className="code-mode-header">
+            <span className="code-mode-title">Code Mode</span>
+            <button
+              className={`north-star-toggle ${showNorthStar ? 'active' : ''}`}
+              onClick={() => setShowNorthStar(!showNorthStar)}
+              title={showNorthStar ? 'Hide North Star' : 'Show North Star'}
+            >
+              ⭐
+            </button>
+          </div>
+          <div className="code-mode-content">
+            <div className="code-editor-section">
+              <div className="code-mode-placeholder">[Monaco Editor]</div>
+            </div>
+            {showNorthStar && (
+              <div className="north-star-section-code">
+                <textarea
+                  className="north-star-textarea"
+                  placeholder="Define the North Star for this bias model..."
+                  value={biasDefinition}
+                  onChange={(event) => setBiasDefinition(event.target.value)}
+                />
+              </div>
+            )}
+          </div>
+        </div>
       ) : (
         <div className="mini-sections">
           <ConditionBuilderSection
@@ -91,14 +136,17 @@ const ConditionEditorWorkspace = ({ currentView, modelType, onToggleFullScreen }
             setIsNeutralFormulaIncluded={setIsNeutralFormulaIncluded}
             displayState={displayState}
             handleDisplayToggle={handleDisplayToggle}
+            selectedTimeframes={selectedTimeframes}
             isMinimized={true}
           />
           <PreviewSection
             displayState={displayState}
             handleDisplayToggle={handleDisplayToggle}
             isNeutralFormulaIncluded={isNeutralFormulaIncluded}
-            previewRows={previewRows}
+            previewRows={minimizedPreviewRows}
             statusMessage={statusMessage}
+            formulaVisibility={displayState.displayFormulas}
+            onFormulaVisibilityToggle={handleDisplayToggle}
             isMinimized={true}
             showNorthStar={showNorthStar}
             onToggleNorthStar={() => setShowNorthStar(!showNorthStar)}
@@ -145,9 +193,10 @@ const ConditionEditorWorkspace = ({ currentView, modelType, onToggleFullScreen }
 }
 
 ConditionEditorWorkspace.propTypes = {
-  modelType: PropTypes.oneOf(['bias', 'trading']).isRequired,
   currentView: PropTypes.string.isRequired,
-  onToggleFullScreen: PropTypes.func.isRequired
+  modelType: PropTypes.oneOf(['bias', 'trading']).isRequired,
+  onToggleFullScreen: PropTypes.func.isRequired,
+  selectedTimeframes: PropTypes.arrayOf(PropTypes.string)
 }
 
 export default ConditionEditorWorkspace

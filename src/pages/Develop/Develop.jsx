@@ -679,9 +679,10 @@ const Develop = ({ modelConfig }) => {
             className={`condition-editor-area ${isConditionEditorFullScreen ? 'full-screen' : 'normal'}`}
           >
             <ConditionEditorWorkspace
-              modelType={modelType}
               currentView={currentView}
+              modelType={modelType}
               onToggleFullScreen={() => togglePanelFullScreen('condition-editor')}
+              selectedTimeframes={selectedTimeframes}
             />
           </section>
         )}

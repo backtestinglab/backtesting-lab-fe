@@ -1,15 +1,22 @@
 export const validateFormula = (formula) => {
-  return Object.values(formula).every((value) => value !== '')
+  const requiredFields = ['biasType', 'timeframe', 'indicator1', 'operator', 'indicator2']
+  const requiredFieldsValid = requiredFields.every(
+    (field) => formula[field] !== '' && formula[field] !== null && formula[field] !== undefined
+  )
+
+  return requiredFieldsValid
 }
 
 export const compareFormulas = (formula1, formula2) => {
   if (!formula1 || !formula2) return false
-  
+
   return (
     formula1.timeframe === formula2.timeframe &&
     formula1.indicator1 === formula2.indicator1 &&
+    formula1.indicator1Param === formula2.indicator1Param &&
     formula1.operator === formula2.operator &&
-    formula1.indicator2 === formula2.indicator2
+    formula1.indicator2 === formula2.indicator2 &&
+    formula1.indicator2Param === formula2.indicator2Param
   )
 }
 
@@ -21,7 +28,7 @@ export const hasFormulaChanges = (currentFormula, completedFormulas) => {
   }
 
   const completed = completedFormulas[biasType]
-  
+
   return !compareFormulas(currentFormula, completed)
 }
 
@@ -29,11 +36,11 @@ export const generateStatusMessage = (formulaState, isNeutralFormulaIncluded) =>
   const completed = Object.values(formulaState.completedFormulas).filter(
     (formula) => formula !== null
   ).length
-  
+
   const requiredBiases = isNeutralFormulaIncluded
     ? ['bullish', 'neutral', 'bearish']
     : ['bullish', 'bearish']
-  
+
   const missing = requiredBiases.filter((bias) => !formulaState.completedFormulas[bias])
 
   // Don't show status if no formulas started
@@ -60,7 +67,7 @@ export const generateStatusMessage = (formulaState, isNeutralFormulaIncluded) =>
 export const shouldShowFinishButton = (currentFormula, completedFormulas, hasChanges) => {
   const allFieldsFilled = validateFormula(currentFormula)
   const isCompleted = completedFormulas[currentFormula.biasType] !== null
-  
+
   return allFieldsFilled && (!isCompleted || hasChanges)
 }
 
