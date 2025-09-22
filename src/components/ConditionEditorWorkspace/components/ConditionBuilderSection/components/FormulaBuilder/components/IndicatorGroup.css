@@ -1,0 +1,35 @@
+.indicator-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.param-input {
+  width: 60px;
+  padding: 4px 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.mini-param-input {
+  width: 50px;
+  padding: 2px 4px;
+  font-size: 12px;
+}
+
+.param-input:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 1px;
+  border-color: #007bff;
+}
+
+.param-input.invalid {
+  border-color: #dc3545;
+  background-color: #ffeaea;
+}
+
+.param-input.invalid:focus {
+  outline-color: #dc3545;
+}

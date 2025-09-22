@@ -1,0 +1,74 @@
+.formula-builder {
+  display: flex;
+  align-items: center;
+}
+
+.formula-builder.horizontal {
+  flex-direction: row;
+  gap: 8px;
+}
+
+.formula-builder.vertical {
+  flex-direction: column;
+  gap: 3px;
+}
+
+.bias-arrows {
+  display: flex;
+  gap: 4px;
+}
+
+.bias-option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid #ddd;
+  background: #f8f9fa;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  transition: all 0.2s ease;
+  color: #666;
+}
+
+.bias-option:hover {
+  background: #e9ecef;
+  border-color: #adb5bd;
+}
+
+.bias-option.active {
+  background: #007bff;
+  border-color: #007bff;
+  color: white;
+}
+
+.bias-option:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+}
+
+
+.formula-builder .bias-dropdown,
+.formula-builder .timeframe-dropdown,
+.formula-builder .operator-dropdown,
+.formula-builder .indicator-dropdown {
+  flex-shrink: 0;
+}
+
+.formula-builder.vertical .indicator-group {
+  width: 100%;
+}
+
+.formula-builder.vertical .bias-arrows {
+  justify-content: center;
+  margin-bottom: 2px;
+}
+
+.formula-builder.vertical .bias-option {
+  width: 28px;
+  height: 28px;
+  font-size: 14px;
+}
