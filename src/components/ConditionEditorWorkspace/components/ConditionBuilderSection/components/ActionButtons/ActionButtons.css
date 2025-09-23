@@ -1,0 +1,175 @@
+.action-buttons {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  gap: 8px;
+}
+
+.finish-formula-button {
+  background-color: #e0c070;
+  border: 1px solid #e0c070;
+  color: #121218;
+  padding: 4px 16px;
+  font-size: 0.8rem;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 600;
+}
+
+.finish-formula-button:hover {
+  background-color: #f0d080;
+  border-color: #f0d080;
+}
+
+.finish-formula-button:disabled {
+  background-color: #506050;
+  border-color: #506050;
+  cursor: default;
+}
+
+.mini-finish-button {
+  background-color: #e0c070;
+  border: 1px solid #e0c070;
+  color: #121218;
+  padding: 4px 8px;
+  font-size: 0.7rem;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 600;
+}
+
+.mini-finish-button:hover {
+  background-color: #f0d080;
+  border-color: #f0d080;
+}
+
+.mini-finish-button:disabled {
+  background-color: #506050;
+  border-color: #506050;
+  cursor: default;
+}
+
+.test-sample-button {
+  background-color: rgba(224, 192, 112, 0.1);
+  color: #e0c070;
+  border: 1px solid #e0c070;
+  border-radius: 6px;
+  padding: 12px 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.test-sample-button:hover {
+  background-color: rgba(224, 192, 112, 0.2);
+  color: #f0d080;
+  border-color: #f0d080;
+}
+
+.test-sample-button:disabled {
+  background-color: #506050;
+  border-color: #506050;
+  cursor: default;
+}
+
+.mini-test-button {
+  background: none;
+  color: #a0a8c0;
+  border: 1px solid #505570;
+  border-radius: 3px;
+  padding: 3px 8px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mini-test-button:hover {
+  background-color: rgba(80, 85, 110, 0.4);
+  color: #fff;
+}
+
+.mini-test-button:disabled {
+  opacity: 0.5;
+  cursor: default;
+  background: none;
+}
+
+.run-scan-button {
+  background-color: #e0c070;
+  color: #121218;
+  border: 1px solid #e0c070;
+  border-radius: 6px;
+  padding: 12px 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(224, 192, 112, 0.3);
+}
+
+.run-scan-button:hover {
+  background-color: #f0d080;
+  border-color: #f0d080;
+}
+
+.run-scan-button:disabled {
+  background-color: #506050;
+  border-color: #506050;
+  cursor: default;
+}
+
+.mini-scan-button {
+  background: none;
+  color: #a0a8c0;
+  border: 1px solid #505570;
+  border-radius: 3px;
+  padding: 3px 8px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mini-scan-button:hover {
+  background-color: rgba(80, 85, 110, 0.4);
+  color: #fff;
+}
+
+.mini-scan-button:disabled {
+  opacity: 0.5;
+  cursor: default;
+  background: none;
+}
+
+.action-button {
+  background-color: #506050;
+  color: #ccc;
+  border: 1px solid #506050;
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.action-button:hover {
+  background-color: #606060;
+  border-color: #606060;
+}
+
+.action-button:disabled {
+  background-color: #404040;
+  border-color: #404040;
+  cursor: default;
+}
+
+.action-buttons button:focus {
+  outline: 2px solid #e0c070;
+  outline-offset: 2px;
+}
+
