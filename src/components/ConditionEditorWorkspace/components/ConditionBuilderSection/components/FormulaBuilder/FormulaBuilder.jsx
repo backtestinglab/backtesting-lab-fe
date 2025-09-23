@@ -17,7 +17,6 @@ const FormulaBuilder = ({
   onChange,
   layout = 'horizontal',
   size = 'default',
-  biasMode = 'dropdown',
   selectedTimeframes = [],
   isNeutralFormulaIncluded = false,
   className = ''
@@ -31,27 +30,8 @@ const FormulaBuilder = ({
 
   return (
     <div className={formulaBuilderClasses}>
-      {/* Integrated bias selector logic */}
-      {biasMode === 'arrows' ? (
-        <div className="bias-arrows">
-          {['bullish', 'neutral', 'bearish'].map((bias, index) => {
-            if (bias === 'neutral' && !isNeutralFormulaIncluded) {
-              return null
-            }
-
-            return (
-              <button
-                key={bias}
-                className={`bias-option ${formState.biasType === bias ? 'active' : ''}`}
-                onClick={() => onChange('biasType', bias)}
-                type="button"
-              >
-                {['↗', '→', '↘'][index]}
-              </button>
-            )
-          })}
-        </div>
-      ) : (
+      {/* Bias dropdown */}
+      {layout === 'horizontal' && size === 'default' && (
         <Dropdown
           options={biasOptions}
           value={formState.biasType || ''}
@@ -124,7 +104,6 @@ FormulaBuilder.propTypes = {
   onChange: PropTypes.func.isRequired,
   layout: PropTypes.oneOf(['horizontal', 'vertical']),
   size: PropTypes.oneOf(['mini', 'default', 'large']),
-  biasMode: PropTypes.oneOf(['dropdown', 'arrows']),
   selectedTimeframes: PropTypes.arrayOf(PropTypes.string),
   isNeutralFormulaIncluded: PropTypes.bool,
   className: PropTypes.string

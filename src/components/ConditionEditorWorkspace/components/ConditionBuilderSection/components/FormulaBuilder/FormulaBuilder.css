@@ -6,11 +6,13 @@
 .formula-builder.horizontal {
   flex-direction: row;
   gap: 8px;
+  flex-shrink: 0;
 }
 
 .formula-builder.vertical {
   flex-direction: column;
   gap: 3px;
+  width: 100%;
 }
 
 .bias-arrows {
@@ -24,32 +26,32 @@
   justify-content: center;
   width: 32px;
   height: 32px;
-  border: 1px solid #ddd;
-  background: #f8f9fa;
-  border-radius: 4px;
+  border: none;
+  background: transparent;
+  border-radius: 2px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 1.2rem;
   font-weight: bold;
   transition: all 0.2s ease;
-  color: #666;
+  color: #a0a8c0;
+  padding: 2px;
 }
 
 .bias-option:hover {
-  background: #e9ecef;
-  border-color: #adb5bd;
+  background-color: rgba(80, 85, 110, 0.4);
+  color: #fff;
 }
 
 .bias-option.active {
-  background: #007bff;
-  border-color: #007bff;
-  color: white;
+  background-color: rgba(224, 192, 112, 0.2);
+  color: #e0c070;
+  border: 1px solid #e0c070;
 }
 
 .bias-option:focus {
-  outline: 2px solid #007bff;
+  outline: 2px solid #e0c070;
   outline-offset: 2px;
 }
-
 
 .formula-builder .bias-dropdown,
 .formula-builder .timeframe-dropdown,
@@ -58,6 +60,11 @@
   flex-shrink: 0;
 }
 
+.formula-builder.vertical .dropdown-container,
+.formula-builder.vertical .bias-dropdown,
+.formula-builder.vertical .timeframe-dropdown,
+.formula-builder.vertical .operator-dropdown,
+.formula-builder.vertical .indicator-dropdown,
 .formula-builder.vertical .indicator-group {
   width: 100%;
 }
@@ -71,4 +78,27 @@
   width: 28px;
   height: 28px;
   font-size: 14px;
+}
+
+.formula-builder .dropdown-trigger.variant-mini {
+  width: 100%;
+  padding: 4px 6px;
+  background-color: rgba(20, 22, 30, 0.6);
+  border: 1px solid rgba(60, 65, 85, 0.5);
+  color: #c0c8e0;
+  border-radius: 3px;
+  font-size: 0.7rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.formula-builder .dropdown-trigger.variant-mini:hover:not(.disabled) {
+  border-color: #e0c070;
+  background-color: rgba(20, 22, 30, 0.8);
+}
+
+.formula-builder .dropdown-trigger.variant-mini:focus {
+  outline: none;
+  border-color: #e0c070;
+  background-color: rgba(20, 22, 30, 0.9);
 }

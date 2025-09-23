@@ -56,7 +56,6 @@ const IndicatorGroup = ({
   const hasValue = indicatorParam !== null && indicatorParam !== undefined && indicatorParam !== ''
   const isValid = hasValue ? validateParameter(indicatorParam) : true
   const inputClasses = [
-    'param-input',
     size === 'mini' ? 'mini-param-input' : 'param-input',
     !isValid ? 'invalid' : ''
   ]
