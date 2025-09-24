@@ -1,18 +1,20 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { isRowVisible } from '../../../../utils/previewUtils'
+import ActionButtons from '../../../ConditionBuilderSection/components/ActionButtons/ActionButtons'
 import './PreviewText.css'
 
 const PreviewText = ({
   rows = [],
   statusMessage = '',
   layout = 'default',
-  showFinishButton = false,
-  onFinishClick,
-  finishButtonText = 'Finish Formula',
   formulaVisibility = {},
   onFormulaVisibilityToggle,
-  className = ''
+  className = '',
+  // Finish button props - only used for compact layout
+  showFinishButton = false,
+  onFinishClick,
+  finishButtonText = 'Finish Formula'
 }) => {
   const previewTextClasses = ['preview-text', layout, className].filter(Boolean).join(' ')
 
@@ -26,33 +28,47 @@ const PreviewText = ({
             const isVisible = isRowVisible(row, formulaVisibility)
 
             return (
-              <div key={`${row.type}-${index}`} className="preview-row">
-                {isVisible && (
-                  <div className="preview-content">
-                    <span className={`preview-text ${row.completed ? 'completed' : 'incomplete'}`}>
-                      {layout === 'compact' ? `${row.text} ${row.emoji}` : row.text}
-                    </span>
-                    {layout === 'default' && <span className="preview-emoji">{row.emoji}</span>}
+              <div
+                key={`${row.type}-${index}`}
+                className={`preview-row ${layout === 'compact' ? 'mini-preview-row' : ''}`}
+              >
+                <div
+                  className={`preview-content ${layout === 'compact' ? 'mini-preview-content' : ''}`}
+                >
+                  {isVisible && (
+                    <>
+                      <span
+                        className={`${layout === 'compact' ? 'mini-preview-text' : 'preview-text'} ${row.completed ? 'completed' : 'incomplete'}`}
+                      >
+                        {layout === 'compact' ? `${row.text} ${row.emoji}` : row.text}
+                      </span>
+                      {layout === 'default' && <span className="preview-emoji">{row.emoji}</span>}
 
-                    {/* Finish button for last incomplete row */}
-                    {index === rows.length - 1 &&
-                      !row.completed &&
-                      showFinishButton &&
-                      onFinishClick && (
-                        <button
-                          className={`finish-button ${layout === 'compact' ? 'mini-finish-button' : 'finish-formula-button'}`}
-                          onClick={onFinishClick}
-                          type="button"
-                        >
-                          {finishButtonText}
-                        </button>
-                      )}
-                  </div>
-                )}
+                      {/* Finish button for compact layout - appears inline with last incomplete row */}
+                      {layout === 'compact' &&
+                        index === rows.length - 1 &&
+                        !row.completed &&
+                        showFinishButton &&
+                        onFinishClick && (
+                          <ActionButtons
+                            buttons={[
+                              {
+                                type: 'finish',
+                                text: finishButtonText,
+                                onClick: onFinishClick,
+                                show: true
+                              }
+                            ]}
+                            size="mini"
+                          />
+                        )}
+                    </>
+                  )}
+                </div>
 
                 {/* Formula visibility toggle for completed formulas */}
                 {row.completed && onFormulaVisibilityToggle && layout === 'compact' && (
-                  <div className="preview-controls">
+                  <div className="mini-preview-controls">
                     <button
                       className="formula-visibility-toggle"
                       onClick={() => onFormulaVisibilityToggle(row.type)}
@@ -93,16 +109,17 @@ PreviewText.propTypes = {
   ),
   statusMessage: PropTypes.string,
   layout: PropTypes.oneOf(['default', 'compact']),
-  showFinishButton: PropTypes.bool,
-  onFinishClick: PropTypes.func,
-  finishButtonText: PropTypes.string,
   formulaVisibility: PropTypes.shape({
     bullish: PropTypes.bool,
     neutral: PropTypes.bool,
     bearish: PropTypes.bool
   }),
   onFormulaVisibilityToggle: PropTypes.func,
-  className: PropTypes.string
+  className: PropTypes.string,
+  // Finish button props - only used for compact layout
+  showFinishButton: PropTypes.bool,
+  onFinishClick: PropTypes.func,
+  finishButtonText: PropTypes.string
 }
 
 export default PreviewText

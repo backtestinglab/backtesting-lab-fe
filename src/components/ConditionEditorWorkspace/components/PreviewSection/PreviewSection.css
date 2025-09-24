@@ -30,7 +30,7 @@
   color: #e0c070;
 }
 
-.formula-visibility-toggle {
+.old-formula-visibility-toggle {
   background: none;
   border: none;
   font-size: 0.8rem;
@@ -42,7 +42,7 @@
   margin-left: 6px;
 }
 
-.formula-visibility-toggle:hover {
+.old-formula-visibility-toggle:hover {
   opacity: 1;
   background-color: rgba(80, 85, 110, 0.3);
 }
@@ -244,7 +244,7 @@
   width: 100%;
 }
 
-.mini-preview-row {
+.old-mini-preview-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -253,7 +253,7 @@
   min-height: 1.5rem;
 }
 
-.mini-preview-controls {
+.old-mini-preview-controls {
   display: flex;
   align-items: center;
   flex-shrink: 0;
@@ -274,7 +274,7 @@
   color: #8085a0;
 }
 
-.mini-finish-button {
+.old-mini-finish-button {
   background-color: #e0c070;
   border: 1px solid #e0c070;
   color: #121218;
@@ -288,7 +288,7 @@
   white-space: nowrap;
 }
 
-.mini-finish-button:hover {
+.old-mini-finish-button:hover {
   background-color: #f0d080;
   border-color: #f0d080;
 }

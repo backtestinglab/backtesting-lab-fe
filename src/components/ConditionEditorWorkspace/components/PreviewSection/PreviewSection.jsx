@@ -1,8 +1,10 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 
 import { shouldShowFinishButton, getFinishButtonText } from '../../utils/formulaUtils'
 import { isRowVisible } from '../../utils/previewUtils'
+import PreviewText from './components/PreviewText/PreviewText'
+import ActionButtons from '../ConditionBuilderSection/components/ActionButtons/ActionButtons'
 import './PreviewSection.css'
 
 const PreviewSection = ({
@@ -22,6 +24,22 @@ const PreviewSection = ({
   hasFormulaChanges,
   handleFinishFormula
 }) => {
+  // Feature toggles for safe A/B testing of new components
+  const [featureToggles, setFeatureToggles] = useState({
+    useNewPreviewText: false,
+    useNewActionButtons: false
+  })
+
+  const toggleFeature = (feature) => {
+    setFeatureToggles((prev) => ({ ...prev, [feature]: !prev[feature] }))
+  }
+
+  const setAllToggles = (enabled) => {
+    setFeatureToggles({
+      useNewPreviewText: enabled,
+      useNewActionButtons: enabled
+    })
+  }
   const getMinimizedPreviewData = () => {
     if (previewRows.length === 0) {
       return {
@@ -57,10 +75,77 @@ const PreviewSection = ({
     return { showButton, buttonText }
   }, [formulaState, hasFormulaChanges])
 
+  // Development-only toggle UI for testing new components
+  const renderDevToggles = () => {
+    if (process.env.NODE_ENV !== 'development') return null
+
+    return (
+      <div
+        className="dev-testing-panel"
+        style={{
+          position: 'fixed',
+          top: '10px',
+          left: '10px',
+          background: '#1a1a1a',
+          color: '#fff',
+          padding: '10px',
+          borderRadius: '5px',
+          fontSize: '12px',
+          zIndex: 9999,
+          minWidth: '200px'
+        }}
+      >
+        <h4 style={{ margin: '0 0 10px 0', fontSize: '14px' }}>Preview Testing</h4>
+        <div style={{ display: 'grid', gap: '5px' }}>
+          <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+            <input
+              type="checkbox"
+              checked={featureToggles.useNewPreviewText && featureToggles.useNewActionButtons}
+              onChange={(e) => setAllToggles(e.target.checked)}
+            />
+            🚀 Use All New Components
+          </label>
+          <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+            <input
+              type="checkbox"
+              checked={featureToggles.useNewPreviewText}
+              onChange={() => toggleFeature('useNewPreviewText')}
+            />
+            PreviewText
+          </label>
+          <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+            <input
+              type="checkbox"
+              checked={featureToggles.useNewActionButtons}
+              onChange={() => toggleFeature('useNewActionButtons')}
+            />
+            ActionButtons
+          </label>
+        </div>
+        <div style={{ marginTop: '10px', display: 'flex', gap: '5px' }}>
+          <button
+            onClick={() => setAllToggles(false)}
+            style={{ fontSize: '10px', padding: '2px 5px' }}
+          >
+            Reset to Old
+          </button>
+          <button
+            onClick={() => setAllToggles(true)}
+            style={{ fontSize: '10px', padding: '2px 5px' }}
+          >
+            Set to New
+          </button>
+        </div>
+      </div>
+    )
+  }
+
   // Render minimized layout - single return with conditional content
   if (isMinimized) {
     return (
       <div className="mini-section mini-preview-section">
+        {renderDevToggles()}
+
         <div className="section-header">
           {showNorthStar ? 'Preview > North Star' : 'Preview'}
           <button
@@ -79,7 +164,54 @@ const PreviewSection = ({
               value={biasDefinition}
               onChange={onBiasDefinitionChange}
             />
+          ) : featureToggles.useNewPreviewText ? (
+            // NEW: Using PreviewText component
+            <>
+              <div className="mini-preview-content">
+                <PreviewText
+                  rows={previewRows}
+                  statusMessage=""
+                  layout="compact"
+                  formulaVisibility={formulaVisibility}
+                  onFormulaVisibilityToggle={onFormulaVisibilityToggle}
+                  className=""
+                  showFinishButton={finishButtonState.showButton}
+                  onFinishClick={handleFinishFormula}
+                  finishButtonText={finishButtonState.buttonText}
+                />
+              </div>
+              <div className="mini-preview-bottom">
+                {featureToggles.useNewActionButtons ? (
+                  <ActionButtons
+                    buttons={[
+                      { type: 'test', text: 'Test', onClick: () => {}, show: true },
+                      {
+                        type: 'scan',
+                        text: 'Scan',
+                        onClick: () => {},
+                        show: true,
+                        disabled: statusMessage !== 'Ready to test'
+                      }
+                    ]}
+                    size="mini"
+                    className="mini-preview-actions"
+                  />
+                ) : (
+                  <div className="mini-preview-actions">
+                    <button className="mini-test-button">Test</button>
+                    <button
+                      className="mini-scan-button"
+                      disabled={statusMessage !== 'Ready to test'}
+                    >
+                      Scan
+                    </button>
+                  </div>
+                )}
+                <div className="mini-status-message">{statusMessage}</div>
+              </div>
+            </>
           ) : (
+            // OLD: Original implementation
             <>
               <div className="mini-preview-content">
                 {previewData.isEmpty ? (
@@ -91,7 +223,7 @@ const PreviewSection = ({
                     {previewData.rows.map((row, index) => {
                       const isVisible = isRowVisible(row, formulaVisibility)
                       return (
-                        <div key={`${row.type}-${index}`} className="mini-preview-row">
+                        <div key={`${row.type}-${index}`} className="old-mini-preview-row">
                           <div className="mini-preview-content">
                             {isVisible && (
                               <span
@@ -104,17 +236,17 @@ const PreviewSection = ({
                               !row.isCompleted &&
                               finishButtonState.showButton && (
                                 <button
-                                  className="mini-finish-button"
+                                  className="old-mini-finish-button"
                                   onClick={handleFinishFormula}
                                 >
                                   {finishButtonState.buttonText}
                                 </button>
                               )}
                           </div>
-                          <div className="mini-preview-controls">
+                          <div className="old-mini-preview-controls">
                             {row.isCompleted && onFormulaVisibilityToggle && (
                               <button
-                                className="formula-visibility-toggle"
+                                className="old-formula-visibility-toggle"
                                 onClick={() => onFormulaVisibilityToggle(row.type)}
                                 title={
                                   isVisible
@@ -151,6 +283,8 @@ const PreviewSection = ({
   // Render full-screen layout
   return (
     <div className="preview-section">
+      {renderDevToggles()}
+
       <div className="preview-header">
         <h4>Preview</h4>
         <div className="display-bias-controls">
@@ -185,36 +319,74 @@ const PreviewSection = ({
           </div>
         </div>
       </div>
+
       <div className="section-content-centered">
-        <div className="condition-summary">
-          {previewRows.length > 0 ? (
-            <div className="preview-rows">
-              {previewRows
-                .filter((row) => {
-                  if (!row.completed) return true
-                  return formulaVisibility && formulaVisibility[row.type] !== false
-                })
-                .map((row) => (
-                  <div
-                    key={row.type}
-                    className={`preview-row ${row.type} ${row.completed ? 'completed' : 'incomplete'}`}
-                  >
-                    <span className="preview-text">{row.text}</span>
-                    <span className="preview-emoji">{row.emoji}</span>
-                  </div>
-                ))}
+        {featureToggles.useNewPreviewText ? (
+          // NEW: Using PreviewText component
+          <div className="condition-summary">
+            <PreviewText
+              rows={previewRows}
+              statusMessage={statusMessage}
+              layout="default"
+              formulaVisibility={formulaVisibility}
+              onFormulaVisibilityToggle={onFormulaVisibilityToggle}
+              className=""
+            />
+          </div>
+        ) : (
+          // OLD: Original implementation
+          <>
+            <div className="condition-summary">
+              {previewRows.length > 0 ? (
+                <div className="preview-rows">
+                  {previewRows
+                    .filter((row) => {
+                      if (!row.completed) return true
+                      return formulaVisibility && formulaVisibility[row.type] !== false
+                    })
+                    .map((row) => (
+                      <div
+                        key={row.type}
+                        className={`preview-row ${row.type} ${row.completed ? 'completed' : 'incomplete'}`}
+                      >
+                        <span className="preview-text">{row.text}</span>
+                        <span className="preview-emoji">{row.emoji}</span>
+                      </div>
+                    ))}
+                </div>
+              ) : (
+                <span className="empty-preview">Build your condition to see preview...</span>
+              )}
             </div>
-          ) : (
-            <span className="empty-preview">Build your condition to see preview...</span>
-          )}
-        </div>
-        <div className="status-message">{statusMessage}</div>
+            <div className="status-message">{statusMessage}</div>
+          </>
+        )}
       </div>
+
       <div className="preview-actions">
-        <button className="test-sample-button">▶️ Test Sample</button>
-        <button className="run-scan-button" disabled={statusMessage !== 'Ready to test'}>
-          🔍 Run Scan
-        </button>
+        {featureToggles.useNewActionButtons ? (
+          <ActionButtons
+            buttons={[
+              { type: 'test', text: '▶️ Test Sample', onClick: () => {}, show: true },
+              {
+                type: 'scan',
+                text: '🔍 Run Scan',
+                onClick: () => {},
+                show: true,
+                disabled: statusMessage !== 'Ready to test'
+              }
+            ]}
+            size="default"
+            className=""
+          />
+        ) : (
+          <>
+            <button className="test-sample-button">▶️ Test Sample</button>
+            <button className="run-scan-button" disabled={statusMessage !== 'Ready to test'}>
+              🔍 Run Scan
+            </button>
+          </>
+        )}
       </div>
     </div>
   )

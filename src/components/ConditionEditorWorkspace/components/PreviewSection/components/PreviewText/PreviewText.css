@@ -9,18 +9,21 @@
 
 .preview-text.compact {
   gap: 4px;
+  width: 100%;
 }
 
 .preview-empty {
-  color: #6c757d;
+  color: #8085a0;
   font-style: italic;
   padding: 16px;
   text-align: center;
+  font-size: 1rem;
 }
 
 .preview-text.compact .preview-empty {
   padding: 8px;
-  font-size: 14px;
+  font-size: 0.72rem;
+  line-height: 1.2;
 }
 
 .preview-rows {
@@ -29,11 +32,22 @@
   gap: 4px;
 }
 
+.preview-text.default .preview-rows {
+  gap: 8px;
+  align-items: center;
+}
+
 .preview-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 4px 0;
+}
+
+.preview-text.default .preview-row {
+  gap: 8px;
+  padding: 4px 0;
+  position: relative;
 }
 
 .preview-text.compact .preview-row {
@@ -48,16 +62,31 @@
 }
 
 .preview-text .preview-text.completed {
-  color: #28a745;
+  color: #e0e8ff;
   font-weight: 500;
 }
 
 .preview-text .preview-text.incomplete {
-  color: #6c757d;
+  color: #8085a0;
 }
 
 .preview-text.compact .preview-text {
-  font-size: 14px;
+  font-size: 0.72rem;
+  line-height: 1.2;
+  font-style: italic;
+}
+
+/* Full-screen preview text styling */
+.preview-text.default .preview-text {
+  font-size: 1.1rem;
+  color: #e0e8ff;
+  font-style: italic;
+  font-weight: 500;
+}
+
+.preview-text.default .preview-text.incomplete {
+  color: #8085a0;
+  opacity: 0.8;
 }
 
 .preview-emoji {
@@ -69,36 +98,6 @@
   font-size: 14px;
 }
 
-.finish-formula-button {
-  background: #007bff;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  padding: 6px 12px;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.finish-formula-button:hover {
-  background: #0056b3;
-}
-
-.mini-finish-button {
-  background: #007bff;
-  color: white;
-  border: none;
-  border-radius: 3px;
-  padding: 4px 8px;
-  font-size: 12px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.mini-finish-button:hover {
-  background: #0056b3;
-}
-
 .preview-controls {
   display: flex;
   align-items: center;
@@ -108,42 +107,76 @@
 .formula-visibility-toggle {
   background: none;
   border: none;
+  font-size: 0.8rem;
   cursor: pointer;
-  font-size: 14px;
   padding: 2px 4px;
-  border-radius: 3px;
-  transition: background-color 0.2s ease;
+  border-radius: 2px;
+  opacity: 0.4;
+  transition: all 0.2s ease;
+  margin-left: 6px;
 }
 
 .formula-visibility-toggle:hover {
-  background: #f8f9fa;
+  opacity: 1;
+  background-color: rgba(80, 85, 110, 0.3);
 }
 
 .status-message {
-  color: #6c757d;
-  font-size: 14px;
+  font-size: 0.8rem;
+  color: #f0b070;
   font-style: italic;
   margin-top: 8px;
-  padding: 4px 0;
+  text-align: center;
 }
 
 .mini-status-message {
-  color: #6c757d;
-  font-size: 12px;
+  font-size: 0.6rem;
+  color: #f0b070;
   font-style: italic;
-  margin-top: 4px;
-  padding: 2px 0;
-}
-
-.preview-text.compact {
-  font-size: 12px;
-}
-
-.preview-text.compact .preview-empty {
-  font-size: 12px;
-  padding: 6px;
+  text-align: center;
 }
 
 .preview-text.compact .preview-rows {
   gap: 2px;
+}
+
+/* ===================================
+   MINI PREVIEW SPECIFIC STYLES
+   =================================== */
+
+.mini-preview-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  width: 100%;
+  min-height: 1.5rem;
+}
+
+.mini-preview-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.mini-preview-controls {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.mini-preview-text {
+  font-size: 0.72rem;
+  line-height: 1.2;
+  font-style: italic;
+  text-align: center;
+}
+
+.mini-preview-text.completed {
+  color: #e0e8ff;
+}
+
+.mini-preview-text.incomplete {
+  color: #8085a0;
 }
