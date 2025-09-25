@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 
 import { shouldShowFinishButton, getFinishButtonText } from '../../utils/formulaUtils'
@@ -22,24 +22,10 @@ const PreviewSection = ({
   onBiasDefinitionChange,
   formulaState,
   hasFormulaChanges,
-  handleFinishFormula
+  handleFinishFormula,
+  useNewPreviewText = false,
+  useNewActionButtons = false
 }) => {
-  // Feature toggles for safe A/B testing of new components
-  const [featureToggles, setFeatureToggles] = useState({
-    useNewPreviewText: false,
-    useNewActionButtons: false
-  })
-
-  const toggleFeature = (feature) => {
-    setFeatureToggles((prev) => ({ ...prev, [feature]: !prev[feature] }))
-  }
-
-  const setAllToggles = (enabled) => {
-    setFeatureToggles({
-      useNewPreviewText: enabled,
-      useNewActionButtons: enabled
-    })
-  }
   const getMinimizedPreviewData = () => {
     if (previewRows.length === 0) {
       return {
@@ -75,76 +61,11 @@ const PreviewSection = ({
     return { showButton, buttonText }
   }, [formulaState, hasFormulaChanges])
 
-  // Development-only toggle UI for testing new components
-  const renderDevToggles = () => {
-    if (process.env.NODE_ENV !== 'development') return null
-
-    return (
-      <div
-        className="dev-testing-panel"
-        style={{
-          position: 'fixed',
-          top: '10px',
-          left: '10px',
-          background: '#1a1a1a',
-          color: '#fff',
-          padding: '10px',
-          borderRadius: '5px',
-          fontSize: '12px',
-          zIndex: 9999,
-          minWidth: '200px'
-        }}
-      >
-        <h4 style={{ margin: '0 0 10px 0', fontSize: '14px' }}>Preview Testing</h4>
-        <div style={{ display: 'grid', gap: '5px' }}>
-          <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-            <input
-              type="checkbox"
-              checked={featureToggles.useNewPreviewText && featureToggles.useNewActionButtons}
-              onChange={(e) => setAllToggles(e.target.checked)}
-            />
-            🚀 Use All New Components
-          </label>
-          <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-            <input
-              type="checkbox"
-              checked={featureToggles.useNewPreviewText}
-              onChange={() => toggleFeature('useNewPreviewText')}
-            />
-            PreviewText
-          </label>
-          <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-            <input
-              type="checkbox"
-              checked={featureToggles.useNewActionButtons}
-              onChange={() => toggleFeature('useNewActionButtons')}
-            />
-            ActionButtons
-          </label>
-        </div>
-        <div style={{ marginTop: '10px', display: 'flex', gap: '5px' }}>
-          <button
-            onClick={() => setAllToggles(false)}
-            style={{ fontSize: '10px', padding: '2px 5px' }}
-          >
-            Reset to Old
-          </button>
-          <button
-            onClick={() => setAllToggles(true)}
-            style={{ fontSize: '10px', padding: '2px 5px' }}
-          >
-            Set to New
-          </button>
-        </div>
-      </div>
-    )
-  }
 
   // Render minimized layout - single return with conditional content
   if (isMinimized) {
     return (
       <div className="mini-section mini-preview-section">
-        {renderDevToggles()}
 
         <div className="section-header">
           {showNorthStar ? 'Preview > North Star' : 'Preview'}
@@ -164,7 +85,7 @@ const PreviewSection = ({
               value={biasDefinition}
               onChange={onBiasDefinitionChange}
             />
-          ) : featureToggles.useNewPreviewText ? (
+          ) : useNewPreviewText ? (
             // NEW: Using PreviewText component
             <>
               <div className="mini-preview-content">
@@ -181,7 +102,7 @@ const PreviewSection = ({
                 />
               </div>
               <div className="mini-preview-bottom">
-                {featureToggles.useNewActionButtons ? (
+                {useNewActionButtons ? (
                   <ActionButtons
                     buttons={[
                       { type: 'test', text: 'Test', onClick: () => {}, show: true },
@@ -283,7 +204,6 @@ const PreviewSection = ({
   // Render full-screen layout
   return (
     <div className="preview-section">
-      {renderDevToggles()}
 
       <div className="preview-header">
         <h4>Preview</h4>
@@ -321,7 +241,7 @@ const PreviewSection = ({
       </div>
 
       <div className="section-content-centered">
-        {featureToggles.useNewPreviewText ? (
+        {useNewPreviewText ? (
           // NEW: Using PreviewText component
           <div className="condition-summary">
             <PreviewText
@@ -364,7 +284,7 @@ const PreviewSection = ({
       </div>
 
       <div className="preview-actions">
-        {featureToggles.useNewActionButtons ? (
+        {useNewActionButtons ? (
           <ActionButtons
             buttons={[
               { type: 'test', text: '▶️ Test Sample', onClick: () => {}, show: true },
@@ -424,7 +344,9 @@ PreviewSection.propTypes = {
   onBiasDefinitionChange: PropTypes.func,
   formulaState: PropTypes.object,
   hasFormulaChanges: PropTypes.func,
-  handleFinishFormula: PropTypes.func
+  handleFinishFormula: PropTypes.func,
+  useNewPreviewText: PropTypes.bool,
+  useNewActionButtons: PropTypes.bool
 }
 
 export default PreviewSection

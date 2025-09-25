@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 
 import { shouldShowFinishButton, getFinishButtonText } from '../../utils/formulaUtils'
@@ -17,24 +17,10 @@ const ConditionBuilderSection = ({
   displayState,
   handleDisplayToggle,
   selectedTimeframes,
-  isMinimized = false
+  isMinimized = false,
+  useNewFormulaBuilder = false,
+  useNewActionButtons = false
 }) => {
-  // Feature toggles for safe A/B testing of new components
-  const [featureToggles, setFeatureToggles] = useState({
-    useNewFormulaBuilder: false,
-    useNewActionButtons: false
-  })
-
-  const toggleFeature = (feature) => {
-    setFeatureToggles((prev) => ({ ...prev, [feature]: !prev[feature] }))
-  }
-
-  const setAllToggles = (enabled) => {
-    setFeatureToggles({
-      useNewFormulaBuilder: enabled,
-      useNewActionButtons: enabled
-    })
-  }
   const finishButtonState = useMemo(() => {
     const hasChanges = hasFormulaChanges()
     const showButton = shouldShowFinishButton(
@@ -226,78 +212,13 @@ const ConditionBuilderSection = ({
     }
   ]
 
-  // Development-only toggle UI for testing new components
-  const renderDevToggles = () => {
-    if (process.env.NODE_ENV !== 'development') return null
-
-    return (
-      <div
-        className="dev-testing-panel"
-        style={{
-          position: 'fixed',
-          bottom: '10px',
-          right: '10px',
-          background: '#1a1a1a',
-          color: '#fff',
-          padding: '10px',
-          borderRadius: '5px',
-          fontSize: '12px',
-          zIndex: 9999,
-          minWidth: '200px'
-        }}
-      >
-        <h4 style={{ margin: '0 0 10px 0', fontSize: '14px' }}>Component Testing</h4>
-        <div style={{ display: 'grid', gap: '5px' }}>
-          <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-            <input
-              type="checkbox"
-              checked={featureToggles.useNewFormulaBuilder && featureToggles.useNewActionButtons}
-              onChange={(e) => setAllToggles(e.target.checked)}
-            />
-            🚀 Use All New Components
-          </label>
-          <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-            <input
-              type="checkbox"
-              checked={featureToggles.useNewFormulaBuilder}
-              onChange={() => toggleFeature('useNewFormulaBuilder')}
-            />
-            FormulaBuilder
-          </label>
-          <label style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-            <input
-              type="checkbox"
-              checked={featureToggles.useNewActionButtons}
-              onChange={() => toggleFeature('useNewActionButtons')}
-            />
-            ActionButtons
-          </label>
-        </div>
-        <div style={{ marginTop: '10px', display: 'flex', gap: '5px' }}>
-          <button
-            onClick={() => setAllToggles(false)}
-            style={{ fontSize: '10px', padding: '2px 5px' }}
-          >
-            Reset to Old
-          </button>
-          <button
-            onClick={() => setAllToggles(true)}
-            style={{ fontSize: '10px', padding: '2px 5px' }}
-          >
-            Set to New
-          </button>
-        </div>
-      </div>
-    )
-  }
 
   // Render minimized split layout: BIAS arrows + CONDITION dropdowns
   if (isMinimized) {
     return (
       <>
-        {renderDevToggles()}
 
-        {featureToggles.useNewFormulaBuilder ? (
+        {useNewFormulaBuilder ? (
           // NEW: Keep original 3-section layout structure, but use bias arrows from FormulaBuilder
           <>
             {/* BIAS Section - using FormulaBuilder's bias arrows only */}
@@ -436,7 +357,6 @@ const ConditionBuilderSection = ({
   // Render full-screen single section layout
   return (
     <div className="condition-bias-section">
-      {renderDevToggles()}
 
       <div className="condition-header">
         <h4>Condition & Bias Builder</h4>
@@ -453,11 +373,11 @@ const ConditionBuilderSection = ({
       </div>
 
       <div className="section-content-centered condition-builder-content">
-        {featureToggles.useNewFormulaBuilder ? (
+        {useNewFormulaBuilder ? (
           // NEW: FormulaBuilder component
           <div className="formula-row">
             <FormulaBuilder {...formulaBuilderProps} />
-            {featureToggles.useNewActionButtons ? (
+            {useNewActionButtons ? (
               <ActionButtons {...actionButtonsProps} />
             ) : (
               finishButtonState.showButton && (
@@ -521,7 +441,7 @@ const ConditionBuilderSection = ({
                 'old-param-input'
               )}
             </div>
-            {featureToggles.useNewActionButtons ? (
+            {useNewActionButtons ? (
               <ActionButtons {...actionButtonsProps} />
             ) : (
               finishButtonState.showButton && (
@@ -570,7 +490,9 @@ ConditionBuilderSection.propTypes = {
   }).isRequired,
   handleDisplayToggle: PropTypes.func.isRequired,
   selectedTimeframes: PropTypes.arrayOf(PropTypes.string),
-  isMinimized: PropTypes.bool
+  isMinimized: PropTypes.bool,
+  useNewFormulaBuilder: PropTypes.bool,
+  useNewActionButtons: PropTypes.bool
 }
 
 export default ConditionBuilderSection
