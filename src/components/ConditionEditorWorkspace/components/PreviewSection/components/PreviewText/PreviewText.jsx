@@ -33,7 +33,7 @@ const PreviewText = ({
                 className={`preview-row ${layout === 'compact' ? 'mini-preview-row' : ''}`}
               >
                 <div
-                  className={`preview-content ${layout === 'compact' ? 'mini-preview-content' : ''}`}
+                  className={`preview-content ${layout === 'compact' ? 'compact-preview-content' : ''}`}
                 >
                   {isVisible && (
                     <>
@@ -88,9 +88,7 @@ const PreviewText = ({
       )}
 
       {statusMessage && (
-        <div
-          className={`status-message ${layout === 'compact' ? 'mini-status-message' : 'status-message'}`}
-        >
+        <div className="status-message">
           {statusMessage}
         </div>
       )}

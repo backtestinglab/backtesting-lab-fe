@@ -28,39 +28,20 @@
   cursor: default;
 }
 
-.mini-finish-button {
-  background-color: #e0c070;
+.test-sample-button,
+.run-scan-button {
+  padding: 12px 20px;
+  font-size: 0.8rem;
   border: 1px solid #e0c070;
-  color: #121218;
-  padding: 4px 8px;
-  font-size: 0.7rem;
-  border-radius: 3px;
+  border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s ease;
   font-weight: 600;
-}
-
-.mini-finish-button:hover {
-  background-color: #f0d080;
-  border-color: #f0d080;
-}
-
-.mini-finish-button:disabled {
-  background-color: #506050;
-  border-color: #506050;
-  cursor: default;
 }
 
 .test-sample-button {
   background-color: rgba(224, 192, 112, 0.1);
   color: #e0c070;
-  border: 1px solid #e0c070;
-  border-radius: 6px;
-  padding: 12px 20px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
 }
 
 .test-sample-button:hover {
@@ -69,80 +50,24 @@
   border-color: #f0d080;
 }
 
-.test-sample-button:disabled {
-  background-color: #506050;
-  border-color: #506050;
-  cursor: default;
-}
-
-.mini-test-button {
-  background: none;
-  color: #a0a8c0;
-  border: 1px solid #505570;
-  border-radius: 3px;
-  padding: 3px 8px;
-  font-size: 0.65rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.mini-test-button:hover {
-  background-color: rgba(80, 85, 110, 0.4);
-  color: #fff;
-}
-
-.mini-test-button:disabled {
-  opacity: 0.5;
-  cursor: default;
-  background: none;
-}
-
 .run-scan-button {
   background-color: #e0c070;
   color: #121218;
-  border: 1px solid #e0c070;
-  border-radius: 6px;
-  padding: 12px 20px;
-  font-size: 0.8rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
   box-shadow: 0 2px 8px rgba(224, 192, 112, 0.3);
 }
 
-.run-scan-button:hover {
+.run-scan-button:hover:not(:disabled) {
   background-color: #f0d080;
   border-color: #f0d080;
 }
 
+.test-sample-button:disabled,
 .run-scan-button:disabled {
-  background-color: #506050;
-  border-color: #506050;
-  cursor: default;
-}
-
-.mini-scan-button {
-  background: none;
-  color: #a0a8c0;
-  border: 1px solid #505570;
-  border-radius: 3px;
-  padding: 3px 8px;
-  font-size: 0.65rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.mini-scan-button:hover {
-  background-color: rgba(80, 85, 110, 0.4);
-  color: #fff;
-}
-
-.mini-scan-button:disabled {
   opacity: 0.5;
   cursor: default;
-  background: none;
+  background-color: #a08050;
+  border-color: #a08050;
+  box-shadow: none;
 }
 
 .action-button {
@@ -173,3 +98,56 @@
   outline-offset: 2px;
 }
 
+/* ===================================
+   MINIMIZED STYLES
+   =================================== */
+
+.mini-test-button,
+.mini-scan-button {
+  background: none;
+  color: #a0a8c0;
+  border: 1px solid #505570;
+  border-radius: 3px;
+  padding: 3px 8px;
+  font-size: 0.65rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.mini-test-button:hover,
+.mini-scan-button:not(:disabled):hover {
+  background-color: rgba(80, 85, 110, 0.4);
+  color: #fff;
+}
+
+.mini-test-button:disabled,
+.mini-scan-button:disabled {
+  opacity: 0.5;
+  cursor: default;
+  background: none;
+  border: 1px solid #505570;
+}
+
+.mini-finish-button {
+  background-color: #e0c070;
+  border: 1px solid #e0c070;
+  color: #121218;
+  padding: 4px 8px;
+  font-size: 0.7rem;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 600;
+}
+
+.mini-finish-button:hover {
+  background-color: #f0d080;
+  border-color: #f0d080;
+}
+
+.mini-finish-button:disabled {
+  background-color: #506050;
+  border-color: #506050;
+  cursor: default;
+}

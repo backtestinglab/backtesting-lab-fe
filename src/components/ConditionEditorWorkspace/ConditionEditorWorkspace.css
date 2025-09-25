@@ -85,7 +85,6 @@
 .workspace-content {
   flex-grow: 1;
   padding: 12px;
-  overflow-y: auto;
 }
 
 /* Full-Screen Content */

@@ -23,24 +23,6 @@ const ConditionEditorWorkspace = ({
   const [isNeutralFormulaIncluded, setIsNeutralFormulaIncluded] = useState(true)
   const [showNorthStar, setShowNorthStar] = useState(false)
 
-  // Centralized feature toggle management
-  const [featureToggles, setFeatureToggles] = useState({
-    useNewFormulaBuilder: false,
-    useNewActionButtons: false,
-    useNewPreviewText: false
-  })
-
-  const toggleFeature = (feature) => {
-    setFeatureToggles((prev) => ({ ...prev, [feature]: !prev[feature] }))
-  }
-
-  const setAllToggles = (enabled) => {
-    setFeatureToggles({
-      useNewFormulaBuilder: enabled,
-      useNewActionButtons: enabled,
-      useNewPreviewText: enabled
-    })
-  }
 
   const { displayState, handleDisplayToggle } = useDisplayControls()
 
@@ -75,109 +57,6 @@ const ConditionEditorWorkspace = ({
     [modelType]
   )
 
-  // Development-only comprehensive testing UI
-  const renderDevToggles = () => {
-    if (process.env.NODE_ENV !== 'development') return null
-
-    return (
-      <div
-        className="dev-testing-panel"
-        style={{
-          position: 'fixed',
-          bottom: '10px',
-          right: '10px',
-          background: '#1a1a1a',
-          color: '#fff',
-          padding: '12px',
-          borderRadius: '8px',
-          fontSize: '12px',
-          zIndex: 9999,
-          minWidth: '280px',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
-        }}
-      >
-        <h4 style={{ margin: '0 0 12px 0', fontSize: '14px', textAlign: 'center' }}>
-          🧪 Component Testing Dashboard
-        </h4>
-        <div style={{ display: 'grid', gap: '8px' }}>
-          <label style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '4px' }}>
-            <input
-              type="checkbox"
-              checked={
-                featureToggles.useNewFormulaBuilder &&
-                featureToggles.useNewActionButtons &&
-                featureToggles.useNewPreviewText
-              }
-              onChange={(e) => setAllToggles(e.target.checked)}
-              style={{ transform: 'scale(1.2)' }}
-            />
-            <span style={{ fontWeight: 'bold', color: '#4ade80' }}>🚀 Use All New Components</span>
-          </label>
-          <div style={{ borderTop: '1px solid #333', margin: '8px 0' }}></div>
-          <label style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '2px' }}>
-            <input
-              type="checkbox"
-              checked={featureToggles.useNewFormulaBuilder}
-              onChange={() => toggleFeature('useNewFormulaBuilder')}
-            />
-            <span>📋 FormulaBuilder</span>
-          </label>
-          <label style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '2px' }}>
-            <input
-              type="checkbox"
-              checked={featureToggles.useNewActionButtons}
-              onChange={() => toggleFeature('useNewActionButtons')}
-            />
-            <span>🎯 ActionButtons</span>
-          </label>
-          <label style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '2px' }}>
-            <input
-              type="checkbox"
-              checked={featureToggles.useNewPreviewText}
-              onChange={() => toggleFeature('useNewPreviewText')}
-            />
-            <span>👁️ PreviewText</span>
-          </label>
-        </div>
-        <div style={{ marginTop: '12px', display: 'flex', gap: '6px' }}>
-          <button
-            onClick={() => setAllToggles(false)}
-            style={{
-              flex: 1,
-              fontSize: '10px',
-              padding: '6px 8px',
-              background: '#dc2626',
-              border: 'none',
-              borderRadius: '4px',
-              color: 'white',
-              cursor: 'pointer'
-            }}
-          >
-            Reset to Old
-          </button>
-          <button
-            onClick={() => setAllToggles(true)}
-            style={{
-              flex: 1,
-              fontSize: '10px',
-              padding: '6px 8px',
-              background: '#16a34a',
-              border: 'none',
-              borderRadius: '4px',
-              color: 'white',
-              cursor: 'pointer'
-            }}
-          >
-            Set to New
-          </button>
-        </div>
-        <div style={{ marginTop: '8px', fontSize: '10px', color: '#888', textAlign: 'center' }}>
-          {Object.values(featureToggles).filter(Boolean).length} /{' '}
-          {Object.keys(featureToggles).length} components using new implementation
-        </div>
-      </div>
-    )
-  }
 
   const renderFullScreenContent = () => (
     <div className="workspace-content full-screen">
@@ -194,8 +73,6 @@ const ConditionEditorWorkspace = ({
               statusMessage={statusMessage}
               formulaVisibility={displayState.displayFormulas}
               onFormulaVisibilityToggle={handleDisplayToggle}
-              useNewPreviewText={featureToggles.useNewPreviewText}
-              useNewActionButtons={featureToggles.useNewActionButtons}
             />
 
             <ConditionBuilderSection
@@ -208,8 +85,6 @@ const ConditionEditorWorkspace = ({
               displayState={displayState}
               handleDisplayToggle={handleDisplayToggle}
               selectedTimeframes={selectedTimeframes}
-              useNewFormulaBuilder={featureToggles.useNewFormulaBuilder}
-              useNewActionButtons={featureToggles.useNewActionButtons}
             />
           </>
         )}
@@ -264,8 +139,6 @@ const ConditionEditorWorkspace = ({
             handleDisplayToggle={handleDisplayToggle}
             selectedTimeframes={selectedTimeframes}
             isMinimized={true}
-            useNewFormulaBuilder={featureToggles.useNewFormulaBuilder}
-            useNewActionButtons={featureToggles.useNewActionButtons}
           />
           <PreviewSection
             displayState={displayState}
@@ -283,8 +156,6 @@ const ConditionEditorWorkspace = ({
             formulaState={formulaState}
             hasFormulaChanges={hasFormulaChanges}
             handleFinishFormula={handleFinishFormula}
-            useNewPreviewText={featureToggles.useNewPreviewText}
-            useNewActionButtons={featureToggles.useNewActionButtons}
           />
         </div>
       )}
@@ -293,7 +164,6 @@ const ConditionEditorWorkspace = ({
 
   return (
     <div className="condition-editor-workspace">
-      {renderDevToggles()}
       <div className="workspace-header">
         <h3>{headerTitle}</h3>
         <div className="header-controls">

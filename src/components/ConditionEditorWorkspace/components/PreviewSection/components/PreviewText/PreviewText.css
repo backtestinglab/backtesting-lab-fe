@@ -129,13 +129,6 @@
   text-align: center;
 }
 
-.mini-status-message {
-  font-size: 0.6rem;
-  color: #f0b070;
-  font-style: italic;
-  text-align: center;
-}
-
 .preview-text.compact .preview-rows {
   gap: 2px;
 }
@@ -153,7 +146,7 @@
   min-height: 1.5rem;
 }
 
-.mini-preview-content {
+.compact-preview-content {
   display: flex;
   align-items: center;
   justify-content: center;

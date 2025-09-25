@@ -15,11 +15,6 @@
   width: 100%;
 }
 
-.bias-arrows {
-  display: flex;
-  gap: 4px;
-}
-
 .bias-option {
   display: flex;
   align-items: center;
@@ -67,11 +62,6 @@
 .formula-builder.vertical .indicator-dropdown,
 .formula-builder.vertical .indicator-group {
   width: 100%;
-}
-
-.formula-builder.vertical .bias-arrows {
-  justify-content: center;
-  margin-bottom: 2px;
 }
 
 .formula-builder.vertical .bias-option {

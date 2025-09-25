@@ -30,23 +30,6 @@
   color: #e0c070;
 }
 
-.old-formula-visibility-toggle {
-  background: none;
-  border: none;
-  font-size: 0.8rem;
-  cursor: pointer;
-  padding: 2px 4px;
-  border-radius: 2px;
-  opacity: 0.4;
-  transition: all 0.2s ease;
-  margin-left: 6px;
-}
-
-.old-formula-visibility-toggle:hover {
-  opacity: 1;
-  background-color: rgba(80, 85, 110, 0.3);
-}
-
 /* ===================================
    FULL-SCREEN STYLES
    =================================== */
@@ -128,169 +111,21 @@
   font-weight: 500;
 }
 
-.preview-rows {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  align-items: center;
-}
-
-.preview-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 4px 0;
-  position: relative;
-}
-
-.preview-text {
-  font-size: 1.1rem;
-  color: #e0e8ff;
-  font-style: italic;
-  font-weight: 500;
-}
-
-.preview-emoji {
-  font-size: 1.2rem;
-}
-
-.empty-preview {
-  color: #8085a0;
-  font-style: italic;
-  font-size: 1rem;
-}
-
-.preview-row.completed .preview-text {
-  color: #e0e8ff;
-  opacity: 1;
-}
-
-.preview-row.incomplete .preview-text {
-  color: #8085a0;
-  opacity: 0.8;
-}
-
-.status-message {
-  font-size: 0.8rem;
-  color: #f0b070;
-  font-style: italic;
-  margin-top: 8px;
-  text-align: center;
-}
-
 .preview-actions {
   display: flex;
   gap: 8px;
   margin-left: auto;
 }
 
-.preview-actions .test-sample-button,
-.preview-actions .run-scan-button {
-  padding: 12px 20px;
-  font-size: 0.8rem;
-  border: 1px solid #e0c070;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-weight: 600;
-}
-
-.preview-actions .test-sample-button {
-  background-color: rgba(224, 192, 112, 0.1);
-  color: #e0c070;
-}
-
-.preview-actions .test-sample-button:hover {
-  background-color: rgba(224, 192, 112, 0.2);
-  color: #f0d080;
-  border-color: #f0d080;
-}
-
-.preview-actions .run-scan-button {
-  background-color: #e0c070;
-  color: #121218;
-  box-shadow: 0 2px 8px rgba(224, 192, 112, 0.3);
-}
-
-.preview-actions .run-scan-button:hover:not(:disabled) {
-  background-color: #f0d080;
-  color: #0a0b10;
-  border-color: #f0d080;
-}
-
-.preview-actions .run-scan-button:disabled {
-  opacity: 0.5;
-  cursor: default;
-  background-color: #a08050;
-  color: rgba(18, 18, 24, 0.7);
-  box-shadow: none;
-}
-
 /* ===================================
    MINIMIZED STYLES
    =================================== */
 
-.mini-preview-content {
+.mini-preview-container {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 100%;
-}
-
-.mini-preview-rows {
-  display: flex;
-  flex-direction: column;
-  align-items: stretch;
-  width: 100%;
-}
-
-.old-mini-preview-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: nowrap;
-  width: 100%;
-  min-height: 1.5rem;
-}
-
-.old-mini-preview-controls {
-  display: flex;
-  align-items: center;
-  flex-shrink: 0;
-}
-
-.mini-preview-text {
-  font-size: 0.72rem;
-  line-height: 1.2;
-  font-style: italic;
-  text-align: center;
-}
-
-.mini-preview-text.completed {
-  color: #e0e8ff;
-}
-
-.mini-preview-text.incomplete {
-  color: #8085a0;
-}
-
-.old-mini-finish-button {
-  background-color: #e0c070;
-  border: 1px solid #e0c070;
-  color: #121218;
-  padding: 2px 6px;
-  margin-left: 8px;
-  font-size: 0.6rem;
-  border-radius: 2px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-.old-mini-finish-button:hover {
-  background-color: #f0d080;
-  border-color: #f0d080;
 }
 
 .mini-preview-actions {
@@ -298,35 +133,6 @@
   flex-direction: row;
   gap: 8px;
   justify-content: center;
-}
-
-.mini-test-button,
-.mini-scan-button {
-  padding: 3px 8px;
-  font-size: 0.65rem;
-  background: none;
-  border: 1px solid #505570;
-  color: #a0a8c0;
-  border-radius: 3px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  width: 100%;
-}
-
-.mini-test-button:hover {
-  background-color: rgba(80, 85, 110, 0.4);
-  color: #fff;
-}
-
-.mini-scan-button:disabled {
-  opacity: 0.5;
-  cursor: default;
-  background: none;
-}
-
-.mini-scan-button:not(:disabled):hover {
-  background-color: rgba(80, 85, 110, 0.4);
-  color: #fff;
 }
 
 .mini-preview-bottom {

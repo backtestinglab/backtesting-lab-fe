@@ -2,7 +2,6 @@ import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 
 import { shouldShowFinishButton, getFinishButtonText } from '../../utils/formulaUtils'
-import { isRowVisible } from '../../utils/previewUtils'
 import PreviewText from './components/PreviewText/PreviewText'
 import ActionButtons from '../ConditionBuilderSection/components/ActionButtons/ActionButtons'
 import './PreviewSection.css'
@@ -22,9 +21,7 @@ const PreviewSection = ({
   onBiasDefinitionChange,
   formulaState,
   hasFormulaChanges,
-  handleFinishFormula,
-  useNewPreviewText = false,
-  useNewActionButtons = false
+  handleFinishFormula
 }) => {
   const getMinimizedPreviewData = () => {
     if (previewRows.length === 0) {
@@ -61,12 +58,10 @@ const PreviewSection = ({
     return { showButton, buttonText }
   }, [formulaState, hasFormulaChanges])
 
-
   // Render minimized layout - single return with conditional content
   if (isMinimized) {
     return (
       <div className="mini-section mini-preview-section">
-
         <div className="section-header">
           {showNorthStar ? 'Preview > North Star' : 'Preview'}
           <button
@@ -85,10 +80,9 @@ const PreviewSection = ({
               value={biasDefinition}
               onChange={onBiasDefinitionChange}
             />
-          ) : useNewPreviewText ? (
-            // NEW: Using PreviewText component
+          ) : (
             <>
-              <div className="mini-preview-content">
+              <div className="mini-preview-container">
                 <PreviewText
                   rows={previewRows}
                   statusMessage=""
@@ -102,96 +96,20 @@ const PreviewSection = ({
                 />
               </div>
               <div className="mini-preview-bottom">
-                {useNewActionButtons ? (
-                  <ActionButtons
-                    buttons={[
-                      { type: 'test', text: 'Test', onClick: () => {}, show: true },
-                      {
-                        type: 'scan',
-                        text: 'Scan',
-                        onClick: () => {},
-                        show: true,
-                        disabled: statusMessage !== 'Ready to test'
-                      }
-                    ]}
-                    size="mini"
-                    className="mini-preview-actions"
-                  />
-                ) : (
-                  <div className="mini-preview-actions">
-                    <button className="mini-test-button">Test</button>
-                    <button
-                      className="mini-scan-button"
-                      disabled={statusMessage !== 'Ready to test'}
-                    >
-                      Scan
-                    </button>
-                  </div>
-                )}
-                <div className="mini-status-message">{statusMessage}</div>
-              </div>
-            </>
-          ) : (
-            // OLD: Original implementation
-            <>
-              <div className="mini-preview-content">
-                {previewData.isEmpty ? (
-                  <span className="mini-preview-text incomplete">
-                    Build your condition to see preview...
-                  </span>
-                ) : (
-                  <div className="mini-preview-rows">
-                    {previewData.rows.map((row, index) => {
-                      const isVisible = isRowVisible(row, formulaVisibility)
-                      return (
-                        <div key={`${row.type}-${index}`} className="old-mini-preview-row">
-                          <div className="mini-preview-content">
-                            {isVisible && (
-                              <span
-                                className={`mini-preview-text ${row.isCompleted ? 'completed' : 'incomplete'}`}
-                              >
-                                {row.text}
-                              </span>
-                            )}
-                            {index === previewData.rows.length - 1 &&
-                              !row.isCompleted &&
-                              finishButtonState.showButton && (
-                                <button
-                                  className="old-mini-finish-button"
-                                  onClick={handleFinishFormula}
-                                >
-                                  {finishButtonState.buttonText}
-                                </button>
-                              )}
-                          </div>
-                          <div className="old-mini-preview-controls">
-                            {row.isCompleted && onFormulaVisibilityToggle && (
-                              <button
-                                className="old-formula-visibility-toggle"
-                                onClick={() => onFormulaVisibilityToggle(row.type)}
-                                title={
-                                  isVisible
-                                    ? 'Hide this completed formula'
-                                    : 'Show this completed formula'
-                                }
-                              >
-                                👁️
-                              </button>
-                            )}
-                          </div>
-                        </div>
-                      )
-                    })}
-                  </div>
-                )}
-              </div>
-              <div className="mini-preview-bottom">
-                <div className="mini-preview-actions">
-                  <button className="mini-test-button">Test</button>
-                  <button className="mini-scan-button" disabled={statusMessage !== 'Ready to test'}>
-                    Scan
-                  </button>
-                </div>
+                <ActionButtons
+                  buttons={[
+                    { type: 'test', text: 'Test', onClick: () => {}, show: true },
+                    {
+                      type: 'scan',
+                      text: 'Scan',
+                      onClick: () => {},
+                      show: true,
+                      disabled: statusMessage !== 'Ready to test'
+                    }
+                  ]}
+                  size="mini"
+                  className="mini-preview-actions"
+                />
                 <div className="mini-status-message">{statusMessage}</div>
               </div>
             </>
@@ -204,7 +122,6 @@ const PreviewSection = ({
   // Render full-screen layout
   return (
     <div className="preview-section">
-
       <div className="preview-header">
         <h4>Preview</h4>
         <div className="display-bias-controls">
@@ -241,72 +158,33 @@ const PreviewSection = ({
       </div>
 
       <div className="section-content-centered">
-        {useNewPreviewText ? (
-          // NEW: Using PreviewText component
-          <div className="condition-summary">
-            <PreviewText
-              rows={previewRows}
-              statusMessage={statusMessage}
-              layout="default"
-              formulaVisibility={formulaVisibility}
-              onFormulaVisibilityToggle={onFormulaVisibilityToggle}
-              className=""
-            />
-          </div>
-        ) : (
-          // OLD: Original implementation
-          <>
-            <div className="condition-summary">
-              {previewRows.length > 0 ? (
-                <div className="preview-rows">
-                  {previewRows
-                    .filter((row) => {
-                      if (!row.completed) return true
-                      return formulaVisibility && formulaVisibility[row.type] !== false
-                    })
-                    .map((row) => (
-                      <div
-                        key={row.type}
-                        className={`preview-row ${row.type} ${row.completed ? 'completed' : 'incomplete'}`}
-                      >
-                        <span className="preview-text">{row.text}</span>
-                        <span className="preview-emoji">{row.emoji}</span>
-                      </div>
-                    ))}
-                </div>
-              ) : (
-                <span className="empty-preview">Build your condition to see preview...</span>
-              )}
-            </div>
-            <div className="status-message">{statusMessage}</div>
-          </>
-        )}
+        <div className="condition-summary">
+          <PreviewText
+            rows={previewRows}
+            statusMessage={statusMessage}
+            layout="default"
+            formulaVisibility={formulaVisibility}
+            onFormulaVisibilityToggle={onFormulaVisibilityToggle}
+            className=""
+          />
+        </div>
       </div>
 
       <div className="preview-actions">
-        {useNewActionButtons ? (
-          <ActionButtons
-            buttons={[
-              { type: 'test', text: '▶️ Test Sample', onClick: () => {}, show: true },
-              {
-                type: 'scan',
-                text: '🔍 Run Scan',
-                onClick: () => {},
-                show: true,
-                disabled: statusMessage !== 'Ready to test'
-              }
-            ]}
-            size="default"
-            className=""
-          />
-        ) : (
-          <>
-            <button className="test-sample-button">▶️ Test Sample</button>
-            <button className="run-scan-button" disabled={statusMessage !== 'Ready to test'}>
-              🔍 Run Scan
-            </button>
-          </>
-        )}
+        <ActionButtons
+          buttons={[
+            { type: 'test', text: '▶️ Test Sample', onClick: () => {}, show: true },
+            {
+              type: 'scan',
+              text: '🔍 Run Scan',
+              onClick: () => {},
+              show: true,
+              disabled: statusMessage !== 'Ready to test'
+            }
+          ]}
+          size="default"
+          className=""
+        />
       </div>
     </div>
   )
@@ -344,9 +222,7 @@ PreviewSection.propTypes = {
   onBiasDefinitionChange: PropTypes.func,
   formulaState: PropTypes.object,
   hasFormulaChanges: PropTypes.func,
-  handleFinishFormula: PropTypes.func,
-  useNewPreviewText: PropTypes.bool,
-  useNewActionButtons: PropTypes.bool
+  handleFinishFormula: PropTypes.func
 }
 
 export default PreviewSection
