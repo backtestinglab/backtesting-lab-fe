@@ -93,11 +93,6 @@
   cursor: default;
 }
 
-.action-buttons button:focus {
-  outline: var(--focus-outline-width) solid var(--focus-outline-color);
-  outline-offset: var(--focus-outline-offset);
-}
-
 /* ===================================
    MINIMIZED STYLES
    =================================== */

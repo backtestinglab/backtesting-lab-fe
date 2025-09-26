@@ -43,11 +43,6 @@
   border: 1px solid var(--color-accent-primary);
 }
 
-.bias-option:focus {
-  outline: var(--focus-outline-width) solid var(--focus-outline-color);
-  outline-offset: var(--focus-outline-offset);
-}
-
 .formula-builder .bias-dropdown,
 .formula-builder .timeframe-dropdown,
 .formula-builder .operator-dropdown,

@@ -23,8 +23,6 @@
 }
 
 .param-input:focus {
-  outline: var(--focus-outline-width) solid var(--focus-outline-color);
-  outline-offset: var(--focus-outline-offset);
   border-color: var(--color-accent-primary);
   background-color: var(--color-bg-tertiary);
 }

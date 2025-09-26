@@ -244,11 +244,6 @@
   z-index: 10;
 }
 
-.frame-main-nav-icon-button:focus-visible {
-  outline: var(--focus-outline-width) solid var(--focus-outline-color);
-  outline-offset: var(--focus-outline-offset);
-}
-
 .main-nav-svg-icon-instance {
   position: absolute;
   padding: 6px;
@@ -403,6 +398,5 @@
 }
 
 .frame-integrated-nav-button:focus-visible {
-  outline: var(--focus-outline-width) solid var(--focus-outline-color);
   outline-offset: -3px;
 }

@@ -125,11 +125,6 @@
   border-color: rgba(120, 125, 170, 0.7);
 }
 
-.panel-icon-button:focus-visible {
-  outline: var(--focus-outline-width) solid var(--focus-outline-color);
-  outline-offset: 1px;
-}
-
 /* .notifications-section .panel-content-sticky-note { /* If specific styling needed for notification's sticky note */
 /* For example, make it taller to fit more notifications */
 /* max-height: 200px; */

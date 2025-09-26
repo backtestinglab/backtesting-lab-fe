@@ -47,13 +47,13 @@
   --shadow-accent: 0 2px 8px rgba(224, 192, 112, 0.3);
 }
 
-/* Interactive element patterns */
-.interactive-hover {
-  background-color: rgba(80, 85, 110, 0.4);
-  color: #fff;
-}
-
-.interactive-focus {
+button:focus,
+button:focus-visible,
+input:focus,
+select:focus,
+textarea:focus,
+div[role='button']:focus,
+textarea:focus-within {
   outline: var(--focus-outline-width) solid var(--focus-outline-color);
   outline-offset: var(--focus-outline-offset);
 }
