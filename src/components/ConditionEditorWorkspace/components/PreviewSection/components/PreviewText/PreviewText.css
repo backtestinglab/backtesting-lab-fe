@@ -4,24 +4,24 @@
 }
 
 .preview-text.default {
-  gap: 8px;
+  gap: var(--spacing-md);
 }
 
 .preview-text.compact {
-  gap: 4px;
+  gap: var(--spacing-sm);
   width: 100%;
 }
 
 .preview-empty {
-  color: #8085a0;
+  color: var(--color-text-muted);
   font-style: italic;
-  padding: 16px;
+  padding: var(--spacing-xl);
   text-align: center;
   font-size: 1rem;
 }
 
 .preview-text.compact .preview-empty {
-  padding: 8px;
+  padding: var(--spacing-md);
   font-size: 0.72rem;
   line-height: 1.2;
 }
@@ -29,11 +29,11 @@
 .preview-rows {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: var(--spacing-sm);
 }
 
 .preview-text.default .preview-rows {
-  gap: 8px;
+  gap: var(--spacing-md);
   align-items: center;
 }
 
@@ -41,12 +41,12 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 4px 0;
+  padding: var(--spacing-sm) 0;
 }
 
 .preview-text.default .preview-row {
   gap: 8px;
-  padding: 4px 0;
+  padding: var(--spacing-sm) 0;
   position: relative;
 }
 
@@ -57,7 +57,7 @@
 .preview-content {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--spacing-md);
   flex: 1;
 }
 
@@ -67,7 +67,7 @@
 }
 
 .preview-text .preview-text.incomplete {
-  color: #8085a0;
+  color: var(--color-text-muted);
 }
 
 .preview-text.compact .preview-text {
@@ -78,20 +78,20 @@
 
 /* Full-screen preview text styling */
 .preview-text.default .preview-text {
-  font-size: 1.1rem;
+  font-size: var(--font-size-xl);
   color: #e0e8ff;
   font-style: italic;
   font-weight: 500;
 }
 
 .preview-text.default .preview-text.incomplete {
-  color: #8085a0;
+  color: var(--color-text-muted);
   opacity: 0.8;
 }
 
 .preview-emoji {
   font-size: 16px;
-  margin-left: 4px;
+  margin-left: var(--spacing-sm);
 }
 
 .preview-text.compact .preview-emoji {
@@ -101,7 +101,7 @@
 .preview-controls {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: var(--spacing-sm);
 }
 
 .formula-visibility-toggle {
@@ -109,10 +109,10 @@
   border: none;
   font-size: 0.8rem;
   cursor: pointer;
-  padding: 2px 4px;
-  border-radius: 2px;
+  padding: 2px var(--spacing-sm);
+  border-radius: var(--border-radius-sm);
   opacity: 0.4;
-  transition: all 0.2s ease;
+  transition: var(--transition-base);
   margin-left: 6px;
 }
 
@@ -122,10 +122,10 @@
 }
 
 .status-message {
-  font-size: 0.8rem;
+  font-size: var(--font-size-base);
   color: #f0b070;
   font-style: italic;
-  margin-top: 8px;
+  margin-top: var(--spacing-md);
   text-align: center;
 }
 
@@ -171,5 +171,5 @@
 }
 
 .mini-preview-text.incomplete {
-  color: #8085a0;
+  color: var(--color-text-muted);
 }

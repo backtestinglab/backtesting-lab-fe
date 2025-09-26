@@ -1,7 +1,61 @@
 :root {
+  /* Focus Styles */
   --focus-outline-color: rgba(160, 180, 255, 0.8);
   --focus-outline-width: 2px;
   --focus-outline-offset: 2px;
+
+  /* Colors */
+  --color-bg-primary: rgba(20, 22, 30, 0.6);
+  --color-bg-secondary: rgba(20, 22, 30, 0.8);
+  --color-bg-tertiary: rgba(20, 22, 30, 0.9);
+  --color-border-primary: #505570;
+  --color-border-accent: #e0c070;
+  --color-text-primary: #e0e8ff;
+  --color-text-secondary: #a0a8c0;
+  --color-text-muted: #8085a0;
+  --color-accent-primary: #e0c070;
+  --color-accent-hover: #f0d080;
+  --color-error: #ff6b6b;
+
+  /* Spacing */
+  --spacing-xs: 3px;
+  --spacing-sm: 4px;
+  --spacing-md: 8px;
+  --spacing-lg: 12px;
+  --spacing-xl: 16px;
+  --spacing-xxl: 24px;
+
+  /* Typography */
+  --font-size-xs: 0.6rem;
+  --font-size-sm: 0.7rem;
+  --font-size-base: 0.8rem;
+  --font-size-lg: 0.85rem;
+  --font-size-xl: 1.1rem;
+
+  /* Border Radius */
+  --border-radius-sm: 2px;
+  --border-radius-base: 3px;
+  --border-radius-lg: 4px;
+  --border-radius-xl: 6px;
+
+  /* Transitions */
+  --transition-fast: all 0.1s ease;
+  --transition-base: all 0.2s ease;
+  --transition-slow: all 0.3s ease;
+
+  /* Shadows */
+  --shadow-accent: 0 2px 8px rgba(224, 192, 112, 0.3);
+}
+
+/* Interactive element patterns */
+.interactive-hover {
+  background-color: rgba(80, 85, 110, 0.4);
+  color: #fff;
+}
+
+.interactive-focus {
+  outline: var(--focus-outline-width) solid var(--focus-outline-color);
+  outline-offset: var(--focus-outline-offset);
 }
 
 /* Basic Reset & Font */

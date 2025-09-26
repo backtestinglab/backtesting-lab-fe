@@ -2,24 +2,24 @@
   display: flex;
   align-items: center;
   flex-direction: row;
-  gap: 8px;
+  gap: var(--spacing-md);
 }
 
 .finish-formula-button {
-  background-color: #e0c070;
-  border: 1px solid #e0c070;
+  background-color: var(--color-accent-primary);
+  border: 1px solid var(--color-accent-primary);
   color: #121218;
-  padding: 4px 16px;
-  font-size: 0.8rem;
-  border-radius: 3px;
+  padding: var(--spacing-sm) var(--spacing-xl);
+  font-size: var(--font-size-base);
+  border-radius: var(--border-radius-base);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: var(--transition-base);
   font-weight: 600;
 }
 
 .finish-formula-button:hover {
-  background-color: #f0d080;
-  border-color: #f0d080;
+  background-color: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
 }
 
 .finish-formula-button:disabled {
@@ -30,35 +30,35 @@
 
 .test-sample-button,
 .run-scan-button {
-  padding: 12px 20px;
-  font-size: 0.8rem;
-  border: 1px solid #e0c070;
-  border-radius: 6px;
+  padding: var(--spacing-lg) 20px;
+  font-size: var(--font-size-base);
+  border: 1px solid var(--color-accent-primary);
+  border-radius: var(--border-radius-xl);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: var(--transition-base);
   font-weight: 600;
 }
 
 .test-sample-button {
   background-color: rgba(224, 192, 112, 0.1);
-  color: #e0c070;
+  color: var(--color-accent-primary);
 }
 
 .test-sample-button:hover {
   background-color: rgba(224, 192, 112, 0.2);
-  color: #f0d080;
-  border-color: #f0d080;
+  color: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
 }
 
 .run-scan-button {
-  background-color: #e0c070;
+  background-color: var(--color-accent-primary);
   color: #121218;
-  box-shadow: 0 2px 8px rgba(224, 192, 112, 0.3);
+  box-shadow: var(--shadow-accent);
 }
 
 .run-scan-button:hover:not(:disabled) {
-  background-color: #f0d080;
-  border-color: #f0d080;
+  background-color: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
 }
 
 .test-sample-button:disabled,
@@ -74,12 +74,12 @@
   background-color: #506050;
   color: #ccc;
   border: 1px solid #506050;
-  border-radius: 4px;
-  padding: 8px 16px;
-  font-size: 0.8rem;
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-md) var(--spacing-xl);
+  font-size: var(--font-size-base);
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: var(--transition-base);
 }
 
 .action-button:hover {
@@ -94,8 +94,8 @@
 }
 
 .action-buttons button:focus {
-  outline: 2px solid #e0c070;
-  outline-offset: 2px;
+  outline: var(--focus-outline-width) solid var(--focus-outline-color);
+  outline-offset: var(--focus-outline-offset);
 }
 
 /* ===================================
@@ -105,14 +105,14 @@
 .mini-test-button,
 .mini-scan-button {
   background: none;
-  color: #a0a8c0;
-  border: 1px solid #505570;
-  border-radius: 3px;
-  padding: 3px 8px;
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border-primary);
+  border-radius: var(--border-radius-base);
+  padding: var(--spacing-xs) var(--spacing-md);
   font-size: 0.65rem;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: var(--transition-base);
 }
 
 .mini-test-button:hover,
@@ -126,24 +126,24 @@
   opacity: 0.5;
   cursor: default;
   background: none;
-  border: 1px solid #505570;
+  border: 1px solid var(--color-border-primary);
 }
 
 .mini-finish-button {
-  background-color: #e0c070;
-  border: 1px solid #e0c070;
+  background-color: var(--color-accent-primary);
+  border: 1px solid var(--color-accent-primary);
   color: #121218;
-  padding: 4px 8px;
-  font-size: 0.7rem;
-  border-radius: 3px;
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-size: var(--font-size-sm);
+  border-radius: var(--border-radius-base);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: var(--transition-base);
   font-weight: 600;
 }
 
 .mini-finish-button:hover {
-  background-color: #f0d080;
-  border-color: #f0d080;
+  background-color: var(--color-accent-hover);
+  border-color: var(--color-accent-hover);
 }
 
 .mini-finish-button:disabled {

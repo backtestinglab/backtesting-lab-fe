@@ -4,22 +4,22 @@
   height: 100%;
   background-color: rgba(45, 50, 70, 0.7);
   border-left: 1px solid rgba(60, 65, 85, 0.7);
-  border-radius: 4px;
+  border-radius: var(--border-radius-lg);
   display: flex;
   flex-direction: column;
 }
 
 .north-star-header {
-  padding: 16px;
+  padding: var(--spacing-xl);
   border-bottom: 1px solid rgba(60, 65, 85, 0.7);
   flex-shrink: 0;
   justify-items: center;
 }
 
 .north-star-header h4 {
-  margin: 0 0 4px 0;
-  color: #e0c070;
-  font-size: 1.1rem;
+  margin: 0 0 var(--spacing-sm) 0;
+  color: var(--color-accent-primary);
+  font-size: var(--font-size-xl);
   font-weight: 600;
   display: flex;
   align-items: center;
@@ -28,14 +28,14 @@
 
 .north-star-subtitle {
   margin: 0;
-  color: #a0a8c0;
-  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-lg);
   font-style: italic;
 }
 
 .north-star-content {
   flex: 1;
-  padding: 16px;
+  padding: var(--spacing-xl);
   display: flex;
   flex-direction: column;
 }
@@ -44,8 +44,8 @@
   flex: 1;
   background-color: rgba(30, 33, 48, 0.8);
   border: 1px solid rgba(60, 65, 85, 0.6);
-  border-radius: 4px;
-  padding: 12px;
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-lg);
   color: #e0e8ff;
   font-family:
     system-ui,
@@ -53,21 +53,21 @@
     BlinkMacSystemFont,
     'Segoe UI',
     sans-serif;
-  font-size: 0.85rem;
+  font-size: var(--font-size-lg);
   line-height: 1.5;
   resize: none;
   outline: none;
-  transition: all 0.2s ease;
+  transition: var(--transition-base);
 }
 
 .bias-definition-textarea::placeholder {
-  color: #8085a0;
+  color: var(--color-text-muted);
   font-style: italic;
   line-height: 1.4;
 }
 
 .bias-definition-textarea:focus {
-  border-color: #e0c070;
+  border-color: var(--color-accent-primary);
   box-shadow: 0 0 0 2px rgba(224, 192, 112, 0.1);
 }
 

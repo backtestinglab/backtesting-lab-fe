@@ -1,10 +1,10 @@
 .code-mode-placeholder {
-  background-color: rgba(20, 22, 30, 0.6);
+  background-color: var(--color-bg-primary);
   border: 1px solid rgba(60, 65, 85, 0.5);
-  border-radius: 4px;
-  padding: 24px;
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-xxl);
   text-align: center;
-  color: #8085a0;
+  color: var(--color-text-muted);
   font-style: italic;
   font-size: 0.9rem;
   height: 100%;
@@ -15,8 +15,8 @@
 }
 
 .code-mode-placeholder h4 {
-  margin: 0 0 12px 0;
-  font-size: 0.85rem;
+  margin: 0 0 var(--spacing-lg) 0;
+  font-size: var(--font-size-lg);
   font-weight: 600;
   color: #d0d8f0;
   text-transform: uppercase;
@@ -26,16 +26,16 @@
 .code-placeholder-content {
   background-color: rgba(10, 12, 18, 0.8);
   border: 1px solid rgba(60, 65, 85, 0.4);
-  border-radius: 4px;
-  padding: 16px;
-  margin: 16px 0;
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-xl);
+  margin: var(--spacing-xl) 0;
   text-align: left;
 }
 
 .code-placeholder-content code {
   color: #a0c4ff;
   font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-  font-size: 0.85rem;
+  font-size: var(--font-size-lg);
   line-height: 1.4;
   white-space: pre-line;
 }

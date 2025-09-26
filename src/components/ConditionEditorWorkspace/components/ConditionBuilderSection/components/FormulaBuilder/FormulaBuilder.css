@@ -5,13 +5,13 @@
 
 .formula-builder.horizontal {
   flex-direction: row;
-  gap: 8px;
+  gap: var(--spacing-md);
   flex-shrink: 0;
 }
 
 .formula-builder.vertical {
   flex-direction: column;
-  gap: 3px;
+  gap: var(--spacing-xs);
   width: 100%;
 }
 
@@ -23,12 +23,12 @@
   height: 32px;
   border: none;
   background: transparent;
-  border-radius: 2px;
+  border-radius: var(--border-radius-sm);
   cursor: pointer;
   font-size: 1.2rem;
   font-weight: bold;
-  transition: all 0.2s ease;
-  color: #a0a8c0;
+  transition: var(--transition-base);
+  color: var(--color-text-secondary);
   padding: 2px;
 }
 
@@ -39,13 +39,13 @@
 
 .bias-option.active {
   background-color: rgba(224, 192, 112, 0.2);
-  color: #e0c070;
-  border: 1px solid #e0c070;
+  color: var(--color-accent-primary);
+  border: 1px solid var(--color-accent-primary);
 }
 
 .bias-option:focus {
-  outline: 2px solid #e0c070;
-  outline-offset: 2px;
+  outline: var(--focus-outline-width) solid var(--focus-outline-color);
+  outline-offset: var(--focus-outline-offset);
 }
 
 .formula-builder .bias-dropdown,
@@ -72,23 +72,23 @@
 
 .formula-builder .dropdown-trigger.variant-mini {
   width: 100%;
-  padding: 4px 6px;
-  background-color: rgba(20, 22, 30, 0.6);
+  padding: var(--spacing-sm) 6px;
+  background-color: var(--color-bg-primary);
   border: 1px solid rgba(60, 65, 85, 0.5);
   color: #c0c8e0;
-  border-radius: 3px;
-  font-size: 0.7rem;
+  border-radius: var(--border-radius-base);
+  font-size: var(--font-size-sm);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: var(--transition-base);
 }
 
 .formula-builder .dropdown-trigger.variant-mini:hover:not(.disabled) {
-  border-color: #e0c070;
-  background-color: rgba(20, 22, 30, 0.8);
+  border-color: var(--color-accent-primary);
+  background-color: var(--color-bg-secondary);
 }
 
 .formula-builder .dropdown-trigger.variant-mini:focus {
   outline: none;
-  border-color: #e0c070;
-  background-color: rgba(20, 22, 30, 0.9);
+  border-color: var(--color-accent-primary);
+  background-color: var(--color-bg-tertiary);
 }

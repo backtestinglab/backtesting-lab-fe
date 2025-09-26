@@ -12,12 +12,12 @@
 .north-star-toggle {
   background: none;
   border: none;
-  font-size: 0.8rem;
+  font-size: var(--font-size-base);
   cursor: pointer;
   padding: 0 6px;
-  border-radius: 2px;
+  border-radius: var(--border-radius-sm);
   opacity: 0.6;
-  transition: all 0.2s ease;
+  transition: var(--transition-base);
 }
 
 .north-star-toggle:hover {
@@ -35,18 +35,18 @@
    =================================== */
 
 .preview-section {
-  background-color: rgba(20, 22, 30, 0.6);
+  background-color: var(--color-bg-primary);
   border: 1px solid rgba(60, 65, 85, 0.5);
-  border-radius: 4px;
-  padding: 12px;
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-lg);
   display: flex;
   flex-direction: column;
   flex-grow: 1;
 }
 
 .preview-section h4 {
-  margin: 0 0 12px 0;
-  font-size: 0.85rem;
+  margin: 0 0 var(--spacing-lg) 0;
+  font-size: var(--font-size-lg);
   font-weight: 600;
   color: #d0d8f0;
   text-transform: uppercase;
@@ -57,7 +57,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: var(--spacing-xl);
 }
 
 .preview-header h4 {
@@ -69,7 +69,7 @@
   flex-direction: column;
   gap: 6px;
   align-items: flex-end;
-  font-size: 0.8rem;
+  font-size: var(--font-size-base);
 }
 
 .display-label {
@@ -82,15 +82,15 @@
 
 .display-checkboxes {
   display: flex;
-  gap: 12px;
+  gap: var(--spacing-lg);
 }
 
 .display-checkboxes label {
   display: flex;
   align-items: center;
-  gap: 4px;
-  font-size: 0.8rem;
-  color: #a0a8c0;
+  gap: var(--spacing-sm);
+  font-size: var(--font-size-base);
+  color: var(--color-text-secondary);
   cursor: pointer;
 }
 
@@ -100,11 +100,11 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 16px;
+  gap: var(--spacing-xl);
 }
 
 .condition-summary {
-  font-size: 1.1rem;
+  font-size: var(--font-size-xl);
   color: #e0e8ff;
   text-align: center;
   font-style: italic;
@@ -113,7 +113,7 @@
 
 .preview-actions {
   display: flex;
-  gap: 8px;
+  gap: var(--spacing-md);
   margin-left: auto;
 }
 
@@ -131,7 +131,7 @@
 .mini-preview-actions {
   display: flex;
   flex-direction: row;
-  gap: 8px;
+  gap: var(--spacing-md);
   justify-content: center;
 }
 
@@ -143,7 +143,7 @@
 }
 
 .mini-status-message {
-  font-size: 0.6rem;
+  font-size: var(--font-size-xs);
   color: #f0b070;
   font-style: italic;
   text-align: center;
@@ -155,7 +155,7 @@
 
 .north-star-expanded {
   justify-content: flex-start;
-  padding: 8px;
+  padding: var(--spacing-md);
 }
 
 .bias-definition-textarea-mini {
@@ -163,8 +163,8 @@
   height: 100%;
   background-color: rgba(30, 33, 48, 0.8);
   border: 1px solid rgba(60, 65, 85, 0.6);
-  border-radius: 4px;
-  padding: 8px;
+  border-radius: var(--border-radius-lg);
+  padding: var(--spacing-md);
   color: #e0e8ff;
   font-family:
     system-ui,
@@ -172,16 +172,16 @@
     BlinkMacSystemFont,
     'Segoe UI',
     sans-serif;
-  font-size: 0.7rem;
+  font-size: var(--font-size-sm);
   line-height: 1.4;
   resize: none;
   outline: none;
-  transition: all 0.2s ease;
+  transition: var(--transition-base);
   box-sizing: border-box;
 }
 
 .bias-definition-textarea-mini::placeholder {
-  color: #8085a0;
+  color: var(--color-text-muted);
   font-style: italic;
   line-height: 1.3;
 }
