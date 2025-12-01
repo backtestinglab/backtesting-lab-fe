@@ -6,6 +6,7 @@ import ConditionEditorWorkspace from '../../components/ConditionEditorWorkspace/
 import DrawingPropertiesToolbar from '../../components/DrawingPropertiesToolbar/DrawingPropertiesToolbar'
 import DrawingSettingsModal from '../../components/DrawingSettingsModal/DrawingSettingsModal'
 import DrawingToolbar from '../../components/DrawingToolbar/DrawingToolbar'
+import Icon from '../../components/Icon/Icon'
 import SaveTemplateModal from '../../components/SaveTemplateModal/SaveTemplateModal'
 
 import logo from '../../assets/logo.svg'
@@ -668,8 +669,12 @@ const Develop = ({ modelConfig }) => {
                 />
               </>
             )}
-            <button onClick={() => togglePanelFullScreen('chart')}>
-              {isChartFullScreen ? 'Minimize' : 'Maximize'}
+            <button
+              className={`chart-fullscreen-toggle ${isChartFullScreen ? 'active' : ''}`}
+              onClick={() => togglePanelFullScreen('chart')}
+              title={isChartFullScreen ? 'Minimize' : 'Maximize'}
+            >
+              <Icon icon="fullscreen" />
             </button>
           </section>
         )}
@@ -691,19 +696,25 @@ const Develop = ({ modelConfig }) => {
           <section className={`results-area ${isResultsFullScreen ? 'full-screen' : 'normal'}`}>
             <div className="panel-header">
               <h3>Occurrences (0)</h3>
-              <div className="results-controls">
-                <button title="Previous Occurrence" className="up-arrow">
-                  ▲
-                </button>
-                <button title="Next Occurrence" className="down-arrow">
-                  ▲
+              <div className="panel-header-controls">
+                <div className="results-controls">
+                  <button title="Previous Occurrence" className="up-arrow">
+                    ▲
+                  </button>
+                  <button title="Next Occurrence" className="down-arrow">
+                    ▲
+                  </button>
+                </div>
+                <button
+                  className={`fullscreen-toggle-button-base ${isResultsFullScreen ? 'active' : ''}`}
+                  onClick={() => togglePanelFullScreen('results')}
+                  title={isResultsFullScreen ? 'Minimize' : 'Maximize'}
+                >
+                  <Icon icon="fullscreen" />
                 </button>
               </div>
             </div>
             <div className="placeholder-text">Results Table (Placeholder)</div>
-            <button onClick={() => togglePanelFullScreen('results')}>
-              {isResultsFullScreen ? 'Minimize' : 'Maximize'}
-            </button>
           </section>
         )}
       </main>

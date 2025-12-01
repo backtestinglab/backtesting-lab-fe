@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 
 import CodeModeEditor from './components/CodeModeEditor/CodeModeEditor'
 import ConditionBuilderSection from './components/ConditionBuilderSection/ConditionBuilderSection'
+import Icon from '../Icon/Icon'
 import NorthStarSection from './components/NorthStarSection/NorthStarSection'
 import PreviewSection from './components/PreviewSection/PreviewSection'
 
@@ -182,8 +183,12 @@ const ConditionEditorWorkspace = ({
               Code
             </span>
           </div>
-          <button className="minimize-button" onClick={onToggleFullScreen}>
-            {isFullScreen ? 'Minimize' : 'Maximize'}
+          <button
+            className={`fullscreen-toggle-button-base ${isFullScreen ? 'active' : ''}`}
+            onClick={onToggleFullScreen}
+            title={isFullScreen ? 'Minimize' : 'Maximize'}
+          >
+            <Icon icon="fullscreen" />
           </button>
         </div>
       </div>

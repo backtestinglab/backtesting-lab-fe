@@ -1,3 +1,5 @@
+@import '../../styles/fullscreen-button.css';
+
 .condition-editor-workspace {
   width: 100%;
   height: 100%;
@@ -62,23 +64,6 @@
 .mode-separator {
   margin: 0 var(--spacing-sm);
   color: var(--color-border-primary);
-}
-
-.minimize-button {
-  background: none;
-  border: 1px solid var(--color-border-primary);
-  color: var(--color-text-secondary);
-  padding: var(--spacing-sm) var(--spacing-md);
-  font-size: 0.75rem;
-  border-radius: var(--border-radius-base);
-  cursor: pointer;
-  transition: var(--transition-base);
-}
-
-.minimize-button:hover {
-  background-color: rgba(80, 85, 110, 0.4);
-  color: #fff;
-  border-color: #6070a0;
 }
 
 /* Content Area */

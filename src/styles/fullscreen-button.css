@@ -1,0 +1,35 @@
+/* Shared fullscreen toggle button styles (no border variant) */
+.fullscreen-toggle-button-base {
+  background-color: transparent;
+  border: none;
+  color: var(--color-text-secondary);
+  padding: 6px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--border-radius-base);
+  cursor: pointer;
+  transition: var(--transition-base);
+}
+
+.fullscreen-toggle-button-base:hover {
+  background-color: rgba(80, 85, 110, 0.4);
+  color: #fff;
+}
+
+.fullscreen-toggle-button-base.active {
+  background-color: rgba(80, 85, 110, 0.6);
+  color: #e0e8ff;
+}
+
+.fullscreen-toggle-button-base.active:hover {
+  background-color: rgba(80, 85, 110, 0.7);
+  color: #fff;
+}
+
+.fullscreen-toggle-button-base .icon-svg {
+  width: 16px;
+  height: 16px;
+}

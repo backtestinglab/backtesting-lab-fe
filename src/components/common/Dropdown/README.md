@@ -210,7 +210,7 @@ The component includes proper ARIA attributes:
 Run tests with:
 
 ```bash
-npm test Dropdown.test.jsx
+yarn test Dropdown.test.jsx
 ```
 
 The component includes comprehensive tests for:

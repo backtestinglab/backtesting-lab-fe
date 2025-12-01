@@ -1,3 +1,5 @@
+@import '../../styles/fullscreen-button.css';
+
 @keyframes fadeInPage {
   from {
     opacity: 0;
@@ -234,6 +236,54 @@
 .results-controls .down-arrow {
   transform: rotate(180deg);
 }
+
+.panel-header-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+/* Chart fullscreen toggle - absolutely positioned */
+.chart-fullscreen-toggle {
+  position: absolute;
+  top: 10px;
+  right: 100px;
+  z-index: 10;
+  background-color: rgba(30, 33, 48, 0.8);
+  border: 1px solid rgba(60, 65, 85, 0.7);
+  color: #a0a8c0;
+  padding: 6px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.chart-fullscreen-toggle:hover {
+  background-color: rgba(80, 85, 115, 0.9);
+  color: #fff;
+}
+
+.chart-fullscreen-toggle.active {
+  background-color: rgba(80, 85, 115, 0.9);
+  color: #fff;
+}
+
+.chart-fullscreen-toggle.active:hover {
+  background-color: rgba(80, 85, 115, 1);
+  color: #fff;
+}
+
+.chart-fullscreen-toggle .icon-svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Results fullscreen toggle uses shared base styles from fullscreen-button.css */
 
 .chart-indicators-display {
   position: absolute;
