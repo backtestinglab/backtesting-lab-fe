@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import { shouldShowFinishButton, getFinishButtonText } from '../../utils/formulaUtils'
 import PreviewText from './components/PreviewText/PreviewText'
 import ActionButtons from '../ConditionBuilderSection/components/ActionButtons/ActionButtons'
+import TestResultsModal from '../TestResultsModal/TestResultsModal'
 import './PreviewSection.css'
 
 const PreviewSection = ({
@@ -26,6 +27,8 @@ const PreviewSection = ({
 }) => {
   // Test sample state
   const [isTestLoading, setIsTestLoading] = useState(false)
+  const [testResults, setTestResults] = useState(null)
+  const [isTestModalOpen, setIsTestModalOpen] = useState(false)
 
   const getMinimizedPreviewData = () => {
     if (previewRows.length === 0) {
@@ -87,9 +90,12 @@ const PreviewSection = ({
         timeframe
       })
 
-      console.log('Test results:', response)
-
-      // TODO: Open TestResultsModal when implemented (T021.10.5)
+      if (response.success) {
+        setTestResults(response)
+        setIsTestModalOpen(true)
+      } else {
+        console.error('Test failed:', response.error || 'Unknown error')
+      }
     } catch (error) {
       console.error('Test sample error:', error)
     } finally {
@@ -115,67 +121,76 @@ const PreviewSection = ({
   // Render minimized layout - single return with conditional content
   if (isMinimized) {
     return (
-      <div className="mini-section mini-preview-section">
-        <div className="section-header">
-          {showNorthStar ? 'Preview > North Star' : 'Preview'}
-          <button
-            className={`north-star-toggle ${showNorthStar ? 'active' : ''}`}
-            onClick={onToggleNorthStar}
-            title="Define your bias in plain English"
-          >
-            ⭐
-          </button>
+      <>
+        <div className="mini-section mini-preview-section">
+          <div className="section-header">
+            {showNorthStar ? 'Preview > North Star' : 'Preview'}
+            <button
+              className={`north-star-toggle ${showNorthStar ? 'active' : ''}`}
+              onClick={onToggleNorthStar}
+              title="Define your bias in plain English"
+            >
+              ⭐
+            </button>
+          </div>
+          <div className={`mini-section-content ${showNorthStar ? 'north-star-expanded' : ''}`}>
+            {showNorthStar ? (
+              <textarea
+                className="bias-definition-textarea-mini"
+                placeholder="Describe what makes you think the market will move in this direction..."
+                value={biasDefinition}
+                onChange={onBiasDefinitionChange}
+              />
+            ) : (
+              <>
+                <div className="mini-preview-container">
+                  <PreviewText
+                    rows={previewRows}
+                    statusMessage=""
+                    layout="compact"
+                    formulaVisibility={formulaVisibility}
+                    onFormulaVisibilityToggle={onFormulaVisibilityToggle}
+                    className=""
+                    showFinishButton={finishButtonState.showButton}
+                    onFinishClick={handleFinishFormula}
+                    finishButtonText={finishButtonState.buttonText}
+                  />
+                </div>
+                <div className="mini-preview-bottom">
+                  <ActionButtons
+                    buttons={[
+                      {
+                        type: 'test',
+                        text: isTestLoading ? 'Testing...' : 'Test',
+                        onClick: handleTestSample,
+                        show: true,
+                        disabled: statusMessage !== 'Ready to test' || isTestLoading
+                      },
+                      {
+                        type: 'scan',
+                        text: 'Scan',
+                        onClick: () => {},
+                        show: true,
+                        disabled: statusMessage !== 'Ready to test'
+                      }
+                    ]}
+                    size="mini"
+                    className="mini-preview-actions"
+                  />
+                  <div className="mini-status-message">{statusMessage}</div>
+                </div>
+              </>
+            )}
+          </div>
         </div>
-        <div className={`mini-section-content ${showNorthStar ? 'north-star-expanded' : ''}`}>
-          {showNorthStar ? (
-            <textarea
-              className="bias-definition-textarea-mini"
-              placeholder="Describe what makes you think the market will move in this direction..."
-              value={biasDefinition}
-              onChange={onBiasDefinitionChange}
-            />
-          ) : (
-            <>
-              <div className="mini-preview-container">
-                <PreviewText
-                  rows={previewRows}
-                  statusMessage=""
-                  layout="compact"
-                  formulaVisibility={formulaVisibility}
-                  onFormulaVisibilityToggle={onFormulaVisibilityToggle}
-                  className=""
-                  showFinishButton={finishButtonState.showButton}
-                  onFinishClick={handleFinishFormula}
-                  finishButtonText={finishButtonState.buttonText}
-                />
-              </div>
-              <div className="mini-preview-bottom">
-                <ActionButtons
-                  buttons={[
-                    {
-                      type: 'test',
-                      text: isTestLoading ? 'Testing...' : 'Test',
-                      onClick: handleTestSample,
-                      show: true,
-                      disabled: statusMessage !== 'Ready to test' || isTestLoading
-                    },
-                    {
-                      type: 'scan',
-                      text: 'Scan',
-                      onClick: () => {},
-                      show: true,
-                      disabled: statusMessage !== 'Ready to test'
-                    }
-                  ]}
-                  size="mini"
-                  className="mini-preview-actions"
-                />
-                <div className="mini-status-message">{statusMessage}</div>
-              </div>
-            </>
-          )}
-        </div>
-      </div>
+
+        <TestResultsModal
+          isOpen={isTestModalOpen}
+          onClose={() => setIsTestModalOpen(false)}
+          testResults={testResults}
+          formulas={formulaState?.completedFormulas || {}}
+        />
+      </>
     )
   }
 
@@ -252,6 +267,13 @@ const PreviewSection = ({
           className=""
         />
       </div>
+
+      <TestResultsModal
+        isOpen={isTestModalOpen}
+        onClose={() => setIsTestModalOpen(false)}
+        testResults={testResults}
+        formulas={formulaState?.completedFormulas || {}}
+      />
     </div>
   )
 }
