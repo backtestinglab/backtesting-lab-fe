@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useMemo, useState } from 'react'
 import PropTypes from 'prop-types'
 
 import { shouldShowFinishButton, getFinishButtonText } from '../../utils/formulaUtils'
@@ -24,6 +24,9 @@ const PreviewSection = ({
   hasFormulaChanges,
   handleFinishFormula
 }) => {
+  // Test sample state
+  const [isTestLoading, setIsTestLoading] = useState(false)
+
   const getMinimizedPreviewData = () => {
     if (previewRows.length === 0) {
       return {
@@ -42,7 +45,57 @@ const PreviewSection = ({
     }
   }
 
-  const previewData = getMinimizedPreviewData()
+  const previewData = getMinimizedPreviewData() // CLEAN UP? - Currently unused
+
+  const handleTestSample = async () => {
+    // Validate prerequisites
+    if (!datasetId) {
+      console.warn('Cannot test: No dataset selected')
+      return
+    }
+
+    if (!formulaState?.completedFormulas) {
+      console.warn('Cannot test: No formulas available')
+      return
+    }
+
+    setIsTestLoading(true)
+
+    try {
+      // Build formulas array from completed formulas
+      const formulas = Object.values(formulaState.completedFormulas).filter(Boolean)
+
+      if (formulas.length === 0) {
+        console.warn('Cannot test: No completed formulas')
+        setIsTestLoading(false)
+        return
+      }
+
+      // Get timeframe from first formula (all formulas must use same timeframe)
+      const timeframe = formulas[0]?.timeframe
+
+      if (!timeframe) {
+        console.warn('Cannot test: Formula missing timeframe')
+        setIsTestLoading(false)
+        return
+      }
+
+      // Call backend IPC
+      const response = await window.api.biasTestCondition({
+        formulas,
+        datasetId,
+        timeframe
+      })
+
+      console.log('Test results:', response)
+
+      // TODO: Open TestResultsModal when implemented (T021.10.5)
+    } catch (error) {
+      console.error('Test sample error:', error)
+    } finally {
+      setIsTestLoading(false)
+    }
+  }
 
   // Finish button state for minimized view
   const finishButtonState = useMemo(() => {
@@ -99,7 +152,13 @@ const PreviewSection = ({
               <div className="mini-preview-bottom">
                 <ActionButtons
                   buttons={[
-                    { type: 'test', text: 'Test', onClick: () => {}, show: true },
+                    {
+                      type: 'test',
+                      text: isTestLoading ? 'Testing...' : 'Test',
+                      onClick: handleTestSample,
+                      show: true,
+                      disabled: statusMessage !== 'Ready to test' || isTestLoading
+                    },
                     {
                       type: 'scan',
                       text: 'Scan',
@@ -174,7 +233,13 @@ const PreviewSection = ({
       <div className="preview-actions">
         <ActionButtons
           buttons={[
-            { type: 'test', text: '▶️ Test Sample', onClick: () => {}, show: true },
+            {
+              type: 'test',
+              text: isTestLoading ? '⏳ Testing...' : '▶️ Test Sample',
+              onClick: handleTestSample,
+              show: true,
+              disabled: statusMessage !== 'Ready to test' || isTestLoading
+            },
             {
               type: 'scan',
               text: '🔍 Run Scan',

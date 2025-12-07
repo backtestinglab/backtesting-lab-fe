@@ -76,6 +76,9 @@ const ConditionEditorWorkspace = ({
               statusMessage={statusMessage}
               formulaVisibility={displayState.displayFormulas}
               onFormulaVisibilityToggle={handleDisplayToggle}
+              formulaState={formulaState}
+              hasFormulaChanges={hasFormulaChanges}
+              handleFinishFormula={handleFinishFormula}
             />
 
             <ConditionBuilderSection

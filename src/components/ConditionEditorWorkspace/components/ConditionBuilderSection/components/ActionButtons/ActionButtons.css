@@ -44,7 +44,7 @@
   color: var(--color-accent-primary);
 }
 
-.test-sample-button:hover {
+.test-sample-button:hover:not(:disabled) {
   background-color: rgba(224, 192, 112, 0.2);
   color: var(--color-accent-hover);
   border-color: var(--color-accent-hover);
@@ -61,7 +61,13 @@
   border-color: var(--color-accent-hover);
 }
 
-.test-sample-button:disabled,
+.test-sample-button:disabled {
+  opacity: 0.5;
+  cursor: default;
+  background-color: rgba(224, 192, 112, 0.1);
+  border-color: var(--color-accent-primary);
+}
+
 .run-scan-button:disabled {
   opacity: 0.5;
   cursor: default;
@@ -110,8 +116,8 @@
   transition: var(--transition-base);
 }
 
-.mini-test-button:hover,
-.mini-scan-button:not(:disabled):hover {
+.mini-test-button:hover:not(:disabled),
+.mini-scan-button:hover:not(:disabled) {
   background-color: rgba(80, 85, 110, 0.4);
   color: #fff;
 }
