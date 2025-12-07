@@ -15,6 +15,7 @@ import './ConditionEditorWorkspace.css'
 
 const ConditionEditorWorkspace = ({
   currentView,
+  datasetId,
   modelType,
   onToggleFullScreen,
   selectedTimeframes
@@ -67,6 +68,7 @@ const ConditionEditorWorkspace = ({
         ) : (
           <>
             <PreviewSection
+              datasetId={datasetId}
               displayState={displayState}
               handleDisplayToggle={handleDisplayToggle}
               isNeutralFormulaIncluded={isNeutralFormulaIncluded}
@@ -142,6 +144,7 @@ const ConditionEditorWorkspace = ({
             isMinimized={true}
           />
           <PreviewSection
+            datasetId={datasetId}
             displayState={displayState}
             handleDisplayToggle={handleDisplayToggle}
             isNeutralFormulaIncluded={isNeutralFormulaIncluded}
@@ -200,6 +203,7 @@ const ConditionEditorWorkspace = ({
 
 ConditionEditorWorkspace.propTypes = {
   currentView: PropTypes.string.isRequired,
+  datasetId: PropTypes.number,
   modelType: PropTypes.oneOf(['bias', 'trading']).isRequired,
   onToggleFullScreen: PropTypes.func.isRequired,
   selectedTimeframes: PropTypes.arrayOf(PropTypes.string)

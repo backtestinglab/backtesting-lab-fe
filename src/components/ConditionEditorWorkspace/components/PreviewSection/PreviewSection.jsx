@@ -7,6 +7,7 @@ import ActionButtons from '../ConditionBuilderSection/components/ActionButtons/A
 import './PreviewSection.css'
 
 const PreviewSection = ({
+  datasetId,
   displayState,
   handleDisplayToggle,
   isNeutralFormulaIncluded,
@@ -191,6 +192,7 @@ const PreviewSection = ({
 }
 
 PreviewSection.propTypes = {
+  datasetId: PropTypes.number,
   displayState: PropTypes.shape({
     displayFormulas: PropTypes.shape({
       bullish: PropTypes.bool.isRequired,

@@ -685,6 +685,7 @@ const Develop = ({ modelConfig }) => {
           >
             <ConditionEditorWorkspace
               currentView={currentView}
+              datasetId={modelConfig?.dataset?.id}
               modelType={modelType}
               onToggleFullScreen={() => togglePanelFullScreen('condition-editor')}
               selectedTimeframes={selectedTimeframes}
