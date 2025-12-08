@@ -1,8 +1,9 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
+import MiniChart from './components/MiniChart/MiniChart'
 import './TestResultsModal.css'
 
-const TestResultsModal = ({ formulas, isOpen, onClose, testResults }) => {
+const TestResultsModal = ({ chartData, formulas, isOpen, onClose, testResults }) => {
   const [currentPredictionIndex, setCurrentPredictionIndex] = useState(0)
   const [isNextCandleVisible, setIsNextCandleVisible] = useState(false)
 
@@ -36,12 +37,19 @@ const TestResultsModal = ({ formulas, isOpen, onClose, testResults }) => {
         </div>
 
         <div className="modal-content">
-          {/* Chart area - implemented in T021.10.6 */}
-          <div className="chart-container">
-            <div className="chart-placeholder">[Mini TradingView Chart Here]</div>
+          <div className="test-results-chart-container">
+            <MiniChart
+              chartData={chartData}
+              currentResult={currentResult}
+              formulas={formulas}
+              isNextCandleVisible={isNextCandleVisible}
+              onToggleNextCandle={handleToggleNextCandle}
+            />
 
             {/* Prediction overlay - implemented in T021.10.7 */}
-            <div className="prediction-overlay-placeholder">[Prediction Overlay Here]</div>
+            <div className="test-results-prediction-overlay-placeholder">
+              [Prediction Overlay Here]
+            </div>
           </div>
 
           <div className="navigation-controls">
@@ -84,6 +92,16 @@ const TestResultsModal = ({ formulas, isOpen, onClose, testResults }) => {
 }
 
 TestResultsModal.propTypes = {
+  chartData: PropTypes.arrayOf(
+    PropTypes.shape({
+      close: PropTypes.number.isRequired,
+      high: PropTypes.number.isRequired,
+      low: PropTypes.number.isRequired,
+      open: PropTypes.number.isRequired,
+      time: PropTypes.number.isRequired,
+      volume: PropTypes.number.isRequired
+    })
+  ).isRequired,
   formulas: PropTypes.object.isRequired,
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,

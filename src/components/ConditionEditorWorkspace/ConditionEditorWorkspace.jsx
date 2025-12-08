@@ -14,6 +14,7 @@ import usePreviewGenerator from './hooks/usePreviewGenerator'
 import './ConditionEditorWorkspace.css'
 
 const ConditionEditorWorkspace = ({
+  chartData,
   currentView,
   datasetId,
   modelType,
@@ -68,6 +69,7 @@ const ConditionEditorWorkspace = ({
         ) : (
           <>
             <PreviewSection
+              chartData={chartData}
               datasetId={datasetId}
               displayState={displayState}
               handleDisplayToggle={handleDisplayToggle}
@@ -147,6 +149,7 @@ const ConditionEditorWorkspace = ({
             isMinimized={true}
           />
           <PreviewSection
+            chartData={chartData}
             datasetId={datasetId}
             displayState={displayState}
             handleDisplayToggle={handleDisplayToggle}
@@ -205,6 +208,16 @@ const ConditionEditorWorkspace = ({
 }
 
 ConditionEditorWorkspace.propTypes = {
+  chartData: PropTypes.arrayOf(
+    PropTypes.shape({
+      close: PropTypes.number.isRequired,
+      high: PropTypes.number.isRequired,
+      low: PropTypes.number.isRequired,
+      open: PropTypes.number.isRequired,
+      time: PropTypes.number.isRequired,
+      volume: PropTypes.number.isRequired
+    })
+  ),
   currentView: PropTypes.string.isRequired,
   datasetId: PropTypes.number,
   modelType: PropTypes.oneOf(['bias', 'trading']).isRequired,

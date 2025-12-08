@@ -1,0 +1,58 @@
+.mini-chart-wrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.mini-chart {
+  width: 100%;
+  height: 100%;
+}
+
+.toggle-next-candle-btn {
+  position: absolute;
+  top: 50%;
+  right: 20px;
+  transform: translateY(-50%);
+  padding: var(--spacing-md) var(--spacing-xl);
+  background-color: rgba(0, 0, 0, 0.7);
+  border: 1px solid var(--color-accent-primary);
+  border-radius: var(--border-radius-base);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  z-index: 10;
+  transition: var(--transition-base);
+}
+
+.toggle-next-candle-btn:hover {
+  background-color: var(--color-accent-primary);
+  color: #121218;
+}
+
+.mini-chart-ohlc-overlay {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: rgba(0, 0, 0, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--border-radius-base);
+  color: #a0a8c0;
+  font-size: 0.8rem;
+  font-family: monospace;
+  z-index: 10;
+  pointer-events: none;
+  display: flex;
+  gap: 12px;
+}
+
+.mini-chart-ohlc-overlay span {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.mini-chart-ohlc-overlay .ohlc-value {
+  color: #e0e8ff;
+  font-weight: 600;
+}

@@ -8,6 +8,7 @@ import TestResultsModal from '../TestResultsModal/TestResultsModal'
 import './PreviewSection.css'
 
 const PreviewSection = ({
+  chartData,
   datasetId,
   displayState,
   handleDisplayToggle,
@@ -185,6 +186,7 @@ const PreviewSection = ({
         </div>
 
         <TestResultsModal
+          chartData={chartData || []}
           isOpen={isTestModalOpen}
           onClose={() => setIsTestModalOpen(false)}
           testResults={testResults}
@@ -269,6 +271,7 @@ const PreviewSection = ({
       </div>
 
       <TestResultsModal
+        chartData={chartData || []}
         isOpen={isTestModalOpen}
         onClose={() => setIsTestModalOpen(false)}
         testResults={testResults}
@@ -279,6 +282,16 @@ const PreviewSection = ({
 }
 
 PreviewSection.propTypes = {
+  chartData: PropTypes.arrayOf(
+    PropTypes.shape({
+      close: PropTypes.number.isRequired,
+      high: PropTypes.number.isRequired,
+      low: PropTypes.number.isRequired,
+      open: PropTypes.number.isRequired,
+      time: PropTypes.number.isRequired,
+      volume: PropTypes.number.isRequired
+    })
+  ),
   datasetId: PropTypes.number,
   displayState: PropTypes.shape({
     displayFormulas: PropTypes.shape({

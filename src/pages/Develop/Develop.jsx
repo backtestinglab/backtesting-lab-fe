@@ -684,6 +684,7 @@ const Develop = ({ modelConfig }) => {
             className={`condition-editor-area ${isConditionEditorFullScreen ? 'full-screen' : 'normal'}`}
           >
             <ConditionEditorWorkspace
+              chartData={chartData}
               currentView={currentView}
               datasetId={modelConfig?.dataset?.id}
               modelType={modelType}
