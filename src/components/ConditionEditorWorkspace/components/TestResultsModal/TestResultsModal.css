@@ -78,28 +78,6 @@
   flex-shrink: 0;
 }
 
-.test-results-chart-placeholder {
-  flex: 1;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--color-text-muted);
-  border-right: 1px solid var(--color-border-primary);
-}
-
-.test-results-prediction-overlay-placeholder {
-  width: 280px;
-  height: 100%;
-  padding: var(--spacing-xl);
-  background-color: rgba(30, 33, 48, 0.6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--color-text-muted);
-  font-size: var(--font-size-sm);
-}
-
 .navigation-controls {
   display: flex;
   align-items: center;

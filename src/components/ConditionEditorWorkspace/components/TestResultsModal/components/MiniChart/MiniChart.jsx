@@ -3,13 +3,7 @@ import PropTypes from 'prop-types'
 import { CandlestickSeries, createChart, LineSeries } from 'lightweight-charts'
 import './MiniChart.css'
 
-const MiniChart = ({
-  chartData,
-  currentResult,
-  formulas,
-  isNextCandleVisible,
-  onToggleNextCandle
-}) => {
+const MiniChart = ({ chartData, currentResult, formulas, isNextCandleVisible }) => {
   const chartContainerRef = useRef(null)
   const chartRef = useRef(null)
   const candleSeriesRef = useRef(null)
@@ -43,7 +37,8 @@ const MiniChart = ({
       timeScale: {
         borderColor: '#2B2B43',
         timeVisible: true,
-        secondsVisible: false
+        secondsVisible: false,
+        rightOffset: 8
       },
       rightPriceScale: {
         borderColor: '#2B2B43'
@@ -139,13 +134,15 @@ const MiniChart = ({
     const endIndex = isNextCandleVisible ? currentIndex + 1 : currentIndex
 
     // Prepare candle data
-    const displayData = chartData.slice(startIndex, endIndex + 1).map(({ time, open, high, low, close }) => ({
-      time,
-      open,
-      high,
-      low,
-      close
-    }))
+    const displayData = chartData
+      .slice(startIndex, endIndex + 1)
+      .map(({ time, open, high, low, close }) => ({
+        time,
+        open,
+        high,
+        low,
+        close
+      }))
 
     candleSeries.setData(displayData)
 
@@ -286,12 +283,6 @@ const MiniChart = ({
       )}
 
       <div ref={chartContainerRef} className="mini-chart" />
-
-      {/* Show/Hide Next Candle Button */}
-      {/* TODO: Move to Prediction Overlay Panel in T021.10.7 */}
-      <button className="toggle-next-candle-btn" onClick={onToggleNextCandle}>
-        {isNextCandleVisible ? '◼ Hide Next' : '▶ Show Next'}
-      </button>
     </div>
   )
 }
@@ -312,8 +303,7 @@ MiniChart.propTypes = {
     timestamp: PropTypes.number.isRequired
   }).isRequired,
   formulas: PropTypes.object.isRequired,
-  isNextCandleVisible: PropTypes.bool.isRequired,
-  onToggleNextCandle: PropTypes.func.isRequired
+  isNextCandleVisible: PropTypes.bool.isRequired
 }
 
 export default MiniChart

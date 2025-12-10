@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import MiniChart from './components/MiniChart/MiniChart'
+import PredictionOverlay from './components/PredictionOverlay/PredictionOverlay'
 import './TestResultsModal.css'
 
 const TestResultsModal = ({ chartData, formulas, isOpen, onClose, testResults }) => {
@@ -43,13 +44,16 @@ const TestResultsModal = ({ chartData, formulas, isOpen, onClose, testResults })
               currentResult={currentResult}
               formulas={formulas}
               isNextCandleVisible={isNextCandleVisible}
-              onToggleNextCandle={handleToggleNextCandle}
             />
 
-            {/* Prediction overlay - implemented in T021.10.7 */}
-            <div className="test-results-prediction-overlay-placeholder">
-              [Prediction Overlay Here]
-            </div>
+            <PredictionOverlay
+              currentIndex={currentPredictionIndex}
+              currentResult={currentResult}
+              formulas={formulas}
+              isNextCandleVisible={isNextCandleVisible}
+              onToggleNextCandle={handleToggleNextCandle}
+              totalPredictions={results.length}
+            />
           </div>
 
           <div className="navigation-controls">
