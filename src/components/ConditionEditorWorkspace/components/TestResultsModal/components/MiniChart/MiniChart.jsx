@@ -3,11 +3,13 @@ import PropTypes from 'prop-types'
 import { CandlestickSeries, createChart, LineSeries } from 'lightweight-charts'
 import './MiniChart.css'
 
-const MiniChart = ({ chartData, currentResult, formulas, isNextCandleVisible }) => {
+const MiniChart = ({ chartData, currentResult, isNextCandleVisible }) => {
   const chartContainerRef = useRef(null)
   const chartRef = useRef(null)
   const candleSeriesRef = useRef(null)
+  const indicatorSeriesRef = useRef([])
   const chartDataRef = useRef(chartData)
+  const previousResultTimestamp = useRef(null)
   const [ohlc, setOhlc] = useState(null)
 
   // Keep chartDataRef updated
@@ -80,6 +82,7 @@ const MiniChart = ({ chartData, currentResult, formulas, isNextCandleVisible }) 
       chart.remove()
       chartRef.current = null
       candleSeriesRef.current = null
+      indicatorSeriesRef.current = []
     }
   }, []) // Only initialize once on mount
 
@@ -106,28 +109,8 @@ const MiniChart = ({ chartData, currentResult, formulas, isNextCandleVisible }) 
       return
     }
 
-    // Calculate context count based on formulas
-    // Track the largest SMA period if any SMA indicators are used
-    let largestSmaPeriod = 0
-    let hasSmaPeriod = false
-
-    Object.values(formulas).forEach((formulaObj) => {
-      const formulaString = formulaObj?.formula || formulaObj
-      if (typeof formulaString === 'string') {
-        const parsed = parseFormulaString(formulaString)
-        if (parsed.indicator1.type === 'SMA') {
-          largestSmaPeriod = Math.max(largestSmaPeriod, parsed.indicator1.param)
-          hasSmaPeriod = true
-        }
-        if (parsed.indicator2.type === 'SMA') {
-          largestSmaPeriod = Math.max(largestSmaPeriod, parsed.indicator2.param)
-          hasSmaPeriod = true
-        }
-      }
-    })
-
-    // Set context count: use SMA period if present, otherwise default to 20 for visual context
-    const contextCount = hasSmaPeriod ? largestSmaPeriod : 20
+    // Get context count from backend
+    const contextCount = currentResult.contextCount || 20
 
     // Determine visible range
     const startIndex = Math.max(0, currentIndex - contextCount)
@@ -146,121 +129,97 @@ const MiniChart = ({ chartData, currentResult, formulas, isNextCandleVisible }) 
 
     candleSeries.setData(displayData)
 
-    // Set initial OHLC to last candle in displayData
-    if (displayData.length > 0) {
+    // Set initial OHLC when prediction changes
+    const isPredictionChange = previousResultTimestamp.current !== currentResult.timestamp
+    if (isPredictionChange && displayData.length > 0) {
       const lastCandle = chartData[endIndex]
       if (lastCandle) {
         setOhlc(lastCandle)
       }
+      previousResultTimestamp.current = currentResult.timestamp
     }
 
-    // Remove old indicator series if they exist
-    // (We need to track and remove old series, but for simplicity, let's recreate on each update)
-    // TODO: Optimize by tracking series refs and only updating data instead of recreating
+    // Remove old indicator series
+    indicatorSeriesRef.current.forEach((series) => {
+      try {
+        chart.removeSeries(series)
+      } catch {
+        // Series may already be removed
+      }
+    })
+    indicatorSeriesRef.current = []
 
     // Add indicator lines if present in current result
     if (currentResult.indicators) {
-      // PDH line
-      if (
-        typeof currentResult.indicators.pdh === 'number' &&
-        !isNaN(currentResult.indicators.pdh)
-      ) {
+      // PDH line (step function - dashed orange)
+      if (currentResult.indicators.pdh && currentResult.indicators.pdh.length > 0) {
         const pdhLine = chart.addSeries(LineSeries, {
           color: '#FF9800',
           lineWidth: 1,
-          lineStyle: 2,
-          title: 'PDH'
+          lineStyle: 2, // Dashed
+          lastValueVisible: false,
+          priceLineVisible: false
         })
 
-        const pdhData = displayData.map(({ time }) => ({
-          time,
-          value: currentResult.indicators.pdh
+        const pdhData = currentResult.indicators.pdh.map(({ timestamp, value }) => ({
+          time: timestamp,
+          value
         }))
 
         pdhLine.setData(pdhData)
+        indicatorSeriesRef.current.push(pdhLine)
       }
 
-      // PDL line
-      if (
-        typeof currentResult.indicators.pdl === 'number' &&
-        !isNaN(currentResult.indicators.pdl)
-      ) {
+      // PDL line (step function - dashed dark orange)
+      if (currentResult.indicators.pdl && currentResult.indicators.pdl.length > 0) {
         const pdlLine = chart.addSeries(LineSeries, {
           color: '#FF6B00',
           lineWidth: 1,
-          lineStyle: 2,
-          title: 'PDL'
+          lineStyle: 2, // Dashed
+          lastValueVisible: false,
+          priceLineVisible: false
         })
 
-        const pdlData = displayData.map(({ time }) => ({
-          time,
-          value: currentResult.indicators.pdl
+        const pdlData = currentResult.indicators.pdl.map(({ timestamp, value }) => ({
+          time: timestamp,
+          value
         }))
 
         pdlLine.setData(pdlData)
+        indicatorSeriesRef.current.push(pdlLine)
       }
 
-      // SMA lines - DISABLED until backend provides full historical SMA data
-      //
-      // Problem: Backend currently only returns ONE SMA value (at current candle timestamp)
-      // To draw proper SMA curves, we need SMA values for ALL context candles
-      //
-      // Current behavior if enabled: Horizontal line at current SMA value (misleading)
-      //
-      // Solution required: Backend must return full SMA arrays for visible range, or
-      // frontend must make separate indicator data request for visible timespan
-      //
-      // For now, SMA values are displayed in the Prediction Overlay panel only
-      //
-      // TODO (T021.10.14): Implement full SMA line plotting
-      // - Backend: Return full indicator arrays for visible range in test results
-      // - Frontend: Plot actual SMA curves instead of horizontal lines
-      // - Consider performance impact of calculating extra indicator data
+      // SMA lines (smooth curves - solid blue)
+      Object.keys(currentResult.indicators).forEach((key) => {
+        if (key.startsWith('sma') && currentResult.indicators[key].length > 0) {
+          const smaLine = chart.addSeries(LineSeries, {
+            color: '#2196F3',
+            lineWidth: 2,
+            lineStyle: 0, // Solid
+            lastValueVisible: false,
+            priceLineVisible: false
+          })
+
+          const smaData = currentResult.indicators[key].map(({ timestamp, value }) => ({
+            time: timestamp,
+            value
+          }))
+
+          smaLine.setData(smaData)
+          indicatorSeriesRef.current.push(smaLine)
+        }
+      })
     }
 
-    // Only fit content on first data load (when OHLC is null)
-    if (!ohlc) {
-      chart.timeScale().fitContent()
-    }
-  }, [currentResult, isNextCandleVisible, formulas, chartData, ohlc])
-
-  // Parse formula string to extract indicator info
-  const parseFormulaString = (formulaString) => {
-    // Simple parser - assumes format like "1H SMA(20) > SMA(50)"
-    const parts = formulaString.split(/\s+/)
-    const result = {
-      indicator1: { type: '', param: 0 },
-      indicator2: { type: '', param: 0 }
-    }
-
-    parts.forEach((part) => {
-      const smaMatch = part.match(/SMA\((\d+)\)/)
-      if (smaMatch) {
-        const param = parseInt(smaMatch[1])
-        if (!result.indicator1.type) {
-          result.indicator1 = { type: 'SMA', param }
-        } else {
-          result.indicator2 = { type: 'SMA', param }
-        }
-      }
-      if (part === 'PDH') {
-        if (!result.indicator1.type) {
-          result.indicator1 = { type: 'PDH', param: 0 }
-        } else {
-          result.indicator2 = { type: 'PDH', param: 0 }
-        }
-      }
-      if (part === 'PDL') {
-        if (!result.indicator1.type) {
-          result.indicator1 = { type: 'PDL', param: 0 }
-        } else {
-          result.indicator2 = { type: 'PDL', param: 0 }
-        }
-      }
+    // Set visible range AFTER all data and indicators are added
+    // Use setVisibleLogicalRange instead of fitContent to control exactly what's visible
+    // This shows bars from 0 to end, with 8 bars of space on the right (for rightOffset)
+    const totalBars = displayData.length
+    chart.timeScale().setVisibleLogicalRange({
+      from: 0, // Start from first candle
+      to: totalBars - 1 + 8 // End at last candle + 8 bars for right spacing
     })
-
-    return result
-  }
+  }, [currentResult, isNextCandleVisible, chartData])
 
   return (
     <div className="mini-chart-wrapper">
@@ -299,10 +258,17 @@ MiniChart.propTypes = {
     })
   ).isRequired,
   currentResult: PropTypes.shape({
-    indicators: PropTypes.object,
+    contextCount: PropTypes.number.isRequired,
+    indicators: PropTypes.objectOf(
+      PropTypes.arrayOf(
+        PropTypes.shape({
+          timestamp: PropTypes.number.isRequired,
+          value: PropTypes.number.isRequired
+        })
+      )
+    ),
     timestamp: PropTypes.number.isRequired
   }).isRequired,
-  formulas: PropTypes.object.isRequired,
   isNextCandleVisible: PropTypes.bool.isRequired
 }
 

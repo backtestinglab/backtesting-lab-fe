@@ -115,7 +115,14 @@ PredictionOverlay.propTypes = {
   currentResult: PropTypes.shape({
     accuracy: PropTypes.number.isRequired,
     actualDirection: PropTypes.string.isRequired,
-    indicators: PropTypes.object,
+    indicators: PropTypes.objectOf(
+      PropTypes.arrayOf(
+        PropTypes.shape({
+          timestamp: PropTypes.number.isRequired,
+          value: PropTypes.number.isRequired
+        })
+      )
+    ),
     predictedBias: PropTypes.string.isRequired,
     priceAtValidation: PropTypes.number
   }).isRequired,

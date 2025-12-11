@@ -42,7 +42,6 @@ const TestResultsModal = ({ chartData, formulas, isOpen, onClose, testResults })
             <MiniChart
               chartData={chartData}
               currentResult={currentResult}
-              formulas={formulas}
               isNextCandleVisible={isNextCandleVisible}
             />
 
@@ -119,7 +118,14 @@ TestResultsModal.propTypes = {
       PropTypes.shape({
         accuracy: PropTypes.number.isRequired,
         actualDirection: PropTypes.string.isRequired,
-        indicators: PropTypes.object,
+        indicators: PropTypes.objectOf(
+          PropTypes.arrayOf(
+            PropTypes.shape({
+              timestamp: PropTypes.number.isRequired,
+              value: PropTypes.number.isRequired
+            })
+          )
+        ),
         priceAtPrediction: PropTypes.number.isRequired,
         priceAtValidation: PropTypes.number,
         predictedBias: PropTypes.string.isRequired,
