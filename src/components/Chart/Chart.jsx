@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { CandlestickSeries, ColorType, createChart, HistogramSeries } from 'lightweight-charts'
 import { HorizontalLinePlugin } from './HorizontalLinePlugin'
 import PropTypes from 'prop-types'
+import { CHART_COLORS, getCandlestickSeriesConfig, getColorWithOpacity } from '../../config/chartConfig'
 
 import './Chart.css'
 
@@ -51,14 +52,7 @@ const Chart = ({
     chartRef.current = chart
 
     // --- Candlestick Series ---
-    const candleSeries = chart.addSeries(CandlestickSeries, {
-      upColor: '#26a69a',
-      downColor: '#ef5350',
-      borderDownColor: '#ef5350',
-      borderUpColor: '#26a69a',
-      wickDownColor: '#ef5350',
-      wickUpColor: '#26a69a'
-    })
+    const candleSeries = chart.addSeries(CandlestickSeries, getCandlestickSeriesConfig())
     candleSeriesRef.current = candleSeries
 
     // --- Plugin Initialization ---
@@ -196,7 +190,9 @@ const Chart = ({
       const volumeData = data.map((d) => ({
         time: d.time,
         value: d.volume,
-        color: d.close >= d.open ? 'rgba(38, 166, 154, 0.5)' : 'rgba(239, 83, 80, 0.5)'
+        color: d.close >= d.open
+          ? getColorWithOpacity(CHART_COLORS.bullish, 0.5)
+          : getColorWithOpacity(CHART_COLORS.bearish, 0.5)
       }))
       volumeSeriesRef.current.setData(volumeData)
     } else {

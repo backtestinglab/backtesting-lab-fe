@@ -17,6 +17,10 @@
   --color-accent-hover: #f0d080;
   --color-error: #ff6b6b;
 
+  /* Chart colors - synchronized with chartConfig.js */
+  --chart-color-bullish: #26a69a;
+  --chart-color-bearish: #ef5350;
+
   /* Spacing */
   --spacing-xs: 3px;
   --spacing-sm: 4px;

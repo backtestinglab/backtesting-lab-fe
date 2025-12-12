@@ -89,7 +89,9 @@
   pointer-events: none;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.15s ease, visibility 0.15s ease;
+  transition:
+    opacity 0.15s ease,
+    visibility 0.15s ease;
   margin-bottom: 4px;
   z-index: 100;
 }
@@ -176,13 +178,13 @@
 }
 
 .accuracy-badge.correct {
-  background-color: rgba(38, 166, 154, 0.2);
-  border: 1px solid #26a69a;
-  color: #26a69a;
+  background-color: color-mix(in srgb, var(--chart-color-bullish) 20%, transparent);
+  border: 1px solid var(--chart-color-bullish);
+  color: var(--chart-color-bullish);
 }
 
 .accuracy-badge.incorrect {
-  background-color: rgba(239, 83, 80, 0.2);
-  border: 1px solid #ef5350;
-  color: #ef5350;
+  background-color: color-mix(in srgb, var(--chart-color-bearish) 20%, transparent);
+  border: 1px solid var(--chart-color-bearish);
+  color: var(--chart-color-bearish);
 }

@@ -1,6 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { CandlestickSeries, createChart, LineSeries } from 'lightweight-charts'
+import {
+  CHART_COLORS,
+  getCandlestickSeriesConfig,
+  getColorWithOpacity,
+  INDICATOR_COLORS
+} from '../../../../../../config/chartConfig'
 import './MiniChart.css'
 
 const MiniChart = ({ chartData, currentResult, isNextCandleVisible }) => {
@@ -56,13 +62,7 @@ const MiniChart = ({ chartData, currentResult, isNextCandleVisible }) => {
     chartRef.current = chart
 
     // Add candlestick series
-    const candleSeries = chart.addSeries(CandlestickSeries, {
-      upColor: '#26a69a',
-      downColor: '#ef5350',
-      borderVisible: false,
-      wickUpColor: '#26a69a',
-      wickDownColor: '#ef5350'
-    })
+    const candleSeries = chart.addSeries(CandlestickSeries, getCandlestickSeriesConfig(true))
 
     candleSeriesRef.current = candleSeries
 
@@ -136,16 +136,34 @@ const MiniChart = ({ chartData, currentResult, isNextCandleVisible }) => {
     const startIndex = Math.max(0, currentIndex - contextCount)
     const endIndex = isNextCandleVisible ? currentIndex + 1 : currentIndex
 
-    // Prepare candle data
+    // Prepare candle data with opacity differentiation
     const displayData = chartData
       .slice(startIndex, endIndex + 1)
-      .map(({ time, open, high, low, close }) => ({
-        time,
-        open,
-        high,
-        low,
-        close
-      }))
+      .map(({ time, open, high, low, close }, index) => {
+        const globalIndex = startIndex + index
+        const isPredictionCandle = globalIndex === currentIndex
+        const isNextCandle = globalIndex === currentIndex + 1 && isNextCandleVisible
+
+        // Determine if this is a highlighted candle (prediction or next)
+        const isHighlighted = isPredictionCandle || isNextCandle
+
+        // Base candle data
+        const candle = { time, open, high, low, close }
+
+        // Add color properties for hollow vs solid differentiation
+        if (!isHighlighted) {
+          // Context candles: hollow with semi-transparent borders
+          const isBullish = close >= open
+          const baseColor = isBullish ? CHART_COLORS.bullish : CHART_COLORS.bearish
+          candle.color = 'transparent' // Hollow interior
+          candle.borderColor = getColorWithOpacity(baseColor, 0.5)
+          candle.wickColor = getColorWithOpacity(baseColor, 0.5)
+        }
+        // Prediction and next candles: solid with full opacity (use default colors)
+        // No color properties needed - will use series default
+
+        return candle
+      })
 
     candleSeries.setData(displayData)
 
@@ -174,7 +192,7 @@ const MiniChart = ({ chartData, currentResult, isNextCandleVisible }) => {
       // PDH line (step function - dashed orange)
       if (currentResult.indicators.pdh && currentResult.indicators.pdh.length > 0) {
         const pdhLine = chart.addSeries(LineSeries, {
-          color: '#FF9800',
+          color: INDICATOR_COLORS.pdh,
           lineWidth: 1,
           lineStyle: 2, // Dashed
           lastValueVisible: false,
@@ -193,7 +211,7 @@ const MiniChart = ({ chartData, currentResult, isNextCandleVisible }) => {
       // PDL line (step function - dashed dark orange)
       if (currentResult.indicators.pdl && currentResult.indicators.pdl.length > 0) {
         const pdlLine = chart.addSeries(LineSeries, {
-          color: '#FF6B00',
+          color: INDICATOR_COLORS.pdl,
           lineWidth: 1,
           lineStyle: 2, // Dashed
           lastValueVisible: false,
@@ -213,7 +231,7 @@ const MiniChart = ({ chartData, currentResult, isNextCandleVisible }) => {
       Object.keys(currentResult.indicators).forEach((key) => {
         if (key.startsWith('sma') && currentResult.indicators[key].length > 0) {
           const smaLine = chart.addSeries(LineSeries, {
-            color: '#2196F3',
+            color: INDICATOR_COLORS.sma,
             lineWidth: 2,
             lineStyle: 0, // Solid
             lastValueVisible: false,
