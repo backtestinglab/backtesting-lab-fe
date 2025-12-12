@@ -13,10 +13,35 @@ const PredictionOverlay = ({
   // Get the formula that matches this prediction
   const formula = formulas[currentResult.predictedBias]
 
-  // Build formula text from formula object
-  const getFormulaText = () => {
+  // Helper to get indicator value at current prediction timestamp
+  const getIndicatorValue = (indicatorType, param) => {
+    if (!currentResult.indicators) return null
+
+    // Build indicator key
+    let key = null
+    if (indicatorType === 'SMA') {
+      key = `sma${param}`
+    } else if (indicatorType === 'EMA') {
+      key = `ema${param}`
+    } else if (indicatorType === 'PDH') {
+      key = 'pdh'
+    } else if (indicatorType === 'PDL') {
+      key = 'pdl'
+    } else if (indicatorType === 'Value') {
+      return param // Static value, not an indicator
+    }
+
+    if (!key || !currentResult.indicators[key]) return null
+
+    // Find value at current prediction timestamp
+    const indicatorArray = currentResult.indicators[key]
+    const match = indicatorArray.find((item) => item.timestamp === currentResult.timestamp)
+    return match ? match.value : null
+  }
+
+  // Build formula text with interactive tooltips
+  const getFormulaTextWithTooltips = () => {
     if (!formula || typeof formula === 'string') {
-      // If formula is a string, return it directly
       return formula || 'Formula not available'
     }
 
@@ -24,6 +49,7 @@ const PredictionOverlay = ({
 
     // Format indicator 1
     const indicator1Text = indicator1Param ? `${indicator1}(${indicator1Param})` : indicator1
+    const indicator1Value = getIndicatorValue(indicator1, indicator1Param)
 
     // Format indicator 2
     let indicator2Text
@@ -34,8 +60,27 @@ const PredictionOverlay = ({
     } else {
       indicator2Text = indicator2
     }
+    const indicator2Value = getIndicatorValue(indicator2, indicator2Param)
 
-    return `${timeframe} ${indicator1Text} ${operator} ${indicator2Text}`
+    return (
+      <span>
+        {timeframe}{' '}
+        <span className="indicator-with-tooltip" data-tooltip={indicator1Value?.toFixed(2) || 'N/A'}>
+          {indicator1Text}
+        </span>{' '}
+        {operator}{' '}
+        {indicator2 === 'Value' ? (
+          <span>{indicator2Text}</span>
+        ) : (
+          <span
+            className="indicator-with-tooltip"
+            data-tooltip={indicator2Value?.toFixed(2) || 'N/A'}
+          >
+            {indicator2Text}
+          </span>
+        )}
+      </span>
+    )
   }
 
   // Get emoji for bias type
@@ -75,9 +120,7 @@ const PredictionOverlay = ({
 
       <div className="formula-section">
         <div className="formula-label">{formatBias(currentResult.predictedBias)} formula:</div>
-        <div className="formula-text" title="Hover over indicators to see values">
-          {getFormulaText()}
-        </div>
+        <div className="formula-text">{getFormulaTextWithTooltips()}</div>
       </div>
 
       <div className="show-next-section">

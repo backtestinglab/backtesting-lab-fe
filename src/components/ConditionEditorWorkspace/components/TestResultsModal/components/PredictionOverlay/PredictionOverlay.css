@@ -56,7 +56,47 @@
   color: var(--color-text-primary);
   font-family: monospace;
   line-height: 1.4;
+}
+
+.indicator-with-tooltip {
+  position: relative;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-decoration-color: var(--color-accent-primary);
   cursor: help;
+  color: var(--color-accent-primary);
+  transition: color 0.2s ease;
+}
+
+.indicator-with-tooltip:hover {
+  color: var(--color-accent-hover);
+}
+
+.indicator-with-tooltip::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.95);
+  border: 1px solid var(--color-accent-primary);
+  border-radius: var(--border-radius-sm);
+  padding: 4px 8px;
+  color: #e0e8ff;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.15s ease, visibility 0.15s ease;
+  margin-bottom: 4px;
+  z-index: 100;
+}
+
+.indicator-with-tooltip:hover::after {
+  opacity: 1;
+  visibility: visible;
 }
 
 .show-next-section {
