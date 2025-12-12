@@ -9,13 +9,19 @@ const MiniChart = ({ chartData, currentResult, isNextCandleVisible }) => {
   const candleSeriesRef = useRef(null)
   const indicatorSeriesRef = useRef([])
   const chartDataRef = useRef(chartData)
+  const currentResultRef = useRef(currentResult)
   const previousResultTimestamp = useRef(null)
   const [ohlc, setOhlc] = useState(null)
+  const [indicatorValues, setIndicatorValues] = useState(null)
 
-  // Keep chartDataRef updated
+  // Keep refs updated
   useEffect(() => {
     chartDataRef.current = chartData
   }, [chartData])
+
+  useEffect(() => {
+    currentResultRef.current = currentResult
+  }, [currentResult])
 
   // Initialize chart once
   useEffect(() => {
@@ -60,7 +66,7 @@ const MiniChart = ({ chartData, currentResult, isNextCandleVisible }) => {
 
     candleSeriesRef.current = candleSeries
 
-    // Subscribe to crosshair move for dynamic OHLC updates
+    // Subscribe to crosshair move for dynamic OHLC and indicator updates
     const crosshairMoveHandler = (param) => {
       if (param.seriesData.has(candleSeries)) {
         const candleData = param.seriesData.get(candleSeries)
@@ -71,6 +77,20 @@ const MiniChart = ({ chartData, currentResult, isNextCandleVisible }) => {
             setOhlc(fullDataPoint)
           }
         }
+      }
+
+      // Extract indicator values at hovered timestamp
+      const currentResultData = currentResultRef.current
+      if (param.time && currentResultData?.indicators) {
+        const values = {}
+        Object.keys(currentResultData.indicators).forEach((key) => {
+          const indicatorArray = currentResultData.indicators[key]
+          const match = indicatorArray.find((item) => item.timestamp === param.time)
+          if (match) {
+            values[key] = match.value
+          }
+        })
+        setIndicatorValues(values)
       }
     }
 
@@ -221,6 +241,21 @@ const MiniChart = ({ chartData, currentResult, isNextCandleVisible }) => {
     })
   }, [currentResult, isNextCandleVisible, chartData])
 
+  // Helper function to format indicator names for display
+  const formatIndicatorName = (key) => {
+    if (key === 'pdh') return 'PDH'
+    if (key === 'pdl') return 'PDL'
+    if (key.startsWith('sma')) {
+      const period = key.substring(3)
+      return `SMA(${period})`
+    }
+    if (key.startsWith('ema')) {
+      const period = key.substring(3)
+      return `EMA(${period})`
+    }
+    return key.toUpperCase()
+  }
+
   return (
     <div className="mini-chart-wrapper">
       {/* OHLC Overlay */}
@@ -238,6 +273,17 @@ const MiniChart = ({ chartData, currentResult, isNextCandleVisible }) => {
           <span>
             C <span className="ohlc-value">{ohlc.close?.toFixed(2)}</span>
           </span>
+        </div>
+      )}
+
+      {/* Indicator Overlay */}
+      {indicatorValues && Object.keys(indicatorValues).length > 0 && (
+        <div className="mini-chart-indicator-overlay">
+          {Object.entries(indicatorValues).map(([key, value]) => (
+            <span key={key} className="indicator-item">
+              {formatIndicatorName(key)} <span className="indicator-value">{value.toFixed(2)}</span>
+            </span>
+          ))}
         </div>
       )}
 
