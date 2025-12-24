@@ -74,3 +74,13 @@ export const shouldShowFinishButton = (currentFormula, completedFormulas, hasCha
 export const getFinishButtonText = (hasChanges) => {
   return hasChanges ? 'Update' : 'Finish'
 }
+
+// Price fields that indicate horizontal zones (price-based formulas)
+// PDH and PDL are indicators (calculated from historical data), NOT current price fields
+const PRICE_FIELDS = ['Close', 'Open', 'High', 'Low']
+
+// Determine if a formula is price-based (horizontal zones) or time-based (vertical time bands)
+export const isPriceBased = (formula) => {
+  if (!formula || !formula.indicator1) return false
+  return PRICE_FIELDS.includes(formula.indicator1)
+}

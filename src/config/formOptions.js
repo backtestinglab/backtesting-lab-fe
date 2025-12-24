@@ -46,6 +46,13 @@ export const INDICATOR_TYPE_OPTIONS = [
     }
   },
   {
+    value: 'Close',
+    label: 'Close',
+    metadata: {
+      configurable: false
+    }
+  },
+  {
     value: 'PDH',
     label: 'PDH',
     metadata: {

@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
+import { isPriceBased } from '../../utils/formulaUtils'
 import MiniChart from './components/MiniChart/MiniChart'
 import PredictionOverlay from './components/PredictionOverlay/PredictionOverlay'
 import './TestResultsModal.css'
@@ -7,6 +8,26 @@ import './TestResultsModal.css'
 const TestResultsModal = ({ chartData, formulas, isOpen, onClose, testResults }) => {
   const [currentPredictionIndex, setCurrentPredictionIndex] = useState(0)
   const [isNextCandleVisible, setIsNextCandleVisible] = useState(false)
+  const [hoverData, setHoverData] = useState(null)
+  const previousFormulasRef = useRef(formulas)
+
+  // Determine if any formula is time-based (for hiding explore mode)
+  const hasTimeBasedFormulas = useMemo(() => {
+    if (!formulas) return false
+    const allFormulas = [formulas.bullish, formulas.bearish, formulas.neutral].filter(Boolean)
+    return allFormulas.some((formula) => !isPriceBased(formula))
+  }, [formulas])
+
+  // Reset prediction index only when formulas actually change
+  useEffect(() => {
+    const formulasChanged = JSON.stringify(previousFormulasRef.current) !== JSON.stringify(formulas)
+
+    if (formulasChanged) {
+      setCurrentPredictionIndex(0)
+      setIsNextCandleVisible(false)
+      previousFormulasRef.current = formulas
+    }
+  }, [formulas])
 
   if (!isOpen || !testResults) return null
 
@@ -42,29 +63,23 @@ const TestResultsModal = ({ chartData, formulas, isOpen, onClose, testResults })
             <MiniChart
               chartData={chartData}
               currentResult={currentResult}
+              formulas={formulas}
               isNextCandleVisible={isNextCandleVisible}
+              onHoverData={setHoverData}
             />
 
             <PredictionOverlay
               currentIndex={currentPredictionIndex}
               currentResult={currentResult}
               formulas={formulas}
+              hasTimeBasedFormulas={hasTimeBasedFormulas}
+              hoverData={hoverData}
               isNextCandleVisible={isNextCandleVisible}
+              onNext={handleNext}
+              onPrevious={handlePrevious}
               onToggleNextCandle={handleToggleNextCandle}
               totalPredictions={results.length}
             />
-          </div>
-
-          <div className="navigation-controls">
-            <button onClick={handlePrevious} disabled={currentPredictionIndex === 0}>
-              ◄ Prev
-            </button>
-            <span className="navigation-label">
-              Prediction {currentPredictionIndex + 1} of {results.length}
-            </span>
-            <button onClick={handleNext} disabled={currentPredictionIndex === results.length - 1}>
-              Next ►
-            </button>
           </div>
 
           <div className="summary-section">

@@ -48,3 +48,33 @@ export const getCandlestickSeriesConfig = (borderVisible = false) => ({
   wickDownColor: CHART_COLORS.bearish,
   wickUpColor: CHART_COLORS.bullish
 })
+
+/**
+ * Returns the color for a given zone type with specified opacity
+ * @param {string} zoneType - Zone type: 'bullish', 'bearish', or 'neutral'
+ * @param {number} opacity - Opacity value between 0 and 1 (default: 0.15)
+ * @returns {string} RGBA color string for the zone
+ */
+export const getZoneColor = (zoneType, opacity = 0.15) => {
+  const zoneColors = {
+    bearish: CHART_COLORS.bearish,
+    bullish: CHART_COLORS.bullish,
+    neutral: 'rgba(200, 200, 200, 1)'
+  }
+
+  const baseColor = zoneColors[zoneType]
+  if (!baseColor) {
+    return `rgba(200, 200, 200, ${opacity})`
+  }
+
+  // If it's already rgba, extract RGB and apply new opacity
+  if (baseColor.startsWith('rgba')) {
+    const rgbMatch = baseColor.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/)
+    if (rgbMatch) {
+      return `rgba(${rgbMatch[1]}, ${rgbMatch[2]}, ${rgbMatch[3]}, ${opacity})`
+    }
+  }
+
+  // If it's a hex color, use getColorWithOpacity
+  return getColorWithOpacity(baseColor, opacity)
+}
