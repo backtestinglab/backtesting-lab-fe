@@ -31,8 +31,28 @@ const TestResultsModal = ({ chartData, formulas, isOpen, onClose, testResults })
 
   if (!isOpen || !testResults) return null
 
+  // Validate testResults structure
+  if (
+    !testResults.results ||
+    !Array.isArray(testResults.results) ||
+    testResults.results.length === 0
+  ) {
+    console.error('Invalid testResults: results array is missing or empty')
+    return null
+  }
+
+  if (!testResults.metrics || typeof testResults.metrics !== 'object') {
+    console.error('Invalid testResults: metrics object is missing')
+    return null
+  }
+
   const { results, metrics } = testResults
   const currentResult = results[currentPredictionIndex]
+
+  if (!currentResult) {
+    console.error('Invalid prediction index:', currentPredictionIndex)
+    return null
+  }
 
   const handlePrevious = () => {
     setCurrentPredictionIndex((prev) => Math.max(0, prev - 1))

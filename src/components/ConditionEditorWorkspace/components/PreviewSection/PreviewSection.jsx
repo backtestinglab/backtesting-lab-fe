@@ -30,36 +30,39 @@ const PreviewSection = ({
   const [isTestLoading, setIsTestLoading] = useState(false)
   const [testResults, setTestResults] = useState(null)
   const [isTestModalOpen, setIsTestModalOpen] = useState(false)
+  const [testError, setTestError] = useState(null)
 
-  const getMinimizedPreviewData = () => {
-    if (previewRows.length === 0) {
-      return {
-        rows: [],
-        isEmpty: true
-      }
+  // Helper function to convert technical backend errors to user-friendly messages
+  const sanitizeErrorMessage = (errorMessage) => {
+    if (!errorMessage) return 'An unexpected error occurred. Please try again.'
+
+    // Check for common error patterns
+    if (errorMessage.includes('No files found') || errorMessage.includes('parquet')) {
+      return 'Error: Data file is missing or corrupted. Please delete and re-upload the dataset, then try again.'
     }
 
-    return {
-      rows: previewRows.map((row) => ({
-        text: row.text + ' ' + row.emoji,
-        isCompleted: row.completed,
-        type: row.type
-      })),
-      isEmpty: previewRows.length === 0
+    if (errorMessage.includes('Dataset') && errorMessage.includes('not found')) {
+      return 'Dataset not found. Please select a valid dataset and try again.'
     }
+
+    if (errorMessage.includes('timeframe')) {
+      return 'Timeframe error. Please check your formula configuration and try again.'
+    }
+
+    if (errorMessage.includes('DuckDB') || errorMessage.includes('SQLite')) {
+      return 'Database error. Please restart the application and try again.'
+    }
+
+    // If no pattern matches, return a generic friendly message
+    console.error('Original backend error:', errorMessage)
+    return 'An error occurred while testing. Please try again or check your dataset and formulas.'
   }
 
-  const previewData = getMinimizedPreviewData() // CLEAN UP? - Currently unused
-
   const handleTestSample = async () => {
-    // Validate prerequisites
-    if (!datasetId) {
-      console.warn('Cannot test: No dataset selected')
-      return
-    }
+    setTestError(null)
 
     if (!formulaState?.completedFormulas) {
-      console.warn('Cannot test: No formulas available')
+      setTestError('No formulas available. Please complete at least one formula.')
       return
     }
 
@@ -69,17 +72,11 @@ const PreviewSection = ({
       // Build formulas array from completed formulas
       const formulas = Object.values(formulaState.completedFormulas).filter(Boolean)
 
-      if (formulas.length === 0) {
-        console.warn('Cannot test: No completed formulas')
-        setIsTestLoading(false)
-        return
-      }
-
       // Get timeframe from first formula (all formulas must use same timeframe)
       const timeframe = formulas[0]?.timeframe
 
       if (!timeframe) {
-        console.warn('Cannot test: Formula missing timeframe')
+        setTestError('Formula missing timeframe. Please check your formula configuration.')
         setIsTestLoading(false)
         return
       }
@@ -91,14 +88,38 @@ const PreviewSection = ({
         timeframe
       })
 
-      if (response.success) {
-        setTestResults(response)
-        setIsTestModalOpen(true)
-      } else {
-        console.error('Test failed:', response.error || 'Unknown error')
+      if (!response) {
+        setTestError('No response received from backend. Please try again.')
+        return
       }
+
+      if (!response.success) {
+        setTestError(sanitizeErrorMessage(response.message))
+        return
+      }
+
+      if (!response.results || !Array.isArray(response.results)) {
+        setTestError('Invalid response: missing results data.')
+        return
+      }
+
+      if (response.results.length === 0) {
+        setTestError(
+          'No predictions found. Your formulas may not match any candles in this dataset, or there may not be enough historical data for the indicators.'
+        )
+        return
+      }
+
+      if (!response.metrics || typeof response.metrics !== 'object') {
+        setTestError('Invalid response: missing metrics data.')
+        return
+      }
+
+      setTestResults(response)
+      setIsTestModalOpen(true)
     } catch (error) {
       console.error('Test sample error:', error)
+      setTestError(`Error: ${error.message || 'An unexpected error occurred. Please try again.'}`)
     } finally {
       setIsTestLoading(false)
     }
@@ -178,7 +199,12 @@ const PreviewSection = ({
                     size="mini"
                     className="mini-preview-actions"
                   />
-                  <div className="mini-status-message">{statusMessage}</div>
+                  <div
+                    className={`mini-status-message ${testError ? 'error' : ''}`}
+                    title={testError || undefined}
+                  >
+                    {testError || statusMessage}
+                  </div>
                 </div>
               </>
             )}
@@ -233,6 +259,16 @@ const PreviewSection = ({
           </div>
         </div>
       </div>
+
+      {testError && (
+        <div className="preview-error">
+          <span className="error-icon">⚠️</span>
+          <span className="error-message">{testError}</span>
+          <button className="error-dismiss" onClick={() => setTestError(null)}>
+            ×
+          </button>
+        </div>
+      )}
 
       <div className="section-content-centered">
         <div className="condition-summary">
