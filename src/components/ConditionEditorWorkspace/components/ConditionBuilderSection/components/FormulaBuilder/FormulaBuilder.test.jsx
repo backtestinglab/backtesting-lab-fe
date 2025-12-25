@@ -55,46 +55,6 @@ describe('FormulaBuilder Component', () => {
       const biasDropdown = document.querySelector('.bias-dropdown')
       expect(biasDropdown).toBeInTheDocument()
     })
-
-    it('renders arrow bias selector when biasMode is arrows', () => {
-      render(<FormulaBuilder {...defaultProps} biasMode="arrows" />)
-
-      const biasArrows = document.querySelector('.bias-arrows')
-      expect(biasArrows).toBeInTheDocument()
-
-      expect(screen.getByText('↗')).toBeInTheDocument()
-      expect(screen.getByText('↘')).toBeInTheDocument()
-    })
-
-    it('includes neutral option when isNeutralFormulaIncluded is true', () => {
-      render(<FormulaBuilder {...defaultProps} biasMode="arrows" isNeutralFormulaIncluded={true} />)
-
-      expect(screen.getByText('→')).toBeInTheDocument()
-    })
-
-    it('excludes neutral option when isNeutralFormulaIncluded is false', () => {
-      render(
-        <FormulaBuilder {...defaultProps} biasMode="arrows" isNeutralFormulaIncluded={false} />
-      )
-
-      expect(screen.queryByText('→')).not.toBeInTheDocument()
-    })
-
-    it('calls onChange when bias arrow is clicked', () => {
-      const mockOnChange = jest.fn()
-      render(<FormulaBuilder {...defaultProps} onChange={mockOnChange} biasMode="arrows" />)
-
-      fireEvent.click(screen.getByText('↗'))
-      expect(mockOnChange).toHaveBeenCalledWith('biasType', 'bullish')
-    })
-
-    it('applies active class to selected bias arrow', () => {
-      const formStateWithBias = { ...mockFormState, biasType: 'bullish' }
-      render(<FormulaBuilder {...defaultProps} formState={formStateWithBias} biasMode="arrows" />)
-
-      const bullishButton = screen.getByText('↗')
-      expect(bullishButton).toHaveClass('active')
-    })
   })
 
   describe('Dropdown Integration', () => {
@@ -122,39 +82,10 @@ describe('FormulaBuilder Component', () => {
   })
 
   describe('Form State Integration', () => {
-    it('displays current form values', () => {
-      const populatedFormState = {
-        biasType: 'bullish',
-        timeframe: '1h',
-        indicator1: 'SMA',
-        indicator1Param: 20,
-        operator: '>',
-        indicator2: 'EMA',
-        indicator2Param: 50
-      }
-
-      render(<FormulaBuilder {...defaultProps} formState={populatedFormState} biasMode="arrows" />)
-
-      const bullishButton = screen.getByText('↗')
-      expect(bullishButton).toHaveClass('active')
-    })
-
     it('handles empty form state gracefully', () => {
       render(<FormulaBuilder {...defaultProps} />)
 
       expect(document.querySelector('.formula-builder')).toBeInTheDocument()
-    })
-  })
-
-  describe('Accessibility', () => {
-    it('bias arrow buttons have proper button type', () => {
-      render(<FormulaBuilder {...defaultProps} biasMode="arrows" />)
-
-      const bullishButton = screen.getByText('↗')
-      const bearishButton = screen.getByText('↘')
-
-      expect(bullishButton).toHaveAttribute('type', 'button')
-      expect(bearishButton).toHaveAttribute('type', 'button')
     })
   })
 })

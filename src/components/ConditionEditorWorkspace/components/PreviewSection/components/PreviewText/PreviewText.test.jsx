@@ -111,7 +111,7 @@ describe('PreviewText Component', () => {
     })
   })
 
-  describe('Finish Button', () => {
+  describe('Finish Button (Compact Layout Only)', () => {
     it('shows finish button when conditions are met', () => {
       const incompleteLastRow = [
         ...mockRows,
@@ -127,6 +127,7 @@ describe('PreviewText Component', () => {
         <PreviewText
           {...defaultProps}
           rows={incompleteLastRow}
+          layout="compact"
           showFinishButton={true}
           finishButtonText="Complete Formula"
         />
@@ -145,7 +146,14 @@ describe('PreviewText Component', () => {
         }
       ]
 
-      render(<PreviewText {...defaultProps} rows={completedRows} showFinishButton={true} />)
+      render(
+        <PreviewText
+          {...defaultProps}
+          rows={completedRows}
+          layout="compact"
+          showFinishButton={true}
+        />
+      )
 
       expect(screen.queryByText('Finish Formula')).not.toBeInTheDocument()
     })
@@ -165,6 +173,7 @@ describe('PreviewText Component', () => {
         <PreviewText
           {...defaultProps}
           rows={incompleteRows}
+          layout="compact"
           showFinishButton={true}
           onFinishClick={mockOnFinishClick}
         />
@@ -174,7 +183,7 @@ describe('PreviewText Component', () => {
       expect(mockOnFinishClick).toHaveBeenCalledTimes(1)
     })
 
-    it('applies correct button class based on layout', () => {
+    it('applies compact layout button class', () => {
       const incompleteRows = [
         {
           type: 'bullish',
@@ -184,19 +193,13 @@ describe('PreviewText Component', () => {
         }
       ]
 
-      const { rerender } = render(
+      render(
         <PreviewText
           {...defaultProps}
           rows={incompleteRows}
           showFinishButton={true}
-          layout="default"
+          layout="compact"
         />
-      )
-
-      expect(screen.getByText('Finish Formula')).toHaveClass('finish-formula-button')
-
-      rerender(
-        <PreviewText {...defaultProps} rows={incompleteRows} showFinishButton={true} layout="compact" />
       )
 
       expect(screen.getByText('Finish Formula')).toHaveClass('mini-finish-button')
@@ -313,7 +316,14 @@ describe('PreviewText Component', () => {
         }
       ]
 
-      render(<PreviewText {...defaultProps} rows={incompleteRows} showFinishButton={true} />)
+      render(
+        <PreviewText
+          {...defaultProps}
+          rows={incompleteRows}
+          layout="compact"
+          showFinishButton={true}
+        />
+      )
 
       expect(screen.getByText('Finish Formula')).toHaveAttribute('type', 'button')
     })
