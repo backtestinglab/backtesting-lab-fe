@@ -9,6 +9,7 @@ const TestResultsModal = ({ chartData, formulas, isOpen, onClose, testResults })
   const [currentPredictionIndex, setCurrentPredictionIndex] = useState(0)
   const [isNextCandleVisible, setIsNextCandleVisible] = useState(false)
   const [hoverData, setHoverData] = useState(null)
+  const [indicatorColors, setIndicatorColors] = useState({})
   const previousFormulasRef = useRef(formulas)
 
   // Determine if any formula is time-based (for hiding explore mode)
@@ -73,6 +74,10 @@ const TestResultsModal = ({ chartData, formulas, isOpen, onClose, testResults })
       <div className="test-results-modal">
         <div className="modal-header">
           <h2>Test Results Preview</h2>
+          <span className="header-summary">
+            {metrics.correctCount} of {metrics.totalPredictions} correct (
+            {metrics.accuracyPercentage}% accuracy)
+          </span>
           <button className="close-button" onClick={onClose}>
             ×
           </button>
@@ -86,6 +91,7 @@ const TestResultsModal = ({ chartData, formulas, isOpen, onClose, testResults })
               formulas={formulas}
               isNextCandleVisible={isNextCandleVisible}
               onHoverData={setHoverData}
+              onIndicatorColors={setIndicatorColors}
             />
 
             <PredictionOverlay
@@ -94,19 +100,13 @@ const TestResultsModal = ({ chartData, formulas, isOpen, onClose, testResults })
               formulas={formulas}
               hasTimeBasedFormulas={hasTimeBasedFormulas}
               hoverData={hoverData}
+              indicatorColors={indicatorColors}
               isNextCandleVisible={isNextCandleVisible}
               onNext={handleNext}
               onPrevious={handlePrevious}
               onToggleNextCandle={handleToggleNextCandle}
               totalPredictions={results.length}
             />
-          </div>
-
-          <div className="summary-section">
-            <div className="summary-content">
-              Summary: {metrics.correctCount} of {metrics.totalPredictions} correct (
-              {metrics.accuracyPercentage}% accuracy)
-            </div>
           </div>
 
           <div className="action-buttons">

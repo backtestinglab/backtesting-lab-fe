@@ -4,7 +4,9 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.72);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -12,30 +14,27 @@
 }
 
 .test-results-modal {
-  background-color: var(--color-bg-tertiary);
-  border: 2px solid var(--color-accent-primary);
-  border-radius: var(--border-radius-lg);
+  background-color: rgb(38, 41, 56);
+  border-radius: var(--border-radius-xl);
+  border: 1px solid rgba(80, 85, 115, 0.5);
   width: 90vw;
   max-width: 1200px;
   min-width: 900px;
   max-height: 90vh;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.7);
 }
 
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.test-results-modal .modal-header {
   padding: var(--spacing-xl) var(--spacing-xxl);
-  border-bottom: 1px solid var(--color-border-primary);
+  margin-bottom: 0;
 }
 
 .modal-header h2 {
   margin: 0;
   font-size: var(--font-size-xl);
   color: var(--color-text-primary);
+  flex-shrink: 0;
 }
 
 .close-button {
@@ -51,6 +50,7 @@
   align-items: center;
   justify-content: center;
   transition: var(--transition-base);
+  flex-shrink: 0;
 }
 
 .close-button:hover {
@@ -61,15 +61,19 @@
   padding: var(--spacing-xxl);
   overflow-y: auto;
   flex: 1;
-  width: 95%;
+  width: 100%;
   max-width: none;
-  margin: 0 auto;
+  margin: 0;
+  border: none;
+  border-radius: var(--border-radius-xl);
+  border-top-left-radius: 0px;
+  border-top-right-radius: 0px;
 }
 
 .test-results-chart-container {
   position: relative;
-  min-height: 400px;
-  height: 400px;
+  min-height: 450px;
+  height: 450px;
   background-color: var(--color-bg-secondary);
   border: 1px solid var(--color-border-primary);
   border-radius: var(--border-radius-base);
@@ -78,18 +82,13 @@
   flex-shrink: 0;
 }
 
-.summary-section {
-  background-color: var(--color-bg-secondary);
-  border: 1px solid var(--color-border-primary);
-  border-radius: var(--border-radius-base);
-  padding: var(--spacing-xl) var(--spacing-xxl);
-  margin-bottom: var(--spacing-xxl);
-}
-
-.summary-content {
-  color: var(--color-text-primary);
-  font-size: var(--font-size-base);
-  text-align: center;
+.header-summary {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: var(--font-size-lg);
+  color: var(--color-accent-primary);
+  font-weight: 500;
 }
 
 .action-buttons {

@@ -5,6 +5,7 @@ import {
   CHART_COLORS,
   getCandlestickSeriesConfig,
   getColorWithOpacity,
+  getIndicatorColor,
   getZoneColor,
   INDICATOR_COLORS
 } from '../../../../../../config/chartConfig'
@@ -13,7 +14,14 @@ import { BackgroundShade } from './BackgroundShade'
 import { ZoneSeries } from './ZoneSeries'
 import './MiniChart.css'
 
-const MiniChart = ({ chartData, currentResult, formulas, isNextCandleVisible, onHoverData }) => {
+const MiniChart = ({
+  chartData,
+  currentResult,
+  formulas,
+  isNextCandleVisible,
+  onHoverData,
+  onIndicatorColors
+}) => {
   const chartContainerRef = useRef(null)
   const chartRef = useRef(null)
   const candleSeriesRef = useRef(null)
@@ -73,6 +81,7 @@ const MiniChart = ({ chartData, currentResult, formulas, isNextCandleVisible, on
   const previousResultTimestamp = useRef(null)
   const [ohlc, setOhlc] = useState(null)
   const [indicatorValues, setIndicatorValues] = useState(null)
+  const [indicatorColors, setIndicatorColors] = useState({})
 
   // Keep refs updated
   useEffect(() => {
@@ -369,7 +378,7 @@ const MiniChart = ({ chartData, currentResult, formulas, isNextCandleVisible, on
         borderColor: '#2B2B43',
         timeVisible: true,
         secondsVisible: false,
-        rightOffset: 8
+        rightOffset: 10
       },
       rightPriceScale: {
         borderColor: '#2B2B43'
@@ -747,11 +756,25 @@ const MiniChart = ({ chartData, currentResult, formulas, isNextCandleVisible, on
         indicatorSeriesRef.current.push(pdlLine)
       }
 
-      // SMA lines (smooth curves - solid blue)
-      Object.keys(currentResult.indicators).forEach((key) => {
-        if (key.startsWith('sma') && currentResult.indicators[key].length > 0) {
+      // SMA and EMA lines (smooth curves - solid, different colors for multiple)
+      const colorMap = {}
+
+      // Separate SMA and EMA keys and sort them
+      const smaKeys = Object.keys(currentResult.indicators)
+        .filter((key) => key.startsWith('sma'))
+        .sort()
+      const emaKeys = Object.keys(currentResult.indicators)
+        .filter((key) => key.startsWith('ema'))
+        .sort()
+
+      // Plot SMAs with different colors
+      smaKeys.forEach((key, index) => {
+        if (currentResult.indicators[key].length > 0) {
+          const color = getIndicatorColor(key, index)
+          colorMap[key] = color
+
           const smaLine = chart.addSeries(LineSeries, {
-            color: INDICATOR_COLORS.sma,
+            color,
             lineWidth: 2,
             lineStyle: 0, // Solid
             lastValueVisible: false,
@@ -767,6 +790,42 @@ const MiniChart = ({ chartData, currentResult, formulas, isNextCandleVisible, on
           indicatorSeriesRef.current.push(smaLine)
         }
       })
+
+      // Plot EMAs with different colors
+      emaKeys.forEach((key, index) => {
+        if (currentResult.indicators[key].length > 0) {
+          const color = getIndicatorColor(key, index)
+          colorMap[key] = color
+
+          const emaLine = chart.addSeries(LineSeries, {
+            color,
+            lineWidth: 2,
+            lineStyle: 0, // Solid
+            lastValueVisible: false,
+            priceLineVisible: false
+          })
+
+          const emaData = currentResult.indicators[key].map(({ timestamp, value }) => ({
+            time: timestamp,
+            value
+          }))
+
+          emaLine.setData(emaData)
+          indicatorSeriesRef.current.push(emaLine)
+        }
+      })
+
+      // Add PDH/PDL to color map
+      if (currentResult.indicators.pdh) colorMap.pdh = INDICATOR_COLORS.pdh
+      if (currentResult.indicators.pdl) colorMap.pdl = INDICATOR_COLORS.pdl
+
+      // Store color mapping for use in overlay
+      setIndicatorColors(colorMap)
+
+      // Notify parent of color mapping
+      if (onIndicatorColors) {
+        onIndicatorColors(colorMap)
+      }
     }
 
     // Helper function to process a single formula (price-based or time-based)
@@ -821,11 +880,11 @@ const MiniChart = ({ chartData, currentResult, formulas, isNextCandleVisible, on
 
     // Set visible range AFTER all data and indicators are added
     // Use setVisibleLogicalRange instead of fitContent to control exactly what's visible
-    // This shows bars from 0 to end, with 8 bars of space on the right (for rightOffset)
+    // This shows bars from 0 to end, with 10 bars of space on the right (for rightOffset)
     const totalBars = displayData.length
     chart.timeScale().setVisibleLogicalRange({
       from: 0, // Start from first candle
-      to: totalBars - 1 + 8 // End at last candle + 8 bars for right spacing
+      to: totalBars - 1 + 10 // End at last candle + 10 bars for right spacing
     })
   }, [currentResult, isNextCandleVisible, chartData])
 
@@ -869,6 +928,12 @@ const MiniChart = ({ chartData, currentResult, formulas, isNextCandleVisible, on
         <div className="mini-chart-indicator-overlay">
           {Object.entries(indicatorValues).map(([key, value]) => (
             <span key={key} className="indicator-item">
+              {indicatorColors[key] && (
+                <span
+                  className="indicator-color-dot"
+                  style={{ backgroundColor: indicatorColors[key] }}
+                />
+              )}
               {formatIndicatorName(key)} <span className="indicator-value">{value.toFixed(2)}</span>
             </span>
           ))}
@@ -905,7 +970,8 @@ MiniChart.propTypes = {
   }).isRequired,
   formulas: PropTypes.object.isRequired,
   isNextCandleVisible: PropTypes.bool.isRequired,
-  onHoverData: PropTypes.func
+  onHoverData: PropTypes.func,
+  onIndicatorColors: PropTypes.func
 }
 
 export default MiniChart
