@@ -1,0 +1,114 @@
+.results {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Header */
+.results .panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 40px;
+  padding: 0px 12px;
+  background-color: rgba(45, 50, 70, 0.5);
+  border-bottom: 1px solid rgba(60, 65, 85, 0.7);
+  border-radius: 6px 6px 0 0;
+  flex-shrink: 0;
+}
+
+.results .panel-header h3 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #e0e8ff;
+}
+
+.results .panel-header-controls {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.results-controls {
+  display: flex;
+  gap: 5px;
+}
+
+.results-controls button {
+  background: none;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  color: #9098b0;
+  font-size: 1rem;
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.results-controls button:hover {
+  color: #fff;
+}
+
+.results-controls .down-arrow {
+  transform: rotate(180deg);
+}
+
+/* Content Area */
+.results-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 12px;
+  gap: 12px;
+}
+
+/* Placeholder Styles (temporary - will be replaced by actual components) */
+.results-summary-placeholder,
+.results-table-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(40, 45, 65, 0.5);
+  border: 1px dashed rgba(80, 85, 110, 0.5);
+  border-radius: 6px;
+  color: #808898;
+  gap: 4px;
+}
+
+.results-summary-placeholder {
+  min-height: 32px;
+  max-height: 32px;
+  flex-shrink: 0;
+}
+
+.results-table-placeholder {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.placeholder-label {
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+
+.placeholder-hint {
+  font-size: 0.7rem;
+  opacity: 0.7;
+}
+
+/* Fullscreen adjustments - more room for summary in full-screen mode */
+.results.full-screen .results-summary-placeholder {
+  min-height: 80px;
+  max-height: 80px;
+}

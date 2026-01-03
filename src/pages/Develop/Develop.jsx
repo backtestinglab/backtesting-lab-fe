@@ -7,6 +7,7 @@ import DrawingPropertiesToolbar from '../../components/DrawingPropertiesToolbar/
 import DrawingSettingsModal from '../../components/DrawingSettingsModal/DrawingSettingsModal'
 import DrawingToolbar from '../../components/DrawingToolbar/DrawingToolbar'
 import Icon from '../../components/Icon/Icon'
+import Results from '../../components/Results/Results'
 import SaveTemplateModal from '../../components/SaveTemplateModal/SaveTemplateModal'
 
 import logo from '../../assets/logo.svg'
@@ -696,27 +697,10 @@ const Develop = ({ modelConfig }) => {
 
         {(currentView === 'normal' || currentView === 'results') && (
           <section className={`results-area ${isResultsFullScreen ? 'full-screen' : 'normal'}`}>
-            <div className="panel-header">
-              <h3>Occurrences (0)</h3>
-              <div className="panel-header-controls">
-                <div className="results-controls">
-                  <button title="Previous Occurrence" className="up-arrow">
-                    ▲
-                  </button>
-                  <button title="Next Occurrence" className="down-arrow">
-                    ▲
-                  </button>
-                </div>
-                <button
-                  className={`fullscreen-toggle-button-base ${isResultsFullScreen ? 'active' : ''}`}
-                  onClick={() => togglePanelFullScreen('results')}
-                  title={isResultsFullScreen ? 'Minimize' : 'Maximize'}
-                >
-                  <Icon icon="fullscreen" />
-                </button>
-              </div>
-            </div>
-            <div className="placeholder-text">Results Table (Placeholder)</div>
+            <Results
+              isFullScreen={isResultsFullScreen}
+              onToggleFullScreen={() => togglePanelFullScreen('results')}
+            />
           </section>
         )}
       </main>

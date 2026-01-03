@@ -189,60 +189,6 @@
   user-select: none;
 }
 
-.panel-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 40px;
-  padding: 0px 12px;
-  background-color: rgba(45, 50, 70, 0.5);
-  border-bottom: 1px solid rgba(60, 65, 85, 0.7);
-  border-radius: 6px 6px 0 0;
-  flex-shrink: 0;
-}
-
-.panel-header h3 {
-  font-size: 0.9rem;
-  font-weight: 600;
-  margin: 0;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-.results-controls {
-  display: flex;
-  gap: 5px;
-}
-
-.results-controls button {
-  background: none;
-  border: 1px solid transparent;
-  border-radius: 4px;
-  color: #9098b0;
-  font-size: 1rem;
-  cursor: pointer;
-  width: 24px;
-  height: 24px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
-}
-
-.results-controls button:hover {
-  color: #fff;
-}
-
-.results-controls .down-arrow {
-  transform: rotate(180deg);
-}
-
-.panel-header-controls {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-md);
-}
-
 /* Chart fullscreen toggle - absolutely positioned */
 .chart-fullscreen-toggle {
   position: absolute;
