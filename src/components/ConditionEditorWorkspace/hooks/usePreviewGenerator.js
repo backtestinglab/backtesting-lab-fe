@@ -8,7 +8,8 @@ const usePreviewGenerator = (
   displayState,
   isNeutralFormulaIncluded,
   hasFormulaChanges,
-  viewMode = 'full'
+  viewMode = 'full',
+  scanComplete = false
 ) => {
   // Generate dynamic preview rows based on view mode
   const previewRows = useMemo(() => {
@@ -17,8 +18,11 @@ const usePreviewGenerator = (
   }, [formulaState, displayState, hasFormulaChanges, viewMode])
 
   const statusMessage = useMemo(() => {
+    if (scanComplete) {
+      return 'Scan Complete!'
+    }
     return generateStatusMessage(formulaState, isNeutralFormulaIncluded)
-  }, [formulaState, isNeutralFormulaIncluded])
+  }, [formulaState, isNeutralFormulaIncluded, scanComplete])
 
   return {
     previewRows,

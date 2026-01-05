@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 
 import CodeModeEditor from './components/CodeModeEditor/CodeModeEditor'
@@ -17,8 +17,12 @@ const ConditionEditorWorkspace = ({
   chartData,
   currentView,
   datasetId,
+  isScanLoading,
   modelType,
+  onRunFullScan,
+  onScanReset,
   onToggleFullScreen,
+  scanComplete,
   selectedTimeframes
 }) => {
   const [biasDefinition, setBiasDefinition] = useState('')
@@ -26,6 +30,8 @@ const ConditionEditorWorkspace = ({
   const [isNeutralFormulaIncluded, setIsNeutralFormulaIncluded] = useState(true)
   const [showNorthStar, setShowNorthStar] = useState(false)
 
+  // Track previous formula state to detect changes and clear scan results
+  const previousFormulasRef = useRef(null)
 
   const { displayState, handleDisplayToggle } = useDisplayControls()
 
@@ -42,7 +48,8 @@ const ConditionEditorWorkspace = ({
     displayState,
     isNeutralFormulaIncluded,
     hasFormulaChanges,
-    'full'
+    'full',
+    scanComplete
   )
 
   // Generate preview data for minimized view (always include completed formulas)
@@ -51,15 +58,29 @@ const ConditionEditorWorkspace = ({
     displayState,
     isNeutralFormulaIncluded,
     hasFormulaChanges,
-    'minimized'
+    'minimized',
+    scanComplete
   )
+
+  // Detect formula changes and reset scan complete state when formulas are modified
+  useEffect(() => {
+    const currentFormulas = JSON.stringify(formulaState.completedFormulas)
+
+    if (previousFormulasRef.current !== null && previousFormulasRef.current !== currentFormulas) {
+      // Formulas have changed since last check - reset scan complete
+      if (onScanReset) {
+        onScanReset()
+      }
+    }
+
+    previousFormulasRef.current = currentFormulas
+  }, [formulaState.completedFormulas, onScanReset])
 
   const isFullScreen = useMemo(() => currentView === 'condition-editor', [currentView])
   const headerTitle = useMemo(
     () => (modelType === 'bias' ? 'Bias Condition Builder' : 'Trading Strategy Builder'),
     [modelType]
   )
-
 
   const renderFullScreenContent = () => (
     <div className="workspace-content full-screen">
@@ -72,15 +93,17 @@ const ConditionEditorWorkspace = ({
               chartData={chartData}
               datasetId={datasetId}
               displayState={displayState}
+              formulaState={formulaState}
+              formulaVisibility={displayState.displayFormulas}
               handleDisplayToggle={handleDisplayToggle}
+              handleFinishFormula={handleFinishFormula}
+              hasFormulaChanges={hasFormulaChanges}
               isNeutralFormulaIncluded={isNeutralFormulaIncluded}
+              isScanLoading={isScanLoading}
+              onFormulaVisibilityToggle={handleDisplayToggle}
+              onRunFullScan={onRunFullScan}
               previewRows={fullScreenPreviewRows}
               statusMessage={statusMessage}
-              formulaVisibility={displayState.displayFormulas}
-              onFormulaVisibilityToggle={handleDisplayToggle}
-              formulaState={formulaState}
-              hasFormulaChanges={hasFormulaChanges}
-              handleFinishFormula={handleFinishFormula}
             />
 
             <ConditionBuilderSection
@@ -149,23 +172,25 @@ const ConditionEditorWorkspace = ({
             isMinimized={true}
           />
           <PreviewSection
+            biasDefinition={biasDefinition}
             chartData={chartData}
             datasetId={datasetId}
             displayState={displayState}
-            handleDisplayToggle={handleDisplayToggle}
-            isNeutralFormulaIncluded={isNeutralFormulaIncluded}
-            previewRows={minimizedPreviewRows}
-            statusMessage={statusMessage}
-            formulaVisibility={displayState.displayFormulas}
-            onFormulaVisibilityToggle={handleDisplayToggle}
-            isMinimized={true}
-            showNorthStar={showNorthStar}
-            onToggleNorthStar={() => setShowNorthStar(!showNorthStar)}
-            biasDefinition={biasDefinition}
-            onBiasDefinitionChange={(e) => setBiasDefinition(e.target.value)}
             formulaState={formulaState}
-            hasFormulaChanges={hasFormulaChanges}
+            formulaVisibility={displayState.displayFormulas}
+            handleDisplayToggle={handleDisplayToggle}
             handleFinishFormula={handleFinishFormula}
+            hasFormulaChanges={hasFormulaChanges}
+            isMinimized={true}
+            isNeutralFormulaIncluded={isNeutralFormulaIncluded}
+            isScanLoading={isScanLoading}
+            onBiasDefinitionChange={(e) => setBiasDefinition(e.target.value)}
+            onFormulaVisibilityToggle={handleDisplayToggle}
+            onRunFullScan={onRunFullScan}
+            onToggleNorthStar={() => setShowNorthStar(!showNorthStar)}
+            previewRows={minimizedPreviewRows}
+            showNorthStar={showNorthStar}
+            statusMessage={statusMessage}
           />
         </div>
       )}
@@ -220,8 +245,12 @@ ConditionEditorWorkspace.propTypes = {
   ),
   currentView: PropTypes.string.isRequired,
   datasetId: PropTypes.number,
+  isScanLoading: PropTypes.bool,
   modelType: PropTypes.oneOf(['bias', 'trading']).isRequired,
+  onRunFullScan: PropTypes.func,
+  onScanReset: PropTypes.func,
   onToggleFullScreen: PropTypes.func.isRequired,
+  scanComplete: PropTypes.bool,
   selectedTimeframes: PropTypes.arrayOf(PropTypes.string)
 }
 

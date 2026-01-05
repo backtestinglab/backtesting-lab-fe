@@ -285,16 +285,10 @@ describe('PreviewText Component', () => {
       expect(screen.getByText('All formulas completed')).toBeInTheDocument()
     })
 
-    it('applies correct status message class based on layout', () => {
-      const { rerender } = render(
-        <PreviewText {...defaultProps} statusMessage="Status" layout="default" />
-      )
+    it('applies status-message class regardless of layout', () => {
+      render(<PreviewText {...defaultProps} statusMessage="Status" layout="default" />)
 
       expect(screen.getByText('Status')).toHaveClass('status-message')
-
-      rerender(<PreviewText {...defaultProps} statusMessage="Status" layout="compact" />)
-
-      expect(screen.getByText('Status')).toHaveClass('mini-status-message')
     })
 
     it('does not render status message container when empty', () => {

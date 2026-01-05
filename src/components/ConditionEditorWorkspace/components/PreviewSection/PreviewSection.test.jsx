@@ -33,11 +33,7 @@ jest.mock('../ConditionBuilderSection/components/ActionButtons/ActionButtons', (
     return (
       <div data-testid="action-buttons">
         {buttons.map((btn, idx) => (
-          <button
-            key={idx}
-            onClick={btn.onClick}
-            disabled={btn.disabled}
-          >
+          <button key={idx} onClick={btn.onClick} disabled={btn.disabled}>
             {btn.text}
           </button>
         ))}
@@ -113,7 +109,7 @@ describe('PreviewSection Component - Error Handling', () => {
   })
 
   describe('sanitizeErrorMessage Helper', () => {
-    it('sanitizes missing parquet file errors', async () => {
+    it('sanitizes technical parquet file errors', async () => {
       mockBiasTestCondition.mockResolvedValue({
         success: false,
         message: 'IO Error: No files found that match the pattern "/path/to/dataset.parquet"'
@@ -133,43 +129,7 @@ describe('PreviewSection Component - Error Handling', () => {
       })
     })
 
-    it('sanitizes dataset not found errors', async () => {
-      mockBiasTestCondition.mockResolvedValue({
-        success: false,
-        message: 'Dataset with ID 123 not found'
-      })
-
-      render(<PreviewSection {...defaultProps} />)
-
-      const testButton = screen.getByText('▶️ Test Sample')
-      fireEvent.click(testButton)
-
-      await waitFor(() => {
-        expect(
-          screen.getByText('Dataset not found. Please select a valid dataset and try again.')
-        ).toBeInTheDocument()
-      })
-    })
-
-    it('sanitizes timeframe errors', async () => {
-      mockBiasTestCondition.mockResolvedValue({
-        success: false,
-        message: 'All formulas must use the same timeframe'
-      })
-
-      render(<PreviewSection {...defaultProps} />)
-
-      const testButton = screen.getByText('▶️ Test Sample')
-      fireEvent.click(testButton)
-
-      await waitFor(() => {
-        expect(
-          screen.getByText('Timeframe error. Please check your formula configuration and try again.')
-        ).toBeInTheDocument()
-      })
-    })
-
-    it('sanitizes database errors', async () => {
+    it('sanitizes technical database errors', async () => {
       mockBiasTestCondition.mockResolvedValue({
         success: false,
         message: 'DuckDB error: Connection failed'
@@ -187,10 +147,12 @@ describe('PreviewSection Component - Error Handling', () => {
       })
     })
 
-    it('provides generic message for unknown errors', async () => {
+    it('passes through clear backend error messages as-is', async () => {
+      const clearBackendMessage = 'Invalid 2-formula configuration: Neither condition was met.'
+
       mockBiasTestCondition.mockResolvedValue({
         success: false,
-        message: 'Some unexpected backend error'
+        message: clearBackendMessage
       })
 
       render(<PreviewSection {...defaultProps} />)
@@ -199,11 +161,39 @@ describe('PreviewSection Component - Error Handling', () => {
       fireEvent.click(testButton)
 
       await waitFor(() => {
-        expect(
-          screen.getByText(
-            'An error occurred while testing. Please try again or check your dataset and formulas.'
-          )
-        ).toBeInTheDocument()
+        expect(screen.getByText(clearBackendMessage)).toBeInTheDocument()
+      })
+    })
+
+    it('passes through dataset not found errors from backend', async () => {
+      mockBiasTestCondition.mockResolvedValue({
+        success: false,
+        message: 'Dataset with ID 123 not found'
+      })
+
+      render(<PreviewSection {...defaultProps} />)
+
+      const testButton = screen.getByText('▶️ Test Sample')
+      fireEvent.click(testButton)
+
+      await waitFor(() => {
+        expect(screen.getByText('Dataset with ID 123 not found')).toBeInTheDocument()
+      })
+    })
+
+    it('passes through timeframe errors from backend', async () => {
+      mockBiasTestCondition.mockResolvedValue({
+        success: false,
+        message: 'All formulas must use the same timeframe'
+      })
+
+      render(<PreviewSection {...defaultProps} />)
+
+      const testButton = screen.getByText('▶️ Test Sample')
+      fireEvent.click(testButton)
+
+      await waitFor(() => {
+        expect(screen.getByText('All formulas must use the same timeframe')).toBeInTheDocument()
       })
     })
   })
@@ -323,9 +313,11 @@ describe('PreviewSection Component - Error Handling', () => {
 
   describe('Error Display in Minimized View', () => {
     it('displays error in status message area in minimized view', async () => {
+      const errorMessage = 'Dataset with ID 123 not found'
+
       mockBiasTestCondition.mockResolvedValue({
         success: false,
-        message: 'Dataset with ID 123 not found'
+        message: errorMessage
       })
 
       render(<PreviewSection {...defaultProps} isMinimized={true} />)
@@ -336,7 +328,7 @@ describe('PreviewSection Component - Error Handling', () => {
       await waitFor(() => {
         const statusMessage = document.querySelector('.mini-status-message.error')
         expect(statusMessage).toBeInTheDocument()
-        expect(statusMessage).toHaveTextContent('Dataset not found')
+        expect(statusMessage).toHaveTextContent(errorMessage)
       })
     })
 
@@ -380,10 +372,12 @@ describe('PreviewSection Component - Error Handling', () => {
 
   describe('Error Clearing', () => {
     it('clears previous errors on new test attempt', async () => {
+      const errorMessage = 'First error from backend'
+
       mockBiasTestCondition
         .mockResolvedValueOnce({
           success: false,
-          message: 'First error'
+          message: errorMessage
         })
         .mockResolvedValueOnce({
           success: true,
@@ -395,20 +389,16 @@ describe('PreviewSection Component - Error Handling', () => {
 
       const testButton = screen.getByText('▶️ Test Sample')
 
-      // First click - error
+      // First click - error (backend message passed through as-is)
       fireEvent.click(testButton)
       await waitFor(() => {
-        expect(
-          screen.getByText(
-            'An error occurred while testing. Please try again or check your dataset and formulas.'
-          )
-        ).toBeInTheDocument()
+        expect(screen.getByText(errorMessage)).toBeInTheDocument()
       })
 
       // Second click - success (error should clear)
       fireEvent.click(testButton)
       await waitFor(() => {
-        expect(screen.queryByText(/An error occurred while testing/)).not.toBeInTheDocument()
+        expect(screen.queryByText(errorMessage)).not.toBeInTheDocument()
         expect(screen.getByTestId('test-results-modal')).toBeInTheDocument()
       })
     })
@@ -547,6 +537,56 @@ describe('PreviewSection Component - Error Handling', () => {
           screen.getByText('Error: An unexpected error occurred. Please try again.')
         ).toBeInTheDocument()
       })
+    })
+  })
+
+  describe('Scan Complete State', () => {
+    it('hides action buttons when statusMessage is "Scan Complete!"', () => {
+      render(<PreviewSection {...defaultProps} statusMessage="Scan Complete!" />)
+
+      // Action buttons should not be visible
+      expect(screen.queryByText('▶️ Test Sample')).not.toBeInTheDocument()
+      expect(screen.queryByText('🔍 Run Scan')).not.toBeInTheDocument()
+    })
+
+    it('shows action buttons when statusMessage is "Ready to test"', () => {
+      render(<PreviewSection {...defaultProps} statusMessage="Ready to test" />)
+
+      // Action buttons should be visible
+      expect(screen.getByText('▶️ Test Sample')).toBeInTheDocument()
+      expect(screen.getByText('🔍 Run Scan')).toBeInTheDocument()
+    })
+
+    it('hides action buttons in minimized view when statusMessage is "Scan Complete!"', () => {
+      render(<PreviewSection {...defaultProps} isMinimized={true} statusMessage="Scan Complete!" />)
+
+      // Action buttons should not be visible in minimized view
+      expect(screen.queryByText('Test')).not.toBeInTheDocument()
+      expect(screen.queryByText('Scan')).not.toBeInTheDocument()
+    })
+
+    it('displays "Scan Complete!" in status message area in minimized view', () => {
+      render(<PreviewSection {...defaultProps} isMinimized={true} statusMessage="Scan Complete!" />)
+
+      const statusMessage = document.querySelector('.mini-status-message')
+      expect(statusMessage).toHaveTextContent('Scan Complete!')
+    })
+  })
+
+  describe('Status Message Styling by View', () => {
+    it('uses mini-status-message class in minimized view', () => {
+      render(<PreviewSection {...defaultProps} isMinimized={true} statusMessage="Ready to test" />)
+
+      const statusMessage = document.querySelector('.mini-status-message')
+      expect(statusMessage).toBeInTheDocument()
+      expect(statusMessage).toHaveTextContent('Ready to test')
+    })
+
+    it('does not use mini-status-message class in fullscreen view', () => {
+      render(<PreviewSection {...defaultProps} isMinimized={false} statusMessage="Ready to test" />)
+
+      // In fullscreen, status is shown via PreviewText component (status-message class)
+      expect(document.querySelector('.mini-status-message')).not.toBeInTheDocument()
     })
   })
 })

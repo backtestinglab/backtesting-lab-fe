@@ -5,7 +5,15 @@ import MiniChart from './components/MiniChart/MiniChart'
 import PredictionOverlay from './components/PredictionOverlay/PredictionOverlay'
 import './TestResultsModal.css'
 
-const TestResultsModal = ({ chartData, formulas, isOpen, onClose, testResults }) => {
+const TestResultsModal = ({
+  chartData,
+  formulas,
+  isOpen,
+  isScanLoading = false,
+  onClose,
+  onRunFullScan,
+  testResults
+}) => {
   const [currentPredictionIndex, setCurrentPredictionIndex] = useState(0)
   const [isNextCandleVisible, setIsNextCandleVisible] = useState(false)
   const [hoverData, setHoverData] = useState(null)
@@ -115,12 +123,17 @@ const TestResultsModal = ({ chartData, formulas, isOpen, onClose, testResults })
             </button>
             <button
               className="btn-primary"
-              onClick={() => {
-                onClose()
-                // TODO: Trigger full scan (implement in S021.12)
+              disabled={isScanLoading}
+              onClick={async () => {
+                if (onRunFullScan) {
+                  const response = await onRunFullScan()
+                  if (response?.success) {
+                    onClose()
+                  }
+                }
               }}
             >
-              Looks Good - Run Full Scan
+              {isScanLoading ? 'Scanning...' : 'Looks Good - Run Full Scan'}
             </button>
           </div>
         </div>
@@ -142,7 +155,9 @@ TestResultsModal.propTypes = {
   ).isRequired,
   formulas: PropTypes.object.isRequired,
   isOpen: PropTypes.bool.isRequired,
+  isScanLoading: PropTypes.bool,
   onClose: PropTypes.func.isRequired,
+  onRunFullScan: PropTypes.func,
   testResults: PropTypes.shape({
     metrics: PropTypes.shape({
       accuracyPercentage: PropTypes.number.isRequired,

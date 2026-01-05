@@ -177,6 +177,7 @@
   border-radius: 6px;
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 .placeholder-text {
