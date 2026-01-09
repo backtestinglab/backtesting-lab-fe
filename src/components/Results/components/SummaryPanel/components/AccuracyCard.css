@@ -1,0 +1,81 @@
+.accuracy-card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-lg);
+  height: 100%;
+}
+
+.accuracy-gauge {
+  position: relative;
+  width: 120px;
+  height: 120px;
+}
+
+.accuracy-gauge-svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.accuracy-gauge-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.accuracy-percentage {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-accent-primary);
+  line-height: 1;
+}
+
+.accuracy-dots {
+  display: flex;
+  gap: var(--spacing-md);
+  align-items: center;
+  justify-content: center;
+}
+
+.accuracy-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  transition: background-color 0.3s ease;
+}
+
+.accuracy-dot.filled {
+  background-color: var(--color-accent-primary);
+}
+
+.accuracy-dot.empty {
+  background-color: rgba(80, 85, 110, 0.3);
+}
+
+.accuracy-total {
+  font-size: var(--font-size-lg);
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  text-align: center;
+}
+
+.accuracy-card-content .no-data {
+  color: var(--color-text-muted);
+  font-style: italic;
+  font-weight: 400;
+  font-size: var(--font-size-lg);
+}
+
+/* Gauge circle styles */
+.accuracy-gauge-background {
+  stroke: rgba(80, 85, 110, 0.3);
+}
+
+.accuracy-gauge-fill {
+  stroke: var(--color-accent-primary);
+  transition: stroke-dashoffset 0.8s ease-in-out 0.5s;
+}

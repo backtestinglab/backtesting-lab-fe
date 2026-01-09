@@ -1,8 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import AccuracyCard from './components/AccuracyCard'
 import StatCard from './components/StatCard'
 
+import './components/AccuracyCard.css'
 import './SummaryPanel.css'
 
 /**
@@ -15,13 +17,10 @@ const SummaryPanel = ({ metrics }) => {
   return (
     <div className="summary-panel">
       <StatCard className="accuracy-card" title="Accuracy">
-        <div className="stat-card-placeholder">
-          {hasMetrics ? (
-            <span>{metrics.accuracyPercentage?.toFixed(1) || '0.0'}%</span>
-          ) : (
-            <span className="no-data">No data</span>
-          )}
-        </div>
+        <AccuracyCard
+          accuracyPercentage={metrics?.accuracyPercentage}
+          totalPredictions={metrics?.totalPredictions}
+        />
       </StatCard>
 
       <StatCard className="by-bias-card" title="By Bias">
