@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 
 import Chart from '../../components/Chart/Chart'
 import ConditionEditorWorkspace from '../../components/ConditionEditorWorkspace/ConditionEditorWorkspace'
+import { createInitialFormulaState } from '../../components/ConditionEditorWorkspace/utils/stateUtils'
 import DrawingPropertiesToolbar from '../../components/DrawingPropertiesToolbar/DrawingPropertiesToolbar'
 import DrawingSettingsModal from '../../components/DrawingSettingsModal/DrawingSettingsModal'
 import DrawingToolbar from '../../components/DrawingToolbar/DrawingToolbar'
@@ -50,6 +51,8 @@ const Develop = ({ modelConfig }) => {
   const [isScanLoading, setIsScanLoading] = useState(false)
   const [scanComplete, setScanComplete] = useState(false)
   const [scanResults, setScanResults] = useState(null)
+  const [formulaState, setFormulaState] = useState(createInitialFormulaState())
+  const [isNeutralFormulaIncluded, setIsNeutralFormulaIncluded] = useState(true)
   const [modalPosition, setModalPosition] = useState({
     top: -9999,
     left: -9999
@@ -523,46 +526,49 @@ const Develop = ({ modelConfig }) => {
     setSelectedDrawingId(null)
   }
 
-  const handleRunFullScan = useCallback(async (formulas, timeframe) => {
-    if (!modelConfig?.dataset?.id) {
-      console.error('No dataset ID available for full scan')
-      return { success: false, message: 'No dataset selected' }
-    }
-
-    setIsScanLoading(true)
-
-    try {
-      // Generate a default model name based on dataset and timestamp
-      const timestamp = new Date().toISOString().slice(0, 16).replace('T', ' ')
-      const defaultModelName = `${modelConfig.dataset.name} - ${timestamp}`
-
-      const response = await window.api.biasRunFullScan({
-        formulas,
-        datasetId: modelConfig.dataset.id,
-        timeframe,
-        modelName: defaultModelName,
-        // Pass modelId for updates (re-scans)
-        modelId: currentModelId
-      })
-
-      if (response.success) {
-        setScanResults(response)
-        setCurrentModelId(response.modelId)
-        setScanComplete(true)
-        // Minimize fullscreen condition-editor after successful scan
-        if (currentView === 'condition-editor') {
-          setCurrentView('normal')
-        }
+  const handleRunFullScan = useCallback(
+    async (formulas, timeframe) => {
+      if (!modelConfig?.dataset?.id) {
+        console.error('No dataset ID available for full scan')
+        return { success: false, message: 'No dataset selected' }
       }
 
-      return response
-    } catch (error) {
-      console.error('Full scan error:', error)
-      return { success: false, message: error.message || 'An unexpected error occurred' }
-    } finally {
-      setIsScanLoading(false)
-    }
-  }, [currentModelId, currentView, modelConfig?.dataset?.id, modelConfig?.dataset?.name])
+      setIsScanLoading(true)
+
+      try {
+        // Generate a default model name based on dataset and timestamp
+        const timestamp = new Date().toISOString().slice(0, 16).replace('T', ' ')
+        const defaultModelName = `${modelConfig.dataset.name} - ${timestamp}`
+
+        const response = await window.api.biasRunFullScan({
+          formulas,
+          datasetId: modelConfig.dataset.id,
+          timeframe,
+          modelName: defaultModelName,
+          // Pass modelId for updates (re-scans)
+          modelId: currentModelId
+        })
+
+        if (response.success) {
+          setScanResults(response)
+          setCurrentModelId(response.modelId)
+          setScanComplete(true)
+          // Minimize fullscreen condition-editor after successful scan
+          if (currentView === 'condition-editor') {
+            setCurrentView('normal')
+          }
+        }
+
+        return response
+      } catch (error) {
+        console.error('Full scan error:', error)
+        return { success: false, message: error.message || 'An unexpected error occurred' }
+      } finally {
+        setIsScanLoading(false)
+      }
+    },
+    [currentModelId, currentView, modelConfig?.dataset?.id, modelConfig?.dataset?.name]
+  )
 
   // Reset scan complete state when formulas change (called by ConditionEditorWorkspace)
   const handleScanReset = useCallback(() => {
@@ -738,6 +744,8 @@ const Develop = ({ modelConfig }) => {
               chartData={chartData}
               currentView={currentView}
               datasetId={modelConfig?.dataset?.id}
+              formulaState={formulaState}
+              isNeutralFormulaIncluded={isNeutralFormulaIncluded}
               isScanLoading={isScanLoading}
               modelType={modelType}
               onRunFullScan={handleRunFullScan}
@@ -745,6 +753,8 @@ const Develop = ({ modelConfig }) => {
               onToggleFullScreen={() => togglePanelFullScreen('condition-editor')}
               scanComplete={scanComplete}
               selectedTimeframes={selectedTimeframes}
+              setFormulaState={setFormulaState}
+              setIsNeutralFormulaIncluded={setIsNeutralFormulaIncluded}
             />
           </section>
         )}
@@ -754,6 +764,7 @@ const Develop = ({ modelConfig }) => {
             <Results
               isFullScreen={isResultsFullScreen}
               onToggleFullScreen={() => togglePanelFullScreen('results')}
+              results={scanResults}
             />
           </section>
         )}

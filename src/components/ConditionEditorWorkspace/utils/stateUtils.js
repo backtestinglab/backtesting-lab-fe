@@ -24,9 +24,17 @@ export const createInitialFormulaState = () => {
 export const flipOperator = (operator) => {
   switch (operator) {
     case '>':
-      return '<'
-    case '<':
+      return '<='
+    case '<=':
       return '>'
+    case '<':
+      return '>='
+    case '>=':
+      return '<'
+    case '=':
+      return '!='
+    case '!=':
+      return '='
     default:
       return operator
   }
@@ -108,15 +116,28 @@ export const handleFormulaFieldChange = (field, value, currentState) => {
   }
 }
 
-export const completeFormula = (currentState) => {
+export const completeFormula = (currentState, isNeutralFormulaIncluded = true) => {
   const { biasType } = currentState.currentFormula
+  const currentFormula = { ...currentState.currentFormula }
+
+  // Start with the current formula being saved
+  const updatedCompletedFormulas = {
+    ...currentState.completedFormulas,
+    [biasType]: currentFormula
+  }
+
+  // In 2-formula mode (no neutral), auto-update the inverse formula to maintain inverse relationship
+  if (!isNeutralFormulaIncluded) {
+    if (biasType === 'bullish') {
+      updatedCompletedFormulas.bearish = createFlippedFormula(currentFormula, 'bearish')
+    } else if (biasType === 'bearish') {
+      updatedCompletedFormulas.bullish = createFlippedFormula(currentFormula, 'bullish')
+    }
+  }
 
   return {
     ...currentState,
-    completedFormulas: {
-      ...currentState.completedFormulas,
-      [biasType]: { ...currentState.currentFormula }
-    },
+    completedFormulas: updatedCompletedFormulas,
     currentFormula: createEmptyFormula()
   }
 }

@@ -17,17 +17,20 @@ const ConditionEditorWorkspace = ({
   chartData,
   currentView,
   datasetId,
+  formulaState,
+  isNeutralFormulaIncluded,
   isScanLoading,
   modelType,
   onRunFullScan,
   onScanReset,
   onToggleFullScreen,
   scanComplete,
-  selectedTimeframes
+  selectedTimeframes,
+  setFormulaState,
+  setIsNeutralFormulaIncluded
 }) => {
   const [biasDefinition, setBiasDefinition] = useState('')
   const [currentMode, setCurrentMode] = useState('GUI')
-  const [isNeutralFormulaIncluded, setIsNeutralFormulaIncluded] = useState(true)
   const [showNorthStar, setShowNorthStar] = useState(false)
 
   // Track previous formula state to detect changes and clear scan results
@@ -35,13 +38,17 @@ const ConditionEditorWorkspace = ({
 
   const { displayState, handleDisplayToggle } = useDisplayControls()
 
-  const { formulaState, hasFormulaChanges, handleCurrentFormulaChange, handleFinishFormula } =
-    useFormulaManager(isNeutralFormulaIncluded, (biasType) => {
+  const { hasFormulaChanges, handleCurrentFormulaChange, handleFinishFormula } = useFormulaManager(
+    formulaState,
+    setFormulaState,
+    isNeutralFormulaIncluded,
+    (biasType) => {
       // When a formula is completed, ensure it's displayed
       if (!displayState.displayFormulas[biasType]) {
         handleDisplayToggle(biasType)
       }
-    })
+    }
+  )
 
   const { previewRows: fullScreenPreviewRows, statusMessage } = usePreviewGenerator(
     formulaState,
@@ -232,6 +239,16 @@ const ConditionEditorWorkspace = ({
   )
 }
 
+const formulaShape = PropTypes.shape({
+  biasType: PropTypes.string,
+  indicator1: PropTypes.string,
+  indicator1Param: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  indicator2: PropTypes.string,
+  indicator2Param: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  operator: PropTypes.string,
+  timeframe: PropTypes.string
+})
+
 ConditionEditorWorkspace.propTypes = {
   chartData: PropTypes.arrayOf(
     PropTypes.shape({
@@ -245,13 +262,24 @@ ConditionEditorWorkspace.propTypes = {
   ),
   currentView: PropTypes.string.isRequired,
   datasetId: PropTypes.number,
+  formulaState: PropTypes.shape({
+    completedFormulas: PropTypes.shape({
+      bearish: formulaShape,
+      bullish: formulaShape,
+      neutral: formulaShape
+    }).isRequired,
+    currentFormula: formulaShape.isRequired
+  }).isRequired,
+  isNeutralFormulaIncluded: PropTypes.bool.isRequired,
   isScanLoading: PropTypes.bool,
   modelType: PropTypes.oneOf(['bias', 'trading']).isRequired,
   onRunFullScan: PropTypes.func,
   onScanReset: PropTypes.func,
   onToggleFullScreen: PropTypes.func.isRequired,
   scanComplete: PropTypes.bool,
-  selectedTimeframes: PropTypes.arrayOf(PropTypes.string)
+  selectedTimeframes: PropTypes.arrayOf(PropTypes.string),
+  setFormulaState: PropTypes.func.isRequired,
+  setIsNeutralFormulaIncluded: PropTypes.func.isRequired
 }
 
 export default ConditionEditorWorkspace

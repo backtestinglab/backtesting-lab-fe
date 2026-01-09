@@ -1,0 +1,17 @@
+.summary-panel {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  padding: 16px;
+  background-color: rgba(35, 38, 52, 0.6);
+  border-radius: var(--border-radius-lg, 8px);
+  margin-bottom: 12px;
+  flex-shrink: 0;
+}
+
+/* 2 columns on smaller screens */
+@media (max-width: 1200px) {
+  .summary-panel {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

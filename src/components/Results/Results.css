@@ -27,6 +27,15 @@
   color: #e0e8ff;
 }
 
+.results-header-stats {
+  font-size: 0.75rem;
+  font-weight: 400;
+  text-transform: none;
+  letter-spacing: normal;
+  color: #9098b0;
+  margin-left: 8px;
+}
+
 .results .panel-header-controls {
   display: flex;
   align-items: center;
@@ -72,7 +81,6 @@
 }
 
 /* Placeholder Styles (temporary - will be replaced by actual components) */
-.results-summary-placeholder,
 .results-table-placeholder {
   display: flex;
   flex-direction: column;
@@ -83,15 +91,6 @@
   border-radius: 6px;
   color: #808898;
   gap: 4px;
-}
-
-.results-summary-placeholder {
-  min-height: 32px;
-  max-height: 32px;
-  flex-shrink: 0;
-}
-
-.results-table-placeholder {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
@@ -105,10 +104,4 @@
 .placeholder-hint {
   font-size: 0.7rem;
   opacity: 0.7;
-}
-
-/* Fullscreen adjustments - more room for summary in full-screen mode */
-.results.full-screen .results-summary-placeholder {
-  min-height: 80px;
-  max-height: 80px;
 }

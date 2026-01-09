@@ -1,0 +1,43 @@
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  background-color: rgba(40, 45, 65, 0.7);
+  border: 1px solid rgba(80, 85, 110, 0.4);
+  border-radius: var(--border-radius-md, 6px);
+  padding: 12px;
+  min-height: 140px;
+}
+
+.stat-card-title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #9098b0;
+  margin: 0 0 12px 0;
+  text-align: center;
+}
+
+.stat-card-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Placeholder styling (temporary - will be replaced by actual card content in T021.12.6) */
+.stat-card-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #b0b8d0;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.stat-card-placeholder .no-data {
+  color: #606880;
+  font-style: italic;
+  font-weight: 400;
+}

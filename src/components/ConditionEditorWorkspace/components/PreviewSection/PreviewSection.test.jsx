@@ -589,4 +589,193 @@ describe('PreviewSection Component - Error Handling', () => {
       expect(document.querySelector('.mini-status-message')).not.toBeInTheDocument()
     })
   })
+
+  describe('Scan Button Error Handling (handleFullScan)', () => {
+    const mockOnRunFullScan = jest.fn()
+
+    const propsWithScan = {
+      ...defaultProps,
+      onRunFullScan: mockOnRunFullScan,
+      formulaState: {
+        completedFormulas: {
+          bullish: {
+            biasType: 'bullish',
+            timeframe: '1D',
+            indicator1: 'SMA',
+            indicator1Param: 20,
+            operator: '>',
+            indicator2: 'SMA',
+            indicator2Param: 50
+          },
+          bearish: {
+            biasType: 'bearish',
+            timeframe: '1D',
+            indicator1: 'SMA',
+            indicator1Param: 20,
+            operator: '<=',
+            indicator2: 'SMA',
+            indicator2Param: 50
+          }
+        },
+        currentFormula: null
+      }
+    }
+
+    beforeEach(() => {
+      mockOnRunFullScan.mockReset()
+    })
+
+    it('displays backend error message when scan returns success: false', async () => {
+      const errorMessage = 'Failed to run full scan: Invalid 2-formula configuration'
+      mockOnRunFullScan.mockResolvedValue({
+        success: false,
+        message: errorMessage
+      })
+
+      render(<PreviewSection {...propsWithScan} />)
+
+      const scanButton = screen.getByText('🔍 Run Scan')
+      fireEvent.click(scanButton)
+
+      await waitFor(() => {
+        expect(screen.getByText(errorMessage)).toBeInTheDocument()
+      })
+    })
+
+    it('displays error in minimized view when scan fails', async () => {
+      const errorMessage = 'Failed to run full scan: Invalid 2-formula configuration'
+      mockOnRunFullScan.mockResolvedValue({
+        success: false,
+        message: errorMessage
+      })
+
+      render(<PreviewSection {...propsWithScan} isMinimized={true} />)
+
+      const scanButton = screen.getByText('Scan')
+      fireEvent.click(scanButton)
+
+      await waitFor(() => {
+        const statusMessage = document.querySelector('.mini-status-message.error')
+        expect(statusMessage).toBeInTheDocument()
+        expect(statusMessage).toHaveTextContent(errorMessage)
+      })
+    })
+
+    it('does not open TestResultsModal when scan fails', async () => {
+      mockOnRunFullScan.mockResolvedValue({
+        success: false,
+        message: 'Scan failed'
+      })
+
+      render(<PreviewSection {...propsWithScan} />)
+
+      const scanButton = screen.getByText('🔍 Run Scan')
+      fireEvent.click(scanButton)
+
+      await waitFor(() => {
+        expect(screen.getByText('Scan failed')).toBeInTheDocument()
+      })
+
+      expect(screen.queryByTestId('test-results-modal')).not.toBeInTheDocument()
+    })
+
+    it('error is displayed instead of statusMessage when scan fails', async () => {
+      const errorMessage = 'Formula configuration error'
+      mockOnRunFullScan.mockResolvedValue({
+        success: false,
+        message: errorMessage
+      })
+
+      render(<PreviewSection {...propsWithScan} isMinimized={true} />)
+
+      const scanButton = screen.getByText('Scan')
+      fireEvent.click(scanButton)
+
+      await waitFor(() => {
+        const statusMessage = document.querySelector('.mini-status-message')
+        expect(statusMessage).toHaveTextContent(errorMessage)
+        expect(statusMessage).not.toHaveTextContent('Ready to test')
+      })
+    })
+
+    it('clears error on next successful scan', async () => {
+      // First scan fails
+      mockOnRunFullScan
+        .mockResolvedValueOnce({
+          success: false,
+          message: 'First scan error'
+        })
+        // Second scan succeeds
+        .mockResolvedValueOnce({
+          success: true,
+          modelId: 1,
+          metrics: { totalPredictions: 10, correctCount: 7, accuracyPercentage: 70 },
+          predictions: []
+        })
+
+      render(<PreviewSection {...propsWithScan} />)
+
+      const scanButton = screen.getByText('🔍 Run Scan')
+
+      // First click - error
+      fireEvent.click(scanButton)
+      await waitFor(() => {
+        expect(screen.getByText('First scan error')).toBeInTheDocument()
+      })
+
+      // Second click - success (error should clear)
+      fireEvent.click(scanButton)
+      await waitFor(() => {
+        expect(screen.queryByText('First scan error')).not.toBeInTheDocument()
+      })
+    })
+
+    it('shows validation error when formulaState has no completed formulas', async () => {
+      const propsWithoutFormulas = {
+        ...propsWithScan,
+        formulaState: {
+          completedFormulas: {},
+          currentFormula: null
+        }
+      }
+
+      render(<PreviewSection {...propsWithoutFormulas} />)
+
+      const scanButton = screen.getByText('🔍 Run Scan')
+      fireEvent.click(scanButton)
+
+      // When completedFormulas is empty, formulas array is empty,
+      // so formulas[0]?.timeframe is undefined, triggering timeframe validation
+      await waitFor(() => {
+        expect(
+          screen.getByText('Formula missing timeframe. Please check your formula configuration.')
+        ).toBeInTheDocument()
+      })
+
+      expect(mockOnRunFullScan).not.toHaveBeenCalled()
+    })
+
+    it('shows unable to scan error when completedFormulas is null', async () => {
+      const propsWithNullFormulas = {
+        ...propsWithScan,
+        formulaState: {
+          completedFormulas: null,
+          currentFormula: null
+        }
+      }
+
+      render(<PreviewSection {...propsWithNullFormulas} />)
+
+      const scanButton = screen.getByText('🔍 Run Scan')
+      fireEvent.click(scanButton)
+
+      await waitFor(() => {
+        expect(
+          screen.getByText('Unable to run scan. Please complete at least one formula.')
+        ).toBeInTheDocument()
+      })
+
+      expect(mockOnRunFullScan).not.toHaveBeenCalled()
+    })
+  })
 })
