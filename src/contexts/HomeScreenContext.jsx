@@ -53,7 +53,7 @@ const HomeScreenContext = createContext()
 export const useHomeScreen = () => useContext(HomeScreenContext)
 
 const TIMEFRAME_ORDER_MAP = {
-  '1m': 1,
+  '1M': 1,
   '5M': 5,
   '15M': 15,
   '1H': 60,

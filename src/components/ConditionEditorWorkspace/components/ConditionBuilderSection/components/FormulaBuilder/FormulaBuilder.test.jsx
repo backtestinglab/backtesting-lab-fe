@@ -1,5 +1,5 @@
 import React from 'react'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render } from '@testing-library/react'
 import FormulaBuilder from './FormulaBuilder'
 
 // Mock data for testing
@@ -13,7 +13,7 @@ const mockFormState = {
   indicator2Param: null
 }
 
-const mockSelectedTimeframes = ['1m', '5m', '15m', '1h']
+const mockSelectedTimeframes = ['1M', '5M', '15M', '1H']
 
 describe('FormulaBuilder Component', () => {
   const defaultProps = {

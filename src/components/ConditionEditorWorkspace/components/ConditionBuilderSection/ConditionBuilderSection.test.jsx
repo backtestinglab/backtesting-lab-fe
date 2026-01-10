@@ -26,7 +26,7 @@ const mockDisplayState = {
   }
 }
 
-const mockSelectedTimeframes = ['1m', '5m', '15m', '1h']
+const mockSelectedTimeframes = ['1M', '5M', '15M', '1H']
 
 describe('ConditionBuilderSection Component', () => {
   const defaultProps = {
