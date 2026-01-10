@@ -1,0 +1,93 @@
+.bias-by-type-card-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--spacing-lg);
+  height: 100%;
+  min-width: 50%;
+  padding: var(--spacing-sm) 0;
+}
+
+.bias-type-row {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.bias-type-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.bias-type-label {
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+.bias-type-count {
+  font-size: var(--font-size-sm);
+  font-weight: 400;
+  color: var(--color-text-secondary);
+}
+
+.bias-type-bar-container {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-lg);
+}
+
+.bias-type-bar-background {
+  flex: 8;
+  height: 16px;
+  border-radius: var(--border-radius-base);
+  overflow: hidden;
+  position: relative;
+}
+
+.bias-type-bar-background.bullish {
+  background-color: rgba(38, 166, 154, 0.2);
+}
+
+.bias-type-bar-background.neutral {
+  background-color: rgba(160, 168, 192, 0.2);
+}
+
+.bias-type-bar-background.bearish {
+  background-color: rgba(239, 83, 80, 0.2);
+}
+
+.bias-type-bar-fill {
+  height: 100%;
+  width: 0;
+  border-radius: var(--border-radius-base);
+  transition: width 0.8s ease-in-out 0.3s;
+}
+
+.bias-type-bar-fill.bullish {
+  background-color: var(--chart-color-bullish);
+}
+
+.bias-type-bar-fill.neutral {
+  background-color: var(--color-text-secondary);
+}
+
+.bias-type-bar-fill.bearish {
+  background-color: var(--chart-color-bearish);
+}
+
+.bias-type-percentage {
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  color: var(--color-text-primary);
+  flex: 2;
+  text-align: right;
+}
+
+.bias-by-type-card-content .no-data {
+  color: var(--color-text-muted);
+  font-style: italic;
+  font-weight: 400;
+  font-size: var(--font-size-lg);
+}

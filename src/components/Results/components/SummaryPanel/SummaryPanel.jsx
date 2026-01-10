@@ -2,9 +2,11 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import AccuracyCard from './components/AccuracyCard'
+import BiasByTypeCard from './components/BiasByTypeCard'
 import StatCard from './components/StatCard'
 
 import './components/AccuracyCard.css'
+import './components/BiasByTypeCard.css'
 import './SummaryPanel.css'
 
 /**
@@ -24,9 +26,7 @@ const SummaryPanel = ({ metrics }) => {
       </StatCard>
 
       <StatCard className="by-bias-card" title="By Bias">
-        <div className="stat-card-placeholder">
-          {hasMetrics ? <span>3 bias types</span> : <span className="no-data">No data</span>}
-        </div>
+        <BiasByTypeCard byBiasType={metrics?.byBiasType} />
       </StatCard>
 
       <StatCard className="streaks-card" title="Streaks">
