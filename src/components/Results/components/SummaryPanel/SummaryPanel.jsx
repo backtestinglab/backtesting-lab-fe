@@ -4,9 +4,11 @@ import PropTypes from 'prop-types'
 import AccuracyCard from './components/AccuracyCard'
 import BiasByTypeCard from './components/BiasByTypeCard'
 import StatCard from './components/StatCard'
+import StreaksCard from './components/StreaksCard'
 
 import './components/AccuracyCard.css'
 import './components/BiasByTypeCard.css'
+import './components/StreaksCard.css'
 import './SummaryPanel.css'
 
 /**
@@ -30,9 +32,10 @@ const SummaryPanel = ({ metrics }) => {
       </StatCard>
 
       <StatCard className="streaks-card" title="Streaks">
-        <div className="stat-card-placeholder">
-          {hasMetrics ? <span>Win/Lose</span> : <span className="no-data">No data</span>}
-        </div>
+        <StreaksCard
+          bestWinStreak={metrics?.streaks?.bestWinStreak}
+          worstLoseStreak={metrics?.streaks?.worstLoseStreak}
+        />
       </StatCard>
 
       <StatCard className="price-impact-card" title="Price Impact">

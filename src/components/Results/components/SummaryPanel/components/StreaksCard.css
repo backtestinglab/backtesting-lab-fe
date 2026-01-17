@@ -1,0 +1,97 @@
+.streaks-card-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+}
+
+.streaks-card-content .no-data {
+  color: var(--color-text-muted);
+  font-style: italic;
+  font-weight: 400;
+  font-size: var(--font-size-lg);
+}
+
+.streak-badge-top {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-sm) var(--spacing-lg);
+  margin-bottom: var(--spacing-sm);
+}
+
+.streak-value-large {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: var(--color-accent-primary);
+  line-height: 1;
+}
+
+.streaks-bars-container {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: var(--spacing-xl);
+  width: 100%;
+  padding: var(--spacing-md) 0;
+}
+
+.streak-bar-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-sm);
+  flex: 0 0 auto;
+}
+
+.streak-bar-container {
+  height: 80px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.streak-bar {
+  width: 40px;
+  min-height: 20px;
+  border-radius: var(--border-radius-base);
+  position: relative;
+  cursor: pointer;
+  transition: opacity 0.3s ease-in-out;
+  overflow: hidden;
+}
+
+.streak-bar.active {
+  opacity: 1;
+}
+
+.streak-bar.inactive {
+  opacity: 0.3;
+}
+
+.streak-bar.inactive:hover {
+  opacity: 0.6;
+}
+
+.streak-bar-fill {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--border-radius-base);
+}
+
+.streak-bar.win .streak-bar-fill {
+  background-color: var(--chart-color-bullish);
+}
+
+.streak-bar.lose .streak-bar-fill {
+  background-color: var(--chart-color-bearish);
+}
+
+.streak-label-bottom {
+  font-size: var(--font-size-lg);
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  text-align: center;
+  margin-top: var(--spacing-md);
+}
