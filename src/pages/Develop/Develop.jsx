@@ -575,6 +575,13 @@ const Develop = ({ modelConfig }) => {
     setScanComplete(false)
   }, [])
 
+  // Navigate chart to specific timestamp (placeholder for T021.12.9)
+  // eslint-disable-next-line no-unused-vars
+  const handleNavigateToTimestamp = useCallback((timestamp) => {
+    // TODO: Implement chart navigation in T021.12.9
+    // This will call Chart component's navigation method to scroll to the specified timestamp
+  }, [])
+
   const togglePanelFullScreen = (panelType) => {
     if (currentView === panelType) {
       setCurrentView('normal')
@@ -762,7 +769,9 @@ const Develop = ({ modelConfig }) => {
         {(currentView === 'normal' || currentView === 'results') && (
           <section className={`results-area ${isResultsFullScreen ? 'full-screen' : 'normal'}`}>
             <Results
+              chartData={chartData}
               isFullScreen={isResultsFullScreen}
+              onNavigateToTimestamp={handleNavigateToTimestamp}
               onToggleFullScreen={() => togglePanelFullScreen('results')}
               results={scanResults}
             />

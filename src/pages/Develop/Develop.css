@@ -97,6 +97,7 @@
 /* --- Main Workspace Grid --- */
 .develop-workspace {
   flex-grow: 1;
+  height: 0;
   display: grid;
   padding: 9px;
   gap: 9px;
@@ -177,6 +178,7 @@
   border-radius: 6px;
   display: flex;
   flex-direction: column;
+  min-height: 0;
   min-width: 0;
 }
 
